@@ -1,0 +1,327 @@
+//@version=6
+indicator("Impulse Fibonacci Golden Zone", shorttitle="Impulse Fib GZ", overlay=true, max_boxes_count=50, max_lines_count=100, max_labels_count=100)
+
+// ══════════════════════════════════════════════════════════════════════════════
+// HOW IT WORKS (quick reference)
+// 1) Impulse  = a run of consecutive same-color candles (min N, default 3).
+//    It is NOT every market swing — only candle-color streaks that pass filters.
+// 2) When the streak breaks, Fib levels are drawn from that impulse only.
+// 3) Golden Zone (GZ) = the band between Fib 0.500 and 0.618.
+// 4) GZ Buy  = price revisits that band after a bullish impulse (expect bounce up).
+// 5) GZ Sell = price revisits that band after a bearish impulse (expect bounce down).
+// Only the LATEST valid impulse is drawn (no historical staircase clutter).
+// ══════════════════════════════════════════════════════════════════════════════
+
+grpImpulse = "Impulse Detection"
+minCandles  = input.int(3, "Minimum Consecutive Candles", minval=1, group=grpImpulse,
+     tooltip="A valid impulse needs at least this many consecutive green (or red) candles.")
+useMinMove  = input.bool(true, "Require Minimum Price Move", group=grpImpulse)
+minMovePips = input.float(30.0, "Minimum Move (Pips/Ticks)", minval=0.1, step=0.1, group=grpImpulse,
+     tooltip="For XAUUSD, 1 pip ≈ $0.01 if pip size is 0.01, or set Custom Pip Size to 0.1 for $0.10. Filters out tiny noise impulses.")
+pipSize     = input.float(0.1, "Custom Pip Size (0 = auto)", minval=0.0, step=0.01, group=grpImpulse,
+     tooltip="XAUUSD tip: use 0.1 so '30 pips' ≈ $3. Forex majors: leave 0 for auto.")
+
+grpTrend = "Trend Filter"
+useEmaFilter = input.bool(false, "Enable EMA Trend Filter", group=grpTrend)
+emaLength    = input.int(200, "EMA Length", minval=1, group=grpTrend)
+
+grpVisual = "Visualization"
+showFibLines   = input.bool(true, "Show Fibonacci Lines", group=grpVisual)
+showGoldenZone = input.bool(true, "Highlight Golden Zone", group=grpVisual)
+showLabels     = input.bool(true, "Show Level Labels", group=grpVisual)
+showSignals    = input.bool(true, "Show Entry Markers", group=grpVisual)
+showEma        = input.bool(true, "Show EMA", group=grpVisual)
+showImpulseBg  = input.bool(true, "Shade Impulse Candles", group=grpVisual)
+extendBars     = input.int(30, "Extend Levels (bars ahead)", minval=5, maxval=200, group=grpVisual)
+lineWidth      = input.int(1, "Line Width", minval=1, maxval=4, group=grpVisual)
+
+colBullZone = input.color(color.new(color.teal, 80), "Bullish Golden Zone", group=grpVisual)
+colBearZone = input.color(color.new(color.red, 80), "Bearish Golden Zone", group=grpVisual)
+col382      = input.color(#787B86, "0.382", group=grpVisual)
+col500      = input.color(#2962FF, "0.500", group=grpVisual)
+col618      = input.color(#FF6D00, "0.618", group=grpVisual)
+col786      = input.color(#9C27B0, "0.786", group=grpVisual)
+col1000     = input.color(#E91E63, "1.000 (Invalidation)", group=grpVisual)
+col000      = input.color(#089981, "0.000 (Impulse End / Target)", group=grpVisual)
+
+grpAlerts = "Alerts"
+alertOncePerImpulse = input.bool(true, "Alert Once Per Impulse", group=grpAlerts)
+
+// ── helpers ──────────────────────────────────────────────────────────────────
+f_pipSize() =>
+    if pipSize > 0.0
+        pipSize
+    else if syminfo.type == "forex"
+        str.contains(syminfo.ticker, "JPY") ? 0.01 : 0.0001
+    else
+        syminfo.mintick
+
+f_moveOk(float s, float e) =>
+    not useMinMove or math.abs(e - s) >= minMovePips * f_pipSize()
+
+isBull = close > open
+isBear = close < open
+emaTrend = ta.ema(close, emaLength)
+
+// ── impulse state machine ────────────────────────────────────────────────────
+var int   bullCount     = 0
+var float bullStartLow  = na
+var float bullEndHigh   = na
+var int   bullStartBar  = na
+
+var int   bearCount     = 0
+var float bearStartHigh = na
+var float bearEndLow    = na
+var int   bearStartBar  = na
+
+var int   activeDir   = 0
+var float impStart    = na
+var float impEnd      = na
+var int   impStartBar = na
+var int   impEndBar   = na
+var bool  alertFired  = false
+var bool  traded      = false
+
+bool newImpulse = false
+
+if isBull
+    if bullCount == 0
+        bullStartLow := low
+        bullStartBar := bar_index
+        bullCount    := 1
+    else
+        bullCount += 1
+    bullEndHigh := high
+
+    if bearCount >= minCandles and f_moveOk(bearStartHigh, bearEndLow)
+        activeDir   := -1
+        impStart    := bearStartHigh
+        impEnd      := bearEndLow
+        impStartBar := bearStartBar
+        impEndBar   := bar_index - 1
+        alertFired  := false
+        traded      := false
+        newImpulse  := true
+    bearCount     := 0
+    bearStartHigh := na
+    bearEndLow    := na
+    bearStartBar  := na
+
+else if isBear
+    if bearCount == 0
+        bearStartHigh := high
+        bearStartBar  := bar_index
+        bearCount     := 1
+    else
+        bearCount += 1
+    bearEndLow := low
+
+    if bullCount >= minCandles and f_moveOk(bullStartLow, bullEndHigh)
+        activeDir   := 1
+        impStart    := bullStartLow
+        impEnd      := bullEndHigh
+        impStartBar := bullStartBar
+        impEndBar   := bar_index - 1
+        alertFired  := false
+        traded      := false
+        newImpulse  := true
+    bullCount    := 0
+    bullStartLow := na
+    bullEndHigh  := na
+    bullStartBar := na
+
+else
+    if bullCount >= minCandles and f_moveOk(bullStartLow, bullEndHigh)
+        activeDir   := 1
+        impStart    := bullStartLow
+        impEnd      := bullEndHigh
+        impStartBar := bullStartBar
+        impEndBar   := bar_index - 1
+        alertFired  := false
+        traded      := false
+        newImpulse  := true
+    else if bearCount >= minCandles and f_moveOk(bearStartHigh, bearEndLow)
+        activeDir   := -1
+        impStart    := bearStartHigh
+        impEnd      := bearEndLow
+        impStartBar := bearStartBar
+        impEndBar   := bar_index - 1
+        alertFired  := false
+        traded      := false
+        newImpulse  := true
+    bullCount     := 0
+    bullStartLow  := na
+    bullEndHigh   := na
+    bullStartBar  := na
+    bearCount     := 0
+    bearStartHigh := na
+    bearEndLow    := na
+    bearStartBar  := na
+
+// ── fibonacci levels (active impulse only) ───────────────────────────────────
+float lvl000  = na
+float lvl382  = na
+float lvl500  = na
+float lvl618  = na
+float lvl786  = na
+float lvl1000 = na
+
+if activeDir == 1 and not na(impStart) and not na(impEnd)
+    float r = impEnd - impStart
+    lvl000  := impEnd
+    lvl382  := impEnd - 0.382 * r
+    lvl500  := impEnd - 0.500 * r
+    lvl618  := impEnd - 0.618 * r
+    lvl786  := impEnd - 0.786 * r
+    lvl1000 := impStart
+else if activeDir == -1 and not na(impStart) and not na(impEnd)
+    float r = impStart - impEnd
+    lvl000  := impEnd
+    lvl382  := impEnd + 0.382 * r
+    lvl500  := impEnd + 0.500 * r
+    lvl618  := impEnd + 0.618 * r
+    lvl786  := impEnd + 0.786 * r
+    lvl1000 := impStart
+
+bool  hasLevels = activeDir != 0 and not na(lvl500)
+float zoneHigh  = hasLevels ? math.max(lvl500, lvl618) : na
+float zoneLow   = hasLevels ? math.min(lvl500, lvl618) : na
+
+// Invalidate active setup if price breaks beyond 1.000 (impulse origin)
+bool invalidated = hasLevels and ((activeDir == 1 and close < lvl1000) or (activeDir == -1 and close > lvl1000))
+if invalidated
+    activeDir := 0
+
+// ── entry triggers ───────────────────────────────────────────────────────────
+bool inZone     = hasLevels and high >= zoneLow and low <= zoneHigh
+bool inRetrace  = hasLevels and bar_index > impEndBar
+bool bullRaw    = inRetrace and activeDir == 1 and inZone
+bool bearRaw    = inRetrace and activeDir == -1 and inZone
+bool bullOk     = bullRaw and (not useEmaFilter or close > emaTrend)
+bool bearOk     = bearRaw and (not useEmaFilter or close < emaTrend)
+bool bullTrigger = bullOk and (not alertOncePerImpulse or not alertFired)
+bool bearTrigger = bearOk and (not alertOncePerImpulse or not alertFired)
+
+if bullTrigger or bearTrigger
+    alertFired := true
+    traded     := true
+
+// ── CLEAN VISUALS: draw ONLY the active impulse (no staircase history) ───────
+var line ln000  = na
+var line ln382  = na
+var line ln500  = na
+var line ln618  = na
+var line ln786  = na
+var line ln1000 = na
+var box  gzBox  = na
+var label lbDir = na
+var label lb000 = na
+var label lb382 = na
+var label lb500 = na
+var label lb618 = na
+var label lb786 = na
+var label lb1000 = na
+
+f_clear() =>
+    line.delete(ln000)
+    line.delete(ln382)
+    line.delete(ln500)
+    line.delete(ln618)
+    line.delete(ln786)
+    line.delete(ln1000)
+    box.delete(gzBox)
+    label.delete(lbDir)
+    label.delete(lb000)
+    label.delete(lb382)
+    label.delete(lb500)
+    label.delete(lb618)
+    label.delete(lb786)
+    label.delete(lb1000)
+    ln000 := na
+    ln382 := na
+    ln500 := na
+    ln618 := na
+    ln786 := na
+    ln1000 := na
+    gzBox := na
+    lbDir := na
+    lb000 := na
+    lb382 := na
+    lb500 := na
+    lb618 := na
+    lb786 := na
+    lb1000 := na
+
+f_draw() =>
+    int x1 = impStartBar
+    int x2 = bar_index + extendBars
+    color zc = activeDir == 1 ? colBullZone : colBearZone
+
+    if showFibLines
+        ln000  := line.new(x1, lvl000,  x2, lvl000,  color=col000,  width=lineWidth, style=line.style_dotted)
+        ln382  := line.new(x1, lvl382,  x2, lvl382,  color=col382,  width=lineWidth)
+        ln500  := line.new(x1, lvl500,  x2, lvl500,  color=col500,  width=lineWidth + 1)
+        ln618  := line.new(x1, lvl618,  x2, lvl618,  color=col618,  width=lineWidth + 1)
+        ln786  := line.new(x1, lvl786,  x2, lvl786,  color=col786,  width=lineWidth)
+        ln1000 := line.new(x1, lvl1000, x2, lvl1000, color=col1000, width=lineWidth, style=line.style_dashed)
+
+    if showGoldenZone
+        gzBox := box.new(x1, zoneHigh, x2, zoneLow, bgcolor=zc, border_color=color.new(zc, 40), border_width=1)
+
+    if showLabels
+        string dirTxt = activeDir == 1 ? "▲ Bullish Impulse → wait for GZ Buy" : "▼ Bearish Impulse → wait for GZ Sell"
+        color dirCol  = activeDir == 1 ? color.teal : color.red
+        lbDir  := label.new(impEndBar, lvl000, dirTxt, style=label.style_label_down, color=dirCol, textcolor=color.white, size=size.normal)
+        lb000  := label.new(x2, lvl000,  "0.000 Target",        style=label.style_label_left, color=color.new(col000, 70),  textcolor=col000,  size=size.small)
+        lb382  := label.new(x2, lvl382,  "0.382",               style=label.style_label_left, color=color.new(col382, 70),  textcolor=col382,  size=size.tiny)
+        lb500  := label.new(x2, lvl500,  "0.500 GZ top",        style=label.style_label_left, color=color.new(col500, 60),  textcolor=col500,  size=size.small)
+        lb618  := label.new(x2, lvl618,  "0.618 GZ bottom",     style=label.style_label_left, color=color.new(col618, 60),  textcolor=col618,  size=size.small)
+        lb786  := label.new(x2, lvl786,  "0.786 deep",          style=label.style_label_left, color=color.new(col786, 70),  textcolor=col786,  size=size.tiny)
+        lb1000 := label.new(x2, lvl1000, "1.000 SL / invalidate", style=label.style_label_left, color=color.new(col1000, 60), textcolor=col1000, size=size.small)
+
+if newImpulse and hasLevels
+    f_clear()
+    f_draw()
+
+if invalidated or (activeDir == 0 and not na(gzBox))
+    f_clear()
+
+// Extend right edge of drawings as bars form
+if hasLevels and not na(ln500)
+    int x2 = bar_index + extendBars
+    line.set_x2(ln000, x2)
+    line.set_x2(ln382, x2)
+    line.set_x2(ln500, x2)
+    line.set_x2(ln618, x2)
+    line.set_x2(ln786, x2)
+    line.set_x2(ln1000, x2)
+    if not na(gzBox)
+        box.set_right(gzBox, x2)
+    if showLabels
+        label.set_x(lb000, x2)
+        label.set_x(lb382, x2)
+        label.set_x(lb500, x2)
+        label.set_x(lb618, x2)
+        label.set_x(lb786, x2)
+        label.set_x(lb1000, x2)
+
+plot(useEmaFilter and showEma ? emaTrend : na, "Trend EMA", color=color.new(color.orange, 30), linewidth=2)
+
+// Shade the candles that formed the active impulse
+bgcolor(showImpulseBg and hasLevels and bar_index >= impStartBar and bar_index <= impEndBar ? (activeDir == 1 ? color.new(color.teal, 92) : color.new(color.red, 92)) : na, title="Impulse Span")
+
+plotshape(showSignals and bullTrigger, title="GZ Buy",  style=shape.triangleup,   location=location.belowbar, color=color.teal, size=size.normal, text="GZ Buy\nEnter Long")
+plotshape(showSignals and bearTrigger, title="GZ Sell", style=shape.triangledown, location=location.abovebar, color=color.red,  size=size.normal, text="GZ Sell\nEnter Short")
+
+alertcondition(bullTrigger, title="Bullish Fib 0.5-0.618 Triggered", message="Bullish Fib 0.5-0.618 Triggered — consider long entry in Golden Zone")
+alertcondition(bearTrigger, title="Bearish Fib 0.5-0.618 Triggered", message="Bearish Fib 0.5-0.618 Triggered — consider short entry in Golden Zone")
+
+if bullTrigger
+    alert("GZ Buy | " + syminfo.ticker + " | Long in " + str.tostring(zoneLow, format.mintick) + "-" + str.tostring(zoneHigh, format.mintick) + " | SL below " + str.tostring(lvl1000, format.mintick) + " | TP " + str.tostring(lvl000, format.mintick), alert.freq_once_per_bar)
+if bearTrigger
+    alert("GZ Sell | " + syminfo.ticker + " | Short in " + str.tostring(zoneLow, format.mintick) + "-" + str.tostring(zoneHigh, format.mintick) + " | SL above " + str.tostring(lvl1000, format.mintick) + " | TP " + str.tostring(lvl000, format.mintick), alert.freq_once_per_bar)
+
+// Data window
+plotchar(activeDir, title="Dir", display=display.data_window)
+plot(zoneLow,  title="GZ Low",  display=display.data_window)
+plot(zoneHigh, title="GZ High", display=display.data_window)

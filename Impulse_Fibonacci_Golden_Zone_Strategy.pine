@@ -1,0 +1,240 @@
+//@version=6
+strategy("Impulse Fib Golden Zone Strategy", shorttitle="Impulse Fib GZ Strat",
+     overlay=true, initial_capital=10000, default_qty_type=strategy.percent_of_equity,
+     default_qty_value=5, commission_type=strategy.commission.percent, commission_value=0.02,
+     slippage=1, pyramiding=0, process_orders_on_close=false,
+     max_boxes_count=50, max_lines_count=100, max_labels_count=100)
+
+// ══════════════════════════════════════════════════════════════════════════════
+// STRATEGY RULES
+// Entry : first touch of Fib 0.500–0.618 (Golden Zone) after a valid impulse
+// Stop  : beyond Fib 1.000 (impulse origin) ± buffer
+// Target: Fib 0.000 (impulse end) by default — or R-multiple
+// Filter: optional EMA trend filter
+// ══════════════════════════════════════════════════════════════════════════════
+
+grpImpulse = "Impulse Detection"
+minCandles  = input.int(3, "Minimum Consecutive Candles", minval=1, group=grpImpulse)
+useMinMove  = input.bool(true, "Require Minimum Price Move", group=grpImpulse)
+minMovePips = input.float(30.0, "Minimum Move (Pips/Ticks)", minval=0.1, step=0.1, group=grpImpulse)
+pipSize     = input.float(0.1, "Custom Pip Size (0 = auto)", minval=0.0, step=0.01, group=grpImpulse)
+
+grpTrend = "Trend Filter"
+useEmaFilter = input.bool(true, "Enable EMA Trend Filter", group=grpTrend)
+emaLength    = input.int(200, "EMA Length", minval=1, group=grpTrend)
+
+grpTrade = "Trade Management"
+slBufferPips = input.float(5.0, "SL Buffer Beyond 1.000 (pips)", minval=0.0, step=0.5, group=grpTrade)
+tpMode       = input.string("Impulse End (0.000)", "Take Profit Mode",
+     options=["Impulse End (0.000)", "1R", "1.5R", "2R"], group=grpTrade)
+oneTradePerImpulse = input.bool(true, "One Trade Per Impulse", group=grpTrade)
+useLongs     = input.bool(true, "Allow Longs", group=grpTrade)
+useShorts    = input.bool(true, "Allow Shorts", group=grpTrade)
+
+grpVisual = "Visualization"
+showLevels = input.bool(true, "Show Active Fib Levels", group=grpVisual)
+
+// ── helpers ──────────────────────────────────────────────────────────────────
+f_pipSize() =>
+    if pipSize > 0.0
+        pipSize
+    else if syminfo.type == "forex"
+        str.contains(syminfo.ticker, "JPY") ? 0.01 : 0.0001
+    else
+        syminfo.mintick
+
+f_moveOk(float s, float e) =>
+    not useMinMove or math.abs(e - s) >= minMovePips * f_pipSize()
+
+isBull = close > open
+isBear = close < open
+emaTrend = ta.ema(close, emaLength)
+pip = f_pipSize()
+
+// ── impulse detection (same logic as indicator) ──────────────────────────────
+var int   bullCount     = 0
+var float bullStartLow  = na
+var float bullEndHigh   = na
+var int   bullStartBar  = na
+var int   bearCount     = 0
+var float bearStartHigh = na
+var float bearEndLow    = na
+var int   bearStartBar  = na
+
+var int   activeDir   = 0
+var float impStart    = na
+var float impEnd      = na
+var int   impStartBar = na
+var int   impEndBar   = na
+var bool  traded      = false
+
+bool newImpulse = false
+
+if isBull
+    if bullCount == 0
+        bullStartLow := low
+        bullStartBar := bar_index
+        bullCount    := 1
+    else
+        bullCount += 1
+    bullEndHigh := high
+    if bearCount >= minCandles and f_moveOk(bearStartHigh, bearEndLow)
+        activeDir   := -1
+        impStart    := bearStartHigh
+        impEnd      := bearEndLow
+        impStartBar := bearStartBar
+        impEndBar   := bar_index - 1
+        traded      := false
+        newImpulse  := true
+    bearCount     := 0
+    bearStartHigh := na
+    bearEndLow    := na
+    bearStartBar  := na
+else if isBear
+    if bearCount == 0
+        bearStartHigh := high
+        bearStartBar  := bar_index
+        bearCount     := 1
+    else
+        bearCount += 1
+    bearEndLow := low
+    if bullCount >= minCandles and f_moveOk(bullStartLow, bullEndHigh)
+        activeDir   := 1
+        impStart    := bullStartLow
+        impEnd      := bullEndHigh
+        impStartBar := bullStartBar
+        impEndBar   := bar_index - 1
+        traded      := false
+        newImpulse  := true
+    bullCount    := 0
+    bullStartLow := na
+    bullEndHigh  := na
+    bullStartBar := na
+else
+    if bullCount >= minCandles and f_moveOk(bullStartLow, bullEndHigh)
+        activeDir   := 1
+        impStart    := bullStartLow
+        impEnd      := bullEndHigh
+        impStartBar := bullStartBar
+        impEndBar   := bar_index - 1
+        traded      := false
+        newImpulse  := true
+    else if bearCount >= minCandles and f_moveOk(bearStartHigh, bearEndLow)
+        activeDir   := -1
+        impStart    := bearStartHigh
+        impEnd      := bearEndLow
+        impStartBar := bearStartBar
+        impEndBar   := bar_index - 1
+        traded      := false
+        newImpulse  := true
+    bullCount     := 0
+    bullStartLow  := na
+    bullEndHigh   := na
+    bullStartBar  := na
+    bearCount     := 0
+    bearStartHigh := na
+    bearEndLow    := na
+    bearStartBar  := na
+
+// ── levels ───────────────────────────────────────────────────────────────────
+float lvl000  = na
+float lvl500  = na
+float lvl618  = na
+float lvl1000 = na
+
+if activeDir == 1 and not na(impStart) and not na(impEnd)
+    float r = impEnd - impStart
+    lvl000  := impEnd
+    lvl500  := impEnd - 0.500 * r
+    lvl618  := impEnd - 0.618 * r
+    lvl1000 := impStart
+else if activeDir == -1 and not na(impStart) and not na(impEnd)
+    float r = impStart - impEnd
+    lvl000  := impEnd
+    lvl500  := impEnd + 0.500 * r
+    lvl618  := impEnd + 0.618 * r
+    lvl1000 := impStart
+
+bool  hasLevels = activeDir != 0 and not na(lvl500)
+float zoneHigh  = hasLevels ? math.max(lvl500, lvl618) : na
+float zoneLow   = hasLevels ? math.min(lvl500, lvl618) : na
+
+if hasLevels and ((activeDir == 1 and close < lvl1000) or (activeDir == -1 and close > lvl1000))
+    activeDir := 0
+
+bool inZone    = hasLevels and high >= zoneLow and low <= zoneHigh
+bool inRetrace = hasLevels and bar_index > impEndBar
+bool canTrade  = not oneTradePerImpulse or not traded
+
+bool longSignal  = useLongs  and inRetrace and activeDir == 1 and inZone and canTrade and (not useEmaFilter or close > emaTrend)
+bool shortSignal = useShorts and inRetrace and activeDir == -1 and inZone and canTrade and (not useEmaFilter or close < emaTrend)
+
+// ── orders ───────────────────────────────────────────────────────────────────
+if longSignal and strategy.position_size == 0
+    float entryEst = math.min(close, zoneHigh)
+    float sl = lvl1000 - slBufferPips * pip
+    float risk = entryEst - sl
+    float tp = switch tpMode
+        "1R"   => entryEst + risk
+        "1.5R" => entryEst + 1.5 * risk
+        "2R"   => entryEst + 2.0 * risk
+        => lvl000
+    if risk > 0 and tp > entryEst
+        strategy.entry("GZ Long", strategy.long)
+        strategy.exit("LX", from_entry="GZ Long", stop=sl, limit=tp)
+        traded := true
+
+if shortSignal and strategy.position_size == 0
+    float entryEst = math.max(close, zoneLow)
+    float sl = lvl1000 + slBufferPips * pip
+    float risk = sl - entryEst
+    float tp = switch tpMode
+        "1R"   => entryEst - risk
+        "1.5R" => entryEst - 1.5 * risk
+        "2R"   => entryEst - 2.0 * risk
+        => lvl000
+    if risk > 0 and tp < entryEst
+        strategy.entry("GZ Short", strategy.short)
+        strategy.exit("SX", from_entry="GZ Short", stop=sl, limit=tp)
+        traded := true
+
+// Cancel stale setups when a brand-new opposite impulse forms while flat
+if newImpulse and strategy.position_size == 0
+    strategy.cancel("GZ Long")
+    strategy.cancel("GZ Short")
+
+// ── visuals ──────────────────────────────────────────────────────────────────
+plot(useEmaFilter ? emaTrend : na, "EMA", color=color.new(color.orange, 30), linewidth=2)
+
+var line ln000 = na
+var line ln500 = na
+var line ln618 = na
+var line ln1000 = na
+var box  gzBox = na
+
+if newImpulse and hasLevels and showLevels
+    line.delete(ln000)
+    line.delete(ln500)
+    line.delete(ln618)
+    line.delete(ln1000)
+    box.delete(gzBox)
+    int x1 = impStartBar
+    int x2 = bar_index + 25
+    color zc = activeDir == 1 ? color.new(color.teal, 80) : color.new(color.red, 80)
+    ln000  := line.new(x1, lvl000,  x2, lvl000,  color=#089981, width=1, style=line.style_dotted)
+    ln500  := line.new(x1, lvl500,  x2, lvl500,  color=#2962FF, width=2)
+    ln618  := line.new(x1, lvl618,  x2, lvl618,  color=#FF6D00, width=2)
+    ln1000 := line.new(x1, lvl1000, x2, lvl1000, color=#E91E63, width=1, style=line.style_dashed)
+    gzBox  := box.new(x1, zoneHigh, x2, zoneLow, bgcolor=zc, border_color=color.new(zc, 40))
+
+if hasLevels and showLevels and not na(ln500)
+    int x2 = bar_index + 25
+    line.set_x2(ln000, x2)
+    line.set_x2(ln500, x2)
+    line.set_x2(ln618, x2)
+    line.set_x2(ln1000, x2)
+    if not na(gzBox)
+        box.set_right(gzBox, x2)
+
+plotshape(longSignal,  title="Long",  style=shape.triangleup,   location=location.belowbar, color=color.teal, size=size.small, text="Long")
+plotshape(shortSignal, title="Short", style=shape.triangledown, location=location.abovebar, color=color.red,  size=size.small, text="Short")

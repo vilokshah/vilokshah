@@ -1,0 +1,80 @@
+{
+  "description": "Impulse Fib Golden Zone backtest on GC=F 15m (~60 trading days)",
+  "note": "yfinance GC=F is a gold futures proxy for XAUUSD. Results are approximate; use the Pine strategy on TradingView for official Strategy Tester stats.",
+  "data_range": "2026-05-26 04:00:00+00:00 \u2192 2026-08-05 13:45:00+00:00",
+  "bars": 4596,
+  "configs": [
+    {
+      "config": "default_ema_tp_impulse",
+      "trades": 186,
+      "win_rate_pct": 56.99,
+      "net_pnl": 163.75,
+      "net_pnl_pct": 1.64,
+      "profit_factor": 1.003,
+      "max_drawdown_pct": -55.69,
+      "avg_trade": 0.88,
+      "long_trades": 83,
+      "short_trades": 103
+    },
+    {
+      "config": "default_ema_tp_1R",
+      "trades": 187,
+      "win_rate_pct": 62.03,
+      "net_pnl": -1965.32,
+      "net_pnl_pct": -19.65,
+      "profit_factor": 0.952,
+      "max_drawdown_pct": -53.82,
+      "avg_trade": -10.51,
+      "long_trades": 84,
+      "short_trades": 103
+    },
+    {
+      "config": "default_ema_tp_2R",
+      "trades": 153,
+      "win_rate_pct": 45.1,
+      "net_pnl": 5214.6,
+      "net_pnl_pct": 52.15,
+      "profit_factor": 1.085,
+      "max_drawdown_pct": -52.35,
+      "avg_trade": 34.08,
+      "long_trades": 70,
+      "short_trades": 83
+    },
+    {
+      "config": "no_ema_tp_impulse",
+      "trades": 288,
+      "win_rate_pct": 52.78,
+      "net_pnl": -8989.71,
+      "net_pnl_pct": -89.9,
+      "profit_factor": 0.71,
+      "max_drawdown_pct": -91.22,
+      "avg_trade": -31.21,
+      "long_trades": 143,
+      "short_trades": 145
+    },
+    {
+      "config": "stricter_5c_5usd",
+      "trades": 47,
+      "win_rate_pct": 51.06,
+      "net_pnl": 1853.14,
+      "net_pnl_pct": 18.53,
+      "profit_factor": 1.126,
+      "max_drawdown_pct": -27.69,
+      "avg_trade": 39.43,
+      "long_trades": 20,
+      "short_trades": 27
+    },
+    {
+      "config": "noisy_3c_no_minmove",
+      "trades": 187,
+      "win_rate_pct": 62.03,
+      "net_pnl": -1965.32,
+      "net_pnl_pct": -19.65,
+      "profit_factor": 0.952,
+      "max_drawdown_pct": -53.82,
+      "avg_trade": -10.51,
+      "long_trades": 84,
+      "short_trades": 103
+    }
+  ]
+}
