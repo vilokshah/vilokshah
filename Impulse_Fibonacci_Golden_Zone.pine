@@ -13,17 +13,32 @@ indicator("Impulse Fibonacci Golden Zone", shorttitle="Impulse Fib GZ", overlay=
 // ══════════════════════════════════════════════════════════════════════════════
 
 grpImpulse = "Impulse Detection"
-minCandles  = input.int(3, "Minimum Consecutive Candles", minval=1, group=grpImpulse,
-     tooltip="A valid impulse needs at least this many consecutive green (or red) candles.")
+minCandles  = input.int(5, "Minimum Consecutive Candles", minval=1, group=grpImpulse,
+     tooltip="Stricter (5+) filters noise. Backtests on gold favored 5 over 3.")
 useMinMove  = input.bool(true, "Require Minimum Price Move", group=grpImpulse)
-minMovePips = input.float(30.0, "Minimum Move (Pips/Ticks)", minval=0.1, step=0.1, group=grpImpulse,
-     tooltip="For XAUUSD, 1 pip ≈ $0.01 if pip size is 0.01, or set Custom Pip Size to 0.1 for $0.10. Filters out tiny noise impulses.")
+minMovePips = input.float(50.0, "Minimum Move (Pips/Ticks)", minval=0.1, step=0.1, group=grpImpulse,
+     tooltip="With pip size 0.1 on XAUUSD, 50 ≈ $5 impulse range. Larger = fewer but cleaner setups.")
 pipSize     = input.float(0.1, "Custom Pip Size (0 = auto)", minval=0.0, step=0.01, group=grpImpulse,
-     tooltip="XAUUSD tip: use 0.1 so '30 pips' ≈ $3. Forex majors: leave 0 for auto.")
+     tooltip="XAUUSD tip: use 0.1 so '50 pips' ≈ $5. Forex majors: leave 0 for auto.")
 
 grpTrend = "Trend Filter"
-useEmaFilter = input.bool(false, "Enable EMA Trend Filter", group=grpTrend)
+useEmaFilter = input.bool(true, "Enable EMA Trend Filter", group=grpTrend,
+     tooltip="Only long above EMA, only short below EMA. Strongly recommended.")
 emaLength    = input.int(200, "EMA Length", minval=1, group=grpTrend)
+useHtfFilter = input.bool(false, "Enable Higher-Timeframe EMA Filter", group=grpTrend,
+     tooltip="Optional. Align with HTF EMA (e.g. 1H). Can reduce trade count a lot.")
+htfTimeframe = input.timeframe("60", "HTF Timeframe", group=grpTrend)
+
+grpQuality = "Entry Quality Filters"
+requireCloseInZone = input.bool(false, "Require Close Inside Golden Zone", group=grpQuality,
+     tooltip="Stricter: candle must close inside 0.5–0.618. Can remove good wick entries.")
+requireRejectCandle = input.bool(true, "Require Rejection Candle (bullish/bearish close)", group=grpQuality,
+     tooltip="Longs need a green close on GZ touch; shorts need a red close. Helped most in sample tests.")
+useSessionFilter = input.bool(false, "Trade Only During Session", group=grpQuality,
+     tooltip="Optional. Enable to skip off-hours; tune session to your broker timezone.")
+sessionTimes = input.session("0700-1700", "Session (exchange TZ)", group=grpQuality)
+maxWaitBars = input.int(40, "Max Bars After Impulse to Enter", minval=1, group=grpQuality,
+     tooltip="Ignore stale pullbacks. 40 bars on 15m ≈ 10 hours.")
 
 grpVisual = "Visualization"
 showFibLines   = input.bool(true, "Show Fibonacci Lines", group=grpVisual)
@@ -62,6 +77,8 @@ f_moveOk(float s, float e) =>
 isBull = close > open
 isBear = close < open
 emaTrend = ta.ema(close, emaLength)
+htfEma   = request.security(syminfo.tickerid, htfTimeframe, ta.ema(close, emaLength), barmerge.gaps_off, barmerge.lookahead_off)
+inSession = not useSessionFilter or not na(time(timeframe.period, sessionTimes))
 
 // ── impulse state machine ────────────────────────────────────────────────────
 var int   bullCount     = 0
@@ -193,14 +210,24 @@ if invalidated
     activeDir := 0
 
 // ── entry triggers ───────────────────────────────────────────────────────────
-bool inZone     = hasLevels and high >= zoneLow and low <= zoneHigh
-bool inRetrace  = hasLevels and bar_index > impEndBar
-bool bullRaw    = inRetrace and activeDir == 1 and inZone
-bool bearRaw    = inRetrace and activeDir == -1 and inZone
-bool bullOk     = bullRaw and (not useEmaFilter or close > emaTrend)
-bool bearOk     = bearRaw and (not useEmaFilter or close < emaTrend)
-bool bullTrigger = bullOk and (not alertOncePerImpulse or not alertFired)
-bool bearTrigger = bearOk and (not alertOncePerImpulse or not alertFired)
+bool touchZone   = hasLevels and high >= zoneLow and low <= zoneHigh
+bool closeInZone = hasLevels and close >= zoneLow and close <= zoneHigh
+bool inZone      = requireCloseInZone ? closeInZone : touchZone
+bool inRetrace   = hasLevels and bar_index > impEndBar and (bar_index - impEndBar) <= maxWaitBars
+bool sessionOk   = inSession
+
+bool trendLongOk  = (not useEmaFilter or close > emaTrend) and (not useHtfFilter or close > htfEma)
+bool trendShortOk = (not useEmaFilter or close < emaTrend) and (not useHtfFilter or close < htfEma)
+bool rejectLongOk  = not requireRejectCandle or isBull
+bool rejectShortOk = not requireRejectCandle or isBear
+
+bool bullRaw = inRetrace and activeDir == 1 and inZone and sessionOk and trendLongOk and rejectLongOk
+bool bearRaw = inRetrace and activeDir == -1 and inZone and sessionOk and trendShortOk and rejectShortOk
+bool bullTrigger = bullRaw and (not alertOncePerImpulse or not alertFired)
+bool bearTrigger = bearRaw and (not alertOncePerImpulse or not alertFired)
+
+float longSl  = hasLevels ? lvl1000 - 5.0 * f_pipSize() : na
+float shortSl = hasLevels ? lvl1000 + 5.0 * f_pipSize() : na
 
 if bullTrigger or bearTrigger
     alertFired := true
@@ -303,6 +330,7 @@ if hasLevels and not na(ln500)
         label.set_x(lb1000, x2)
 
 plot(useEmaFilter and showEma ? emaTrend : na, "Trend EMA", color=color.new(color.orange, 30), linewidth=2)
+plot(useHtfFilter and showEma ? htfEma : na, "HTF EMA", color=color.new(color.fuchsia, 40), linewidth=2)
 
 // Shade the candles that formed the active impulse
 bgcolor(showImpulseBg and hasLevels and bar_index >= impStartBar and bar_index <= impEndBar ? (activeDir == 1 ? color.new(color.teal, 92) : color.new(color.red, 92)) : na, title="Impulse Span")
@@ -312,11 +340,13 @@ plotshape(showSignals and bearTrigger, title="GZ Sell", style=shape.triangledown
 
 alertcondition(bullTrigger, title="Bullish Fib 0.5-0.618 Triggered", message="Bullish Fib 0.5-0.618 Triggered — consider long entry in Golden Zone")
 alertcondition(bearTrigger, title="Bearish Fib 0.5-0.618 Triggered", message="Bearish Fib 0.5-0.618 Triggered — consider short entry in Golden Zone")
+alertcondition(bullTrigger or bearTrigger, title="Any GZ Entry Triggered", message="Impulse Fib GZ entry triggered on {{ticker}} @ {{close}}")
 
+// Rich realtime alerts (phone push / email / webhook — create alert with "Any alert() function call")
 if bullTrigger
-    alert("GZ Buy | " + syminfo.ticker + " | Long in " + str.tostring(zoneLow, format.mintick) + "-" + str.tostring(zoneHigh, format.mintick) + " | SL below " + str.tostring(lvl1000, format.mintick) + " | TP " + str.tostring(lvl000, format.mintick), alert.freq_once_per_bar)
+    alert('{"side":"BUY","ticker":"' + syminfo.ticker + '","tf":"' + timeframe.period + '","entry":' + str.tostring(close, format.mintick) + ',"sl":' + str.tostring(longSl, format.mintick) + ',"tp":' + str.tostring(lvl000, format.mintick) + ',"gz_low":' + str.tostring(zoneLow, format.mintick) + ',"gz_high":' + str.tostring(zoneHigh, format.mintick) + ',"msg":"GZ Buy — Long in Golden Zone"}', alert.freq_once_per_bar_close)
 if bearTrigger
-    alert("GZ Sell | " + syminfo.ticker + " | Short in " + str.tostring(zoneLow, format.mintick) + "-" + str.tostring(zoneHigh, format.mintick) + " | SL above " + str.tostring(lvl1000, format.mintick) + " | TP " + str.tostring(lvl000, format.mintick), alert.freq_once_per_bar)
+    alert('{"side":"SELL","ticker":"' + syminfo.ticker + '","tf":"' + timeframe.period + '","entry":' + str.tostring(close, format.mintick) + ',"sl":' + str.tostring(shortSl, format.mintick) + ',"tp":' + str.tostring(lvl000, format.mintick) + ',"gz_low":' + str.tostring(zoneLow, format.mintick) + ',"gz_high":' + str.tostring(zoneHigh, format.mintick) + ',"msg":"GZ Sell — Short in Golden Zone"}', alert.freq_once_per_bar_close)
 
 // Data window
 plotchar(activeDir, title="Dir", display=display.data_window)

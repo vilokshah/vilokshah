@@ -14,18 +14,27 @@ strategy("Impulse Fib Golden Zone Strategy", shorttitle="Impulse Fib GZ Strat",
 // ══════════════════════════════════════════════════════════════════════════════
 
 grpImpulse = "Impulse Detection"
-minCandles  = input.int(3, "Minimum Consecutive Candles", minval=1, group=grpImpulse)
+minCandles  = input.int(5, "Minimum Consecutive Candles", minval=1, group=grpImpulse)
 useMinMove  = input.bool(true, "Require Minimum Price Move", group=grpImpulse)
-minMovePips = input.float(30.0, "Minimum Move (Pips/Ticks)", minval=0.1, step=0.1, group=grpImpulse)
+minMovePips = input.float(50.0, "Minimum Move (Pips/Ticks)", minval=0.1, step=0.1, group=grpImpulse)
 pipSize     = input.float(0.1, "Custom Pip Size (0 = auto)", minval=0.0, step=0.01, group=grpImpulse)
 
 grpTrend = "Trend Filter"
 useEmaFilter = input.bool(true, "Enable EMA Trend Filter", group=grpTrend)
 emaLength    = input.int(200, "EMA Length", minval=1, group=grpTrend)
+useHtfFilter = input.bool(false, "Enable Higher-Timeframe EMA Filter", group=grpTrend)
+htfTimeframe = input.timeframe("60", "HTF Timeframe", group=grpTrend)
+
+grpQuality = "Entry Quality Filters"
+requireCloseInZone = input.bool(false, "Require Close Inside Golden Zone", group=grpQuality)
+requireRejectCandle = input.bool(true, "Require Rejection Candle", group=grpQuality)
+useSessionFilter = input.bool(false, "Trade Only During Session", group=grpQuality)
+sessionTimes = input.session("0700-1700", "Session (exchange TZ)", group=grpQuality)
+maxWaitBars = input.int(40, "Max Bars After Impulse to Enter", minval=1, group=grpQuality)
 
 grpTrade = "Trade Management"
 slBufferPips = input.float(5.0, "SL Buffer Beyond 1.000 (pips)", minval=0.0, step=0.5, group=grpTrade)
-tpMode       = input.string("Impulse End (0.000)", "Take Profit Mode",
+tpMode       = input.string("1.5R", "Take Profit Mode",
      options=["Impulse End (0.000)", "1R", "1.5R", "2R"], group=grpTrade)
 oneTradePerImpulse = input.bool(true, "One Trade Per Impulse", group=grpTrade)
 useLongs     = input.bool(true, "Allow Longs", group=grpTrade)
@@ -49,6 +58,8 @@ f_moveOk(float s, float e) =>
 isBull = close > open
 isBear = close < open
 emaTrend = ta.ema(close, emaLength)
+htfEma = request.security(syminfo.tickerid, htfTimeframe, ta.ema(close, emaLength), barmerge.gaps_off, barmerge.lookahead_off)
+inSession = not useSessionFilter or not na(time(timeframe.period, sessionTimes))
 pip = f_pipSize()
 
 // ── impulse detection (same logic as indicator) ──────────────────────────────
@@ -162,12 +173,18 @@ float zoneLow   = hasLevels ? math.min(lvl500, lvl618) : na
 if hasLevels and ((activeDir == 1 and close < lvl1000) or (activeDir == -1 and close > lvl1000))
     activeDir := 0
 
-bool inZone    = hasLevels and high >= zoneLow and low <= zoneHigh
-bool inRetrace = hasLevels and bar_index > impEndBar
-bool canTrade  = not oneTradePerImpulse or not traded
+bool touchZone   = hasLevels and high >= zoneLow and low <= zoneHigh
+bool closeInZone = hasLevels and close >= zoneLow and close <= zoneHigh
+bool inZone      = requireCloseInZone ? closeInZone : touchZone
+bool inRetrace   = hasLevels and bar_index > impEndBar and (bar_index - impEndBar) <= maxWaitBars
+bool canTrade    = not oneTradePerImpulse or not traded
+bool trendLongOk  = (not useEmaFilter or close > emaTrend) and (not useHtfFilter or close > htfEma)
+bool trendShortOk = (not useEmaFilter or close < emaTrend) and (not useHtfFilter or close < htfEma)
+bool rejectLongOk  = not requireRejectCandle or isBull
+bool rejectShortOk = not requireRejectCandle or isBear
 
-bool longSignal  = useLongs  and inRetrace and activeDir == 1 and inZone and canTrade and (not useEmaFilter or close > emaTrend)
-bool shortSignal = useShorts and inRetrace and activeDir == -1 and inZone and canTrade and (not useEmaFilter or close < emaTrend)
+bool longSignal  = useLongs  and inRetrace and activeDir == 1 and inZone and canTrade and inSession and trendLongOk and rejectLongOk
+bool shortSignal = useShorts and inRetrace and activeDir == -1 and inZone and canTrade and inSession and trendShortOk and rejectShortOk
 
 // ── orders ───────────────────────────────────────────────────────────────────
 if longSignal and strategy.position_size == 0
@@ -205,6 +222,7 @@ if newImpulse and strategy.position_size == 0
 
 // ── visuals ──────────────────────────────────────────────────────────────────
 plot(useEmaFilter ? emaTrend : na, "EMA", color=color.new(color.orange, 30), linewidth=2)
+plot(useHtfFilter ? htfEma : na, "HTF EMA", color=color.new(color.fuchsia, 40), linewidth=2)
 
 var line ln000 = na
 var line ln500 = na
