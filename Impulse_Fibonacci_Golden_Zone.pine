@@ -237,6 +237,20 @@ f_clear() =>
     label.delete(lb618)
     label.delete(lb786)
     label.delete(lb1000)
+    ln000 := na
+    ln382 := na
+    ln500 := na
+    ln618 := na
+    ln786 := na
+    ln1000 := na
+    gzBox := na
+    lbDir := na
+    lb000 := na
+    lb382 := na
+    lb500 := na
+    lb618 := na
+    lb786 := na
+    lb1000 := na
 
 f_draw() =>
     int x1 = impStartBar
