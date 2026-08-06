@@ -1,0 +1,74 @@
+[
+  {
+    "trades": 47,
+    "wr": 51.1,
+    "net": 2413.08,
+    "pct": 24.13,
+    "pf": 1.164,
+    "dd": -27.69,
+    "config": "A_prev_best_5c5_ema_1.5R"
+  },
+  {
+    "trades": 32,
+    "wr": 43.8,
+    "net": -1255.43,
+    "pct": -12.55,
+    "pf": 0.87,
+    "dd": -32.57,
+    "config": "B_5c5_ema_closeIn_1.5R"
+  },
+  {
+    "trades": 34,
+    "wr": 52.9,
+    "net": 3108.99,
+    "pct": 31.09,
+    "pf": 1.304,
+    "dd": -22.14,
+    "config": "C_5c5_ema_reject_1.5R"
+  },
+  {
+    "trades": 46,
+    "wr": 52.2,
+    "net": 3207.3,
+    "pct": 32.07,
+    "pf": 1.226,
+    "dd": -27.48,
+    "config": "D_5c5_ema_max40_1.5R"
+  },
+  {
+    "trades": 47,
+    "wr": 51.1,
+    "net": 2413.08,
+    "pct": 24.13,
+    "pf": 1.164,
+    "dd": -27.69,
+    "config": "E_5c3_ema_1.5R"
+  },
+  {
+    "trades": 92,
+    "wr": 42.4,
+    "net": 1409.62,
+    "pct": 14.1,
+    "pf": 1.035,
+    "dd": -51.73,
+    "config": "F_4c5_ema_2R"
+  },
+  {
+    "trades": 26,
+    "wr": 53.8,
+    "net": 2510.72,
+    "pct": 25.11,
+    "pf": 1.348,
+    "dd": -19.91,
+    "config": "G_5c5_ema_sess_1.5R"
+  },
+  {
+    "trades": 16,
+    "wr": 43.8,
+    "net": -574.44,
+    "pct": -5.74,
+    "pf": 0.891,
+    "dd": -31.87,
+    "config": "H_5c5_ema_close+reject_1.5R"
+  }
+]
