@@ -10,6 +10,7 @@
   var activeIndex = -1;
   var currentResults = [];
   var activeVersion = '';
+  var activeVersionId = '';
 
   function debounce(fn, wait) {
     return function () {
@@ -34,32 +35,27 @@
     return (manualDocs.versions && manualDocs.versions.length) ? manualDocs.versions : [];
   }
 
-  function defaultVersionSlug() {
-    var switcher = document.querySelector('.md-version-switcher');
-    if (switcher && switcher.getAttribute('data-current')) {
-      return switcher.getAttribute('data-current') || '';
-    }
-    return '';
-  }
-
   function setOpenState(wrap, open) {
     wrap.classList.toggle('is-open', !!open);
     var hero = wrap.closest('.md-hero');
     if (hero) hero.classList.toggle('is-search-open', !!open);
   }
 
-  function renderFilters(container) {
+  function renderFilters() {
     var versions = getVersions();
     if (!versions.length) return '';
 
     var html = '<div class="md-live-search__filters" role="group" aria-label="Filter by release">';
-    html += '<button type="button" class="md-live-search__filter' + (!activeVersion ? ' is-active' : '') + '" data-version="">' +
-      escapeHtml('All') + '</button>';
+    html += '<button type="button" class="md-live-search__filter' + (!activeVersion && !activeVersionId ? ' is-active' : '') +
+      '" data-version="" data-version-id="">' + escapeHtml('All') + '</button>';
     versions.forEach(function (v) {
       var slug = v.slug || '';
+      var id = String(v.id || '');
       var name = v.name || slug;
-      html += '<button type="button" class="md-live-search__filter' + (activeVersion === slug ? ' is-active' : '') +
-        '" data-version="' + escapeHtml(slug) + '">' + escapeHtml(name) + '</button>';
+      var active = (activeVersionId && activeVersionId === id) || (!activeVersionId && activeVersion === slug);
+      html += '<button type="button" class="md-live-search__filter' + (active ? ' is-active' : '') +
+        '" data-version="' + escapeHtml(slug) + '" data-version-id="' + escapeHtml(id) + '">' +
+        escapeHtml(name) + '</button>';
     });
     html += '</div>';
     return html;
@@ -69,7 +65,7 @@
     currentResults = results || [];
     activeIndex = -1;
 
-    var filters = renderFilters(container);
+    var filters = renderFilters();
     if (!currentResults.length) {
       container.innerHTML = filters + '<div class="md-live-search__empty">' + escapeHtml(manualDocs.i18n.noResults) + '</div>';
       container.hidden = false;
@@ -104,6 +100,12 @@
     }
   }
 
+  function versionQueryParam() {
+    if (activeVersionId) return activeVersionId;
+    if (activeVersion) return activeVersion;
+    return '';
+  }
+
   function search(query, wrap) {
     var resultsEl = wrap.querySelector('.md-live-search__results');
     var spinner = wrap.querySelector('.md-live-search__spinner');
@@ -121,7 +123,7 @@
     setOpenState(wrap, true);
 
     var url = manualDocs.restUrl + 'search?q=' + encodeURIComponent(query);
-    var version = activeVersion || '';
+    var version = versionQueryParam();
     if (version) url += '&version=' + encodeURIComponent(version);
 
     fetch(url, {
@@ -170,10 +172,6 @@
     var resultsEl = wrap.querySelector('.md-live-search__results');
     if (!input || !resultsEl) return;
 
-    if (!activeVersion) {
-      activeVersion = defaultVersionSlug();
-    }
-
     input.addEventListener('input', function () {
       runSearch(input, wrap);
     });
@@ -191,6 +189,7 @@
       e.preventDefault();
       e.stopPropagation();
       activeVersion = btn.getAttribute('data-version') || '';
+      activeVersionId = btn.getAttribute('data-version-id') || '';
       search(input.value.trim(), wrap);
     });
 

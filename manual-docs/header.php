@@ -3,6 +3,19 @@
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+	(function () {
+		try {
+			var t = localStorage.getItem('manualDocsTheme');
+			if (t !== 'light' && t !== 'dark') {
+				t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+			}
+			document.documentElement.setAttribute('data-md-theme', t);
+		} catch (e) {
+			document.documentElement.setAttribute('data-md-theme', 'dark');
+		}
+	})();
+	</script>
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
@@ -36,6 +49,12 @@
 		</nav>
 
 		<div class="md-header__actions">
+			<button type="button" class="md-theme-toggle" data-md-theme-toggle aria-pressed="false" title="<?php esc_attr_e( 'Toggle light / dark mode', 'manual-docs' ); ?>">
+				<span class="screen-reader-text"><?php esc_html_e( 'Toggle color theme', 'manual-docs' ); ?></span>
+				<svg class="md-theme-toggle__sun" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+				<svg class="md-theme-toggle__moon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 14.5A8.5 8.5 0 1110.5 3a7 7 0 0010.5 11.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+			</button>
+
 			<button type="button" class="md-search-toggle" aria-expanded="false" aria-controls="md-header-search" data-md-search-toggle>
 				<span class="screen-reader-text"><?php esc_html_e( 'Open search', 'manual-docs' ); ?></span>
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>

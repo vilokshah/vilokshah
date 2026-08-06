@@ -22,6 +22,25 @@
     }
   }
 
+  // Theme toggle (light / dark)
+  function applyTheme(theme) {
+    var next = theme === 'light' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-md-theme', next);
+    try { localStorage.setItem('manualDocsTheme', next); } catch (e) {}
+    qsa('[data-md-theme-toggle]').forEach(function (btn) {
+      btn.setAttribute('aria-pressed', next === 'light' ? 'true' : 'false');
+      btn.title = next === 'light' ? 'Switch to dark mode' : 'Switch to light mode';
+    });
+  }
+
+  qsa('[data-md-theme-toggle]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var current = document.documentElement.getAttribute('data-md-theme') || 'dark';
+      applyTheme(current === 'light' ? 'dark' : 'light');
+    });
+  });
+  applyTheme(document.documentElement.getAttribute('data-md-theme') || 'dark');
+
   // Header search toggle
   qsa('[data-md-search-toggle]').forEach(function (btn) {
     btn.addEventListener('click', function () {

@@ -420,10 +420,11 @@ function manual_docs_options_css() {
 	$o = manual_docs_get_options();
 	?>
 	<style id="manual-docs-options-css">
-		:root {
+		/* Admin color overrides apply to dark mode; light mode keeps its own palette. */
+		html[data-md-theme="dark"] {
 			--md-primary: <?php echo esc_html( $o['primary_color'] ); ?>;
 			--md-accent: <?php echo esc_html( $o['accent_color'] ); ?>;
-			--md-accent-soft: color-mix(in srgb, <?php echo esc_html( $o['accent_color'] ); ?> 14%, white);
+			--md-accent-soft: color-mix(in srgb, <?php echo esc_html( $o['accent_color'] ); ?> 16%, transparent);
 			--md-link: <?php echo esc_html( $o['link_color'] ); ?>;
 			--md-pdf: <?php echo esc_html( $o['pdf_color'] ); ?>;
 			--md-active-bar: <?php echo esc_html( $o['active_bar_color'] ); ?>;
