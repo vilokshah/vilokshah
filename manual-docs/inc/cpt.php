@@ -163,7 +163,7 @@ function manual_docs_register_cpt() {
 		register_taxonomy_for_object_type( $tax, 'manual_documentation' );
 	}
 }
-add_action( 'init', 'manual_docs_register_cpt', 5 );
+add_action( 'init', 'manual_docs_register_cpt', 25 );
 
 /**
  * Late pass: attach taxonomy + REST visibility if another plugin registered first.
@@ -192,28 +192,29 @@ function manual_docs_late_bind_taxonomy() {
 add_action( 'init', 'manual_docs_late_bind_taxonomy', 99 );
 
 /**
- * Flush rewrites on theme switch.
+ * Flush rewrite rules on theme switch only (never on ordinary admin loads).
  */
 function manual_docs_rewrite_flush() {
 	manual_docs_register_cpt();
 	flush_rewrite_rules();
+	update_option( 'manual_docs_permalinks_flushed_2_2', 1 );
 }
 add_action( 'after_switch_theme', 'manual_docs_rewrite_flush' );
 
 /**
- * Admin notice: flush permalinks once after update.
+ * One-time permalink flush after 2.2 update (safe single run).
  */
-function manual_docs_permalinks_notice() {
-	if ( ! current_user_can( 'manage_options' ) ) {
+function manual_docs_maybe_flush_permalinks_once() {
+	if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
-	if ( get_option( 'manual_docs_permalinks_flushed_2_1' ) ) {
+	if ( get_option( 'manual_docs_permalinks_flushed_2_2' ) ) {
 		return;
 	}
 	flush_rewrite_rules( false );
-	update_option( 'manual_docs_permalinks_flushed_2_1', 1 );
+	update_option( 'manual_docs_permalinks_flushed_2_2', 1 );
 }
-add_action( 'admin_init', 'manual_docs_permalinks_notice' );
+add_action( 'admin_init', 'manual_docs_maybe_flush_permalinks_once', 1 );
 
 /**
  * Category access role fields (add).

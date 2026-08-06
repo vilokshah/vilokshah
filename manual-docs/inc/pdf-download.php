@@ -25,15 +25,9 @@ function manual_docs_pdf_query_var( $vars ) {
 add_filter( 'query_vars', 'manual_docs_pdf_query_var' );
 
 /**
- * Optional pretty rewrite: append /pdf/ to any documentation permalink path.
+ * Optional pretty rewrite for PDF under documentation paths only.
  */
 function manual_docs_pdf_rewrite() {
-	add_rewrite_rule(
-		'^(.?.+?)/pdf/?$',
-		'index.php?pagename=$matches[1]&manual_docs_pdf=1',
-		'bottom'
-	);
-	// CPT path forms commonly used by Manual / this theme.
 	add_rewrite_rule(
 		'^documentation/(.+?)/pdf/?$',
 		'index.php?manual_documentation=$matches[1]&manual_docs_pdf=1',

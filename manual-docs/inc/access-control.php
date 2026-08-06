@@ -97,6 +97,9 @@ function manual_docs_enforce_access() {
 	if ( is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
 		return;
 	}
+	if ( function_exists( 'manual_docs_is_rest_like_request' ) && manual_docs_is_rest_like_request() ) {
+		return;
+	}
 
 	$tax     = manual_docs_category_taxonomy();
 	$is_docs = is_singular( 'manual_documentation' )
@@ -142,6 +145,12 @@ add_action( 'template_redirect', 'manual_docs_enforce_access', 5 );
  */
 function manual_docs_filter_query_access( $query ) {
 	if ( is_admin() || ! $query->is_main_query() ) {
+		return;
+	}
+	if ( function_exists( 'manual_docs_is_rest_like_request' ) && manual_docs_is_rest_like_request() ) {
+		return;
+	}
+	if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 		return;
 	}
 
