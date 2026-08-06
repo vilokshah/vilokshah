@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MANUAL_DOCS_VERSION', '2.7.1' );
+define( 'MANUAL_DOCS_VERSION', '2.7.2' );
 
 /**
  * Version roots for JS (search filters).
