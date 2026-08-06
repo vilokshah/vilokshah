@@ -100,9 +100,28 @@
     }
 
     var modified = qs('[data-md-modified]', article);
-    if (modified) modified.textContent = data.modifiedHuman || '';
+    if (modified) {
+      modified.innerHTML = modified.querySelector('svg')
+        ? modified.querySelector('svg').outerHTML + ' ' + (data.modifiedHuman || '')
+        : (data.modifiedHuman || '');
+    }
+
+    var edit = qs('.md-meta-edit', article);
+    if (edit) {
+      if (data.editUrl) {
+        edit.href = data.editUrl;
+        edit.hidden = false;
+      } else {
+        edit.hidden = true;
+      }
+    }
 
     contentEl.innerHTML = data.content || '';
+
+    if (typeof data.treeHtml === 'string') {
+      var tree = qs('[data-md-doc-tree]', shell);
+      if (tree) tree.innerHTML = data.treeHtml;
+    }
 
     var pager = qs('[data-md-pager]', article);
     if (pager) pager.innerHTML = data.pagerHtml || '';
@@ -123,11 +142,8 @@
       window.history.pushState({ mdDocId: data.id }, data.title, data.url);
     }
 
-    // Scroll content into view smoothly.
     var top = article.getBoundingClientRect().top + window.pageYOffset - 72;
     window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
-
-    // Announce for screen readers.
     article.focus({ preventScroll: true });
   }
 

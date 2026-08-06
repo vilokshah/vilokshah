@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MANUAL_DOCS_VERSION', '1.1.0' );
+define( 'MANUAL_DOCS_VERSION', '2.0.0' );
 define( 'MANUAL_DOCS_DIR', get_template_directory() );
 define( 'MANUAL_DOCS_URI', get_template_directory_uri() );
 
@@ -142,8 +142,7 @@ function manual_docs_scripts() {
 
 	$is_docs_view = is_singular( 'manual_documentation' )
 		|| is_post_type_archive( 'manual_documentation' )
-		|| is_tax( 'doc_category' )
-		|| is_tax( 'doc_version' );
+		|| ( function_exists( 'manual_docs_category_taxonomy' ) && is_tax( manual_docs_category_taxonomy() ) );
 
 	if ( $is_docs_view ) {
 		wp_enqueue_script(
@@ -171,6 +170,7 @@ add_action( 'wp_enqueue_scripts', 'manual_docs_scripts' );
  * Load theme includes.
  */
 $manual_docs_includes = array(
+	'theme-options.php',
 	'security.php',
 	'cpt.php',
 	'access-control.php',
@@ -197,7 +197,8 @@ foreach ( $manual_docs_includes as $file ) {
  * @return array
  */
 function manual_docs_body_classes( $classes ) {
-	if ( is_singular( 'manual_documentation' ) || is_post_type_archive( 'manual_documentation' ) || is_tax( 'doc_category' ) || is_tax( 'doc_version' ) ) {
+	$tax = function_exists( 'manual_docs_category_taxonomy' ) ? manual_docs_category_taxonomy() : 'manualdocumentationcategory';
+	if ( is_singular( 'manual_documentation' ) || is_post_type_archive( 'manual_documentation' ) || is_tax( $tax ) ) {
 		$classes[] = 'manual-docs-layout';
 	}
 
@@ -242,7 +243,8 @@ add_filter( 'nav_menu_link_attributes', 'manual_docs_nav_menu_link_attributes', 
  * @return int
  */
 function manual_docs_excerpt_length( $length ) {
-	if ( is_post_type_archive( 'manual_documentation' ) || is_tax( 'doc_category' ) ) {
+	$tax = function_exists( 'manual_docs_category_taxonomy' ) ? manual_docs_category_taxonomy() : 'manualdocumentationcategory';
+	if ( is_post_type_archive( 'manual_documentation' ) || is_tax( $tax ) ) {
 		return 22;
 	}
 	return $length;

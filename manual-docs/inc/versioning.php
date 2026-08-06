@@ -1,6 +1,10 @@
 <?php
 /**
- * Document version switching.
+ * Version switching via parent documentation pages.
+ *
+ * Top-level docs (or configured roots) like goat / flamingo / hummingbird
+ * are release versions. Matching docs under each share the same relative
+ * path or title within that version tree.
  *
  * @package ManualDocs
  */
@@ -10,140 +14,315 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Get version terms ordered (newest / custom order via term meta).
+ * Get configured / discovered version root posts.
  *
- * @return WP_Term[]
+ * @return WP_Post[]
  */
-function manual_docs_get_versions() {
-	$terms = get_terms( array(
-		'taxonomy'   => 'doc_version',
-		'hide_empty' => false,
-	) );
+function manual_docs_get_version_roots() {
+	$options = manual_docs_get_options();
+	$ids     = array();
 
-	if ( is_wp_error( $terms ) || empty( $terms ) ) {
-		return array();
+	if ( ! empty( $options['version_root_ids'] ) ) {
+		$ids = array_filter( array_map( 'absint', explode( ',', $options['version_root_ids'] ) ) );
 	}
 
-	usort(
-		$terms,
-		static function ( $a, $b ) {
-			$oa = (int) get_term_meta( $a->term_id, 'manual_docs_version_order', true );
-			$ob = (int) get_term_meta( $b->term_id, 'manual_docs_version_order', true );
-			if ( $oa === $ob ) {
-				return strnatcasecmp( $b->name, $a->name );
+	if ( empty( $ids ) && ! empty( $options['version_root_slugs'] ) ) {
+		$slugs = array_filter( array_map( 'sanitize_title', array_map( 'trim', explode( ',', $options['version_root_slugs'] ) ) ) );
+		foreach ( $slugs as $slug ) {
+			$found = get_posts( array(
+				'name'           => $slug,
+				'post_type'      => 'manual_documentation',
+				'post_parent'    => 0,
+				'posts_per_page' => 1,
+				'post_status'    => 'publish',
+			) );
+			if ( $found ) {
+				$ids[] = (int) $found[0]->ID;
 			}
-			return $oa <=> $ob;
 		}
-	);
+	}
 
-	return $terms;
+	if ( empty( $ids ) ) {
+		// Auto: all top-level documentation pages are versions.
+		$roots = get_posts( array(
+			'post_type'      => 'manual_documentation',
+			'post_parent'    => 0,
+			'posts_per_page' => 50,
+			'orderby'        => 'menu_order title',
+			'order'          => 'ASC',
+			'post_status'    => 'publish',
+		) );
+		return $roots;
+	}
+
+	$posts = get_posts( array(
+		'post_type'      => 'manual_documentation',
+		'post__in'       => $ids,
+		'posts_per_page' => count( $ids ),
+		'orderby'        => 'post__in',
+		'post_status'    => 'publish',
+	) );
+
+	return $posts;
 }
 
 /**
- * Current document's version term.
+ * Find the version root ancestor for a document.
+ *
+ * @param int $post_id Post ID.
+ * @return WP_Post|null
+ */
+function manual_docs_get_version_root_for_doc( $post_id ) {
+	$post_id = (int) $post_id;
+	$roots   = manual_docs_get_version_roots();
+	$root_ids = wp_list_pluck( $roots, 'ID' );
+	$root_ids = array_map( 'intval', $root_ids );
+
+	if ( in_array( $post_id, $root_ids, true ) ) {
+		return get_post( $post_id );
+	}
+
+	$ancestors = get_post_ancestors( $post_id );
+	foreach ( $ancestors as $ancestor_id ) {
+		if ( in_array( (int) $ancestor_id, $root_ids, true ) ) {
+			return get_post( $ancestor_id );
+		}
+	}
+
+	// Fallback: top-most ancestor or self if top-level.
+	if ( ! empty( $ancestors ) ) {
+		return get_post( end( $ancestors ) );
+	}
+
+	$post = get_post( $post_id );
+	return ( $post && 0 === (int) $post->post_parent ) ? $post : null;
+}
+
+/**
+ * Relative slug path from version root to document (excluding root).
+ *
+ * @param int $post_id Post ID.
+ * @param int $root_id Root ID.
+ * @return string[]
+ */
+function manual_docs_get_relative_slug_path( $post_id, $root_id ) {
+	$path = array();
+	$current = (int) $post_id;
+	$root_id = (int) $root_id;
+	$guard   = 0;
+
+	while ( $current && $current !== $root_id && $guard < 40 ) {
+		$post = get_post( $current );
+		if ( ! $post ) {
+			break;
+		}
+		array_unshift( $path, $post->post_name );
+		$current = (int) $post->post_parent;
+		$guard++;
+	}
+
+	return $path;
+}
+
+/**
+ * Resolve a document under a version root by relative slug path.
+ *
+ * @param int      $root_id Root ID.
+ * @param string[] $path    Relative slugs.
+ * @return WP_Post|null
+ */
+function manual_docs_resolve_path_under_root( $root_id, $path ) {
+	$parent = (int) $root_id;
+	$post   = get_post( $parent );
+
+	if ( empty( $path ) ) {
+		return $post;
+	}
+
+	foreach ( $path as $slug ) {
+		$found = get_posts( array(
+			'name'           => $slug,
+			'post_type'      => 'manual_documentation',
+			'post_parent'    => $parent,
+			'posts_per_page' => 1,
+			'post_status'    => 'publish',
+		) );
+		if ( empty( $found ) ) {
+			return null;
+		}
+		$post   = $found[0];
+		$parent = (int) $post->ID;
+	}
+
+	return $post;
+}
+
+/**
+ * Find matching document in another version by path, then title.
+ *
+ * @param int $post_id          Current post.
+ * @param int $target_root_id   Target version root.
+ * @return WP_Post|null
+ */
+function manual_docs_find_version_sibling( $post_id, $target_root_id ) {
+	$post_id        = (int) $post_id;
+	$target_root_id = (int) $target_root_id;
+	$current_root   = manual_docs_get_version_root_for_doc( $post_id );
+
+	if ( ! $current_root ) {
+		return null;
+	}
+
+	if ( (int) $current_root->ID === $target_root_id ) {
+		return get_post( $post_id );
+	}
+
+	// 1) Same relative slug path under target root.
+	$path = manual_docs_get_relative_slug_path( $post_id, $current_root->ID );
+	$hit  = manual_docs_resolve_path_under_root( $target_root_id, $path );
+	if ( $hit ) {
+		return $hit;
+	}
+
+	// 2) Same post_name directly under the mirrored parent path prefix.
+	// 3) Same title under target version root.
+	$title = get_the_title( $post_id );
+	$slug  = get_post_field( 'post_name', $post_id );
+
+	global $wpdb;
+	$rows = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT ID, post_parent, post_name FROM {$wpdb->posts}
+			WHERE post_type = 'manual_documentation'
+			AND post_status = 'publish'
+			AND (post_title = %s OR post_name = %s)
+			LIMIT 40",
+			$title,
+			$slug
+		)
+	);
+
+	if ( empty( $rows ) ) {
+		return null;
+	}
+
+	foreach ( $rows as $row ) {
+		$cand_root = manual_docs_get_version_root_for_doc( (int) $row->ID );
+		if ( $cand_root && (int) $cand_root->ID === $target_root_id ) {
+			return get_post( (int) $row->ID );
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Get all descendant post IDs under a parent (BFS, capped).
+ *
+ * @param int $parent_id Parent.
+ * @param int $limit     Safety cap.
+ * @return int[]
+ */
+function manual_docs_get_descendant_ids( $parent_id, $limit = 5000 ) {
+	$all   = array();
+	$queue = array( (int) $parent_id );
+	$seen  = array();
+
+	while ( $queue && count( $all ) < $limit ) {
+		$pid = array_shift( $queue );
+		if ( isset( $seen[ $pid ] ) ) {
+			continue;
+		}
+		$seen[ $pid ] = true;
+
+		$children = get_posts( array(
+			'post_type'      => 'manual_documentation',
+			'post_parent'    => $pid,
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'post_status'    => 'publish',
+			'orderby'        => 'menu_order title',
+			'order'          => 'ASC',
+		) );
+
+		foreach ( $children as $cid ) {
+			$cid = (int) $cid;
+			$all[] = $cid;
+			$queue[] = $cid;
+		}
+	}
+
+	return $all;
+}
+
+/**
+ * Current version label for a document.
  *
  * @param int|null $post_id Post ID.
- * @return WP_Term|null
+ * @return array{id:int,name:string,slug:string}|null
  */
 function manual_docs_get_doc_version( $post_id = null ) {
 	$post_id = $post_id ? $post_id : get_the_ID();
-	$terms   = get_the_terms( $post_id, 'doc_version' );
-	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+	$root    = manual_docs_get_version_root_for_doc( $post_id );
+	if ( ! $root ) {
 		return null;
 	}
-	return $terms[0];
+	return array(
+		'id'   => (int) $root->ID,
+		'name' => get_the_title( $root ),
+		'slug' => $root->post_name,
+	);
 }
 
 /**
- * Find sibling document in another version via version group key.
+ * Compatibility shim — old code expected WP_Term; return object-like array via stdClass.
  *
- * @param int    $post_id     Current post.
- * @param string $version_slug Target version slug.
- * @return WP_Post|null
+ * @param int|null $post_id Post ID.
+ * @return object|null
  */
-function manual_docs_find_version_sibling( $post_id, $version_slug ) {
-	$group = get_post_meta( $post_id, '_manual_docs_version_group', true );
-	if ( empty( $group ) ) {
-		$group = get_post_field( 'post_name', $post_id );
+function manual_docs_get_doc_version_object( $post_id = null ) {
+	$data = manual_docs_get_doc_version( $post_id );
+	if ( ! $data ) {
+		return null;
 	}
-
-	$query = new WP_Query( array(
-		'post_type'      => 'manual_documentation',
-		'posts_per_page' => 1,
-		'post_status'    => 'publish',
-		'post__not_in'   => array( (int) $post_id ),
-		'meta_key'       => '_manual_docs_version_group',
-		'meta_value'     => $group,
-		'tax_query'      => array(
-			array(
-				'taxonomy' => 'doc_version',
-				'field'    => 'slug',
-				'terms'    => $version_slug,
-			),
-		),
-	) );
-
-	if ( $query->have_posts() ) {
-		return $query->posts[0];
-	}
-
-	// Fallback: match by slug within version.
-	$slug  = get_post_field( 'post_name', $post_id );
-	$query = new WP_Query( array(
-		'post_type'      => 'manual_documentation',
-		'name'           => $slug,
-		'posts_per_page' => 1,
-		'post_status'    => 'publish',
-		'post__not_in'   => array( (int) $post_id ),
-		'tax_query'      => array(
-			array(
-				'taxonomy' => 'doc_version',
-				'field'    => 'slug',
-				'terms'    => $version_slug,
-			),
-		),
-	) );
-
-	return $query->have_posts() ? $query->posts[0] : null;
+	return (object) $data;
 }
 
 /**
- * Render version switcher markup.
+ * Render release version switcher (parent-page based).
  *
  * @param int|null $post_id Post ID.
  */
 function manual_docs_render_version_switcher( $post_id = null ) {
 	$post_id = $post_id ? $post_id : get_the_ID();
-	$versions = manual_docs_get_versions();
-	if ( empty( $versions ) ) {
+	$roots   = manual_docs_get_version_roots();
+	if ( count( $roots ) < 2 ) {
 		return;
 	}
 
 	$current = manual_docs_get_doc_version( $post_id );
-	$current_slug = $current ? $current->slug : '';
+	$current_id = $current ? (int) $current['id'] : 0;
+	$label = manual_docs_get_option( 'version_label', __( 'Release version', 'manual-docs' ) );
 	?>
-	<div class="md-version-switcher" data-current="<?php echo esc_attr( $current_slug ); ?>">
-		<label for="md-version-select" class="screen-reader-text"><?php esc_html_e( 'Document version', 'manual-docs' ); ?></label>
-		<span class="md-version-label"><?php esc_html_e( 'Version', 'manual-docs' ); ?></span>
+	<div class="md-version-switcher" data-current="<?php echo esc_attr( $current ? $current['slug'] : '' ); ?>">
+		<label for="md-version-select" class="md-version-label"><?php echo esc_html( $label ); ?></label>
 		<select id="md-version-select" class="md-version-select" data-post-id="<?php echo esc_attr( (string) $post_id ); ?>">
-			<?php foreach ( $versions as $version ) : ?>
+			<?php foreach ( $roots as $root ) : ?>
 				<?php
-				$sibling = manual_docs_find_version_sibling( $post_id, $version->slug );
-				$url     = $sibling ? get_permalink( $sibling ) : get_term_link( $version );
-				if ( is_wp_error( $url ) ) {
-					continue;
-				}
-				$disabled = ( ! $sibling && $current_slug !== $version->slug );
+				$sibling  = manual_docs_find_version_sibling( $post_id, $root->ID );
+				$url      = $sibling ? get_permalink( $sibling ) : get_permalink( $root );
+				$disabled = ! $sibling;
 				$sib_id   = $sibling ? (int) $sibling->ID : 0;
 				?>
 				<option
 					value="<?php echo esc_url( $url ); ?>"
 					data-md-doc-id="<?php echo esc_attr( (string) $sib_id ); ?>"
-					<?php selected( $current_slug, $version->slug ); ?>
-					<?php disabled( $disabled ); ?>
+					data-version-root="<?php echo esc_attr( (string) $root->ID ); ?>"
+					<?php selected( $current_id, (int) $root->ID ); ?>
+					<?php disabled( $disabled && (int) $root->ID !== $current_id ); ?>
 				>
-					<?php echo esc_html( $version->name ); ?>
-					<?php if ( $disabled ) : ?>
+					<?php echo esc_html( get_the_title( $root ) ); ?>
+					<?php if ( $disabled && (int) $root->ID !== $current_id ) : ?>
 						<?php echo esc_html( ' — ' . __( 'unavailable', 'manual-docs' ) ); ?>
 					<?php endif; ?>
 				</option>
@@ -152,51 +331,3 @@ function manual_docs_render_version_switcher( $post_id = null ) {
 	</div>
 	<?php
 }
-
-/**
- * Version order field on add form.
- */
-function manual_docs_version_add_fields() {
-	?>
-	<div class="form-field">
-		<label for="manual_docs_version_order"><?php esc_html_e( 'Sort Order', 'manual-docs' ); ?></label>
-		<input type="number" name="manual_docs_version_order" id="manual_docs_version_order" value="0" />
-		<p><?php esc_html_e( 'Lower numbers appear first in the version switcher.', 'manual-docs' ); ?></p>
-	</div>
-	<?php
-}
-add_action( 'doc_version_add_form_fields', 'manual_docs_version_add_fields' );
-
-/**
- * Version order on edit form.
- *
- * @param WP_Term $term Term.
- */
-function manual_docs_version_edit_fields( $term ) {
-	$order = (int) get_term_meta( $term->term_id, 'manual_docs_version_order', true );
-	?>
-	<tr class="form-field">
-		<th scope="row"><label for="manual_docs_version_order"><?php esc_html_e( 'Sort Order', 'manual-docs' ); ?></label></th>
-		<td>
-			<input type="number" name="manual_docs_version_order" id="manual_docs_version_order" value="<?php echo esc_attr( (string) $order ); ?>" />
-		</td>
-	</tr>
-	<?php
-}
-add_action( 'doc_version_edit_form_fields', 'manual_docs_version_edit_fields' );
-
-/**
- * Save version order.
- *
- * @param int $term_id Term ID.
- */
-function manual_docs_save_version_meta( $term_id ) {
-	if ( ! current_user_can( 'manage_categories' ) ) {
-		return;
-	}
-	if ( isset( $_POST['manual_docs_version_order'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-		update_term_meta( $term_id, 'manual_docs_version_order', (int) $_POST['manual_docs_version_order'] ); // phpcs:ignore WordPress.Security.NonceVerification
-	}
-}
-add_action( 'created_doc_version', 'manual_docs_save_version_meta' );
-add_action( 'edited_doc_version', 'manual_docs_save_version_meta' );

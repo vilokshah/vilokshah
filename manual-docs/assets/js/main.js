@@ -57,6 +57,41 @@
     });
   });
 
+  // Tree expand/collapse (delegated for AJAX-replaced trees)
+  document.addEventListener('click', function (e) {
+    var twist = e.target.closest('[data-md-tree-toggle]');
+    if (!twist) return;
+    e.preventDefault();
+    var li = twist.closest('.md-doc-nav__item');
+    if (!li) return;
+    var kids = li.querySelector(':scope > .md-doc-nav__children');
+    var open = !li.classList.contains('is-expanded');
+    li.classList.toggle('is-expanded', open);
+    twist.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (kids) {
+      if (open) kids.removeAttribute('hidden');
+      else kids.setAttribute('hidden', '');
+    }
+  });
+
+  // TOC hide toggle
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-md-toc-toggle]');
+    if (!btn) return;
+    var card = btn.closest('.md-doc-toc__card') || btn.closest('[data-md-toc]');
+    if (!card) return;
+    var list = card.querySelector('[data-md-toc-list]');
+    if (!list) return;
+    var hidden = list.hasAttribute('hidden');
+    if (hidden) {
+      list.removeAttribute('hidden');
+      btn.textContent = 'hide';
+    } else {
+      list.setAttribute('hidden', '');
+      btn.textContent = 'show';
+    }
+  });
+
   // Version switcher is handled by ajax-docs.js when the AJAX shell is present.
   if (!document.querySelector('[data-md-ajax-shell]')) {
     qsa('.md-version-select').forEach(function (select) {

@@ -5,7 +5,8 @@
  * @package ManualDocs
  */
 
-$cats = get_the_terms( get_the_ID(), 'doc_category' );
+$tax  = manual_docs_category_taxonomy();
+$cats = taxonomy_exists( $tax ) ? get_the_terms( get_the_ID(), $tax ) : false;
 $cat  = ( ! empty( $cats ) && ! is_wp_error( $cats ) ) ? $cats[0] : null;
 ?>
 <article <?php post_class( 'md-doc-card' ); ?>>

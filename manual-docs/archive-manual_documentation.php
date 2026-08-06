@@ -6,6 +6,7 @@
  */
 
 get_header();
+$versions = manual_docs_get_version_roots();
 ?>
 
 <main id="main-content" class="md-main md-main--docs-archive">
@@ -14,7 +15,7 @@ get_header();
 			<div class="md-docs-sidebar__search">
 				<?php manual_docs_render_live_search( array( 'class' => 'md-live-search--sidebar' ) ); ?>
 			</div>
-			<nav class="md-docs-sidebar__nav">
+			<nav class="md-docs-sidebar__nav" data-md-doc-tree>
 				<?php manual_docs_render_doc_nav(); ?>
 			</nav>
 		</aside>
@@ -26,15 +27,12 @@ get_header();
 		<div class="md-archive">
 			<header class="md-page-header">
 				<h1 class="md-page-title"><?php post_type_archive_title(); ?></h1>
-				<p class="md-page-desc"><?php esc_html_e( 'Browse the full documentation library.', 'manual-docs' ); ?></p>
-				<?php
-				$versions = manual_docs_get_versions();
-				if ( ! empty( $versions ) ) :
-					?>
+				<p class="md-page-desc"><?php esc_html_e( 'Browse the documentation library. Pick a release version to open its tree.', 'manual-docs' ); ?></p>
+				<?php if ( ! empty( $versions ) ) : ?>
 					<div class="md-archive-versions">
-						<span><?php esc_html_e( 'Filter by version:', 'manual-docs' ); ?></span>
+						<span><?php echo esc_html( manual_docs_get_option( 'version_label', __( 'Release version', 'manual-docs' ) ) ); ?>:</span>
 						<?php foreach ( $versions as $version ) : ?>
-							<a class="md-badge md-badge--link" href="<?php echo esc_url( get_term_link( $version ) ); ?>"><?php echo esc_html( $version->name ); ?></a>
+							<a class="md-badge md-badge--link" href="<?php echo esc_url( get_permalink( $version ) ); ?>"><?php echo esc_html( get_the_title( $version ) ); ?></a>
 						<?php endforeach; ?>
 					</div>
 				<?php endif; ?>

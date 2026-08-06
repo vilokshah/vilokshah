@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return bool
  */
 function manual_docs_require_login_for_docs() {
-	$option = get_theme_mod( 'manual_docs_require_login', true );
+	$option = (bool) manual_docs_get_option( 'require_login', true );
 	return (bool) apply_filters( 'manual_docs_require_login_for_docs', $option );
 }
 
@@ -39,7 +39,8 @@ function manual_docs_user_can_view_doc( $post = null ) {
 		return false;
 	}
 
-	$terms = get_the_terms( $post->ID, 'doc_category' );
+	$tax   = manual_docs_category_taxonomy();
+	$terms = taxonomy_exists( $tax ) ? get_the_terms( $post->ID, $tax ) : false;
 	if ( empty( $terms ) || is_wp_error( $terms ) ) {
 		return is_user_logged_in() || ! manual_docs_require_login_for_docs();
 	}
@@ -97,10 +98,10 @@ function manual_docs_enforce_access() {
 		return;
 	}
 
+	$tax     = manual_docs_category_taxonomy();
 	$is_docs = is_singular( 'manual_documentation' )
 		|| is_post_type_archive( 'manual_documentation' )
-		|| is_tax( 'doc_category' )
-		|| is_tax( 'doc_version' );
+		|| is_tax( $tax );
 
 	if ( ! $is_docs ) {
 		return;
@@ -121,7 +122,7 @@ function manual_docs_enforce_access() {
 		);
 	}
 
-	if ( is_tax( 'doc_category' ) ) {
+	if ( is_tax( $tax ) ) {
 		$term = get_queried_object();
 		if ( $term && ! manual_docs_user_can_view_category( $term->term_id ) ) {
 			wp_die(
@@ -135,7 +136,7 @@ function manual_docs_enforce_access() {
 add_action( 'template_redirect', 'manual_docs_enforce_access', 5 );
 
 /**
- * Filter documentation queries so unauthorized posts are excluded from archives/search.
+ * Filter documentation queries so unauthorized posts are excluded.
  *
  * @param WP_Query $query Query.
  */
@@ -144,11 +145,10 @@ function manual_docs_filter_query_access( $query ) {
 		return;
 	}
 
-	$post_type = $query->get( 'post_type' );
-	$is_docs   = ( 'manual_documentation' === $post_type )
+	$tax     = manual_docs_category_taxonomy();
+	$is_docs = ( 'manual_documentation' === $query->get( 'post_type' ) )
 		|| $query->is_post_type_archive( 'manual_documentation' )
-		|| $query->is_tax( 'doc_category' )
-		|| $query->is_tax( 'doc_version' );
+		|| $query->is_tax( $tax );
 
 	if ( ! $is_docs || current_user_can( 'manage_options' ) ) {
 		return;
@@ -160,13 +160,13 @@ function manual_docs_filter_query_access( $query ) {
 	}
 
 	$restricted = manual_docs_get_restricted_category_ids_for_user();
-	if ( empty( $restricted ) ) {
+	if ( empty( $restricted ) || ! taxonomy_exists( $tax ) ) {
 		return;
 	}
 
 	$tax_query   = (array) $query->get( 'tax_query' );
 	$tax_query[] = array(
-		'taxonomy' => 'doc_category',
+		'taxonomy' => $tax,
 		'field'    => 'term_id',
 		'terms'    => $restricted,
 		'operator' => 'NOT IN',
@@ -181,8 +181,13 @@ add_action( 'pre_get_posts', 'manual_docs_filter_query_access' );
  * @return int[]
  */
 function manual_docs_get_restricted_category_ids_for_user() {
+	$tax = manual_docs_category_taxonomy();
+	if ( ! taxonomy_exists( $tax ) ) {
+		return array();
+	}
+
 	$terms = get_terms( array(
-		'taxonomy'   => 'doc_category',
+		'taxonomy'   => $tax,
 		'hide_empty' => false,
 		'fields'     => 'ids',
 	) );

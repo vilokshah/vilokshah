@@ -104,7 +104,7 @@ function manual_docs_serve_pdf_view() {
 		<div class="meta">
 			<?php echo esc_html( $site ); ?>
 			<?php if ( $version ) : ?>
-				· <?php echo esc_html( sprintf( __( 'Version %s', 'manual-docs' ), $version->name ) ); ?>
+				· <?php echo esc_html( sprintf( __( 'Version %s', 'manual-docs' ), is_array( $version ) ? $version['name'] : $version->name ) ); ?>
 			<?php endif; ?>
 			· <?php echo esc_html( sprintf( __( 'Updated %s', 'manual-docs' ), $date ) ); ?>
 		</div>

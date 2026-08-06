@@ -115,6 +115,11 @@ function manual_docs_get_doc_payload( WP_Post $post ) {
 
 	$version = manual_docs_get_doc_version( $post_id );
 	$adjacent = manual_docs_adjacent_docs( $post_id );
+	$root     = manual_docs_get_version_root_for_doc( $post_id );
+
+	ob_start();
+	manual_docs_render_doc_nav( manual_docs_get_version_scoped_tree( $post_id ), $post_id );
+	$tree_html = ob_get_clean();
 
 	$payload = array(
 		'id'            => $post_id,
@@ -125,22 +130,22 @@ function manual_docs_get_doc_payload( WP_Post $post ) {
 		'modified'      => get_the_modified_date( '', $post ),
 		'modifiedHuman' => sprintf(
 			/* translators: %s: date */
-			__( 'Updated %s', 'manual-docs' ),
+			__( 'Updated on %s', 'manual-docs' ),
 			get_the_modified_date( '', $post )
 		),
-		'version'       => $version ? array(
-			'name' => $version->name,
-			'slug' => $version->slug,
-		) : null,
-		'versionBadge'  => $version ? sprintf( __( 'v%s', 'manual-docs' ), $version->name ) : '',
+		'version'       => $version,
+		'versionBadge'  => $version ? $version['name'] : '',
+		'versionRootId' => $root ? (int) $root->ID : 0,
 		'pdfUrl'        => manual_docs_get_pdf_url( $post_id, true ),
 		'toc'           => $toc,
+		'treeHtml'      => $tree_html,
 		'breadcrumbs'   => manual_docs_get_buffered_markup( 'manual_docs_breadcrumbs', array( $post_id ) ),
 		'versionHtml'   => manual_docs_get_buffered_markup( 'manual_docs_render_version_switcher', array( $post_id ) ),
 		'pagerHtml'     => manual_docs_get_pager_html( $adjacent ),
-		'communityHtml' => manual_docs_get_buffered_markup( 'manual_docs_render_community_cta' ),
+		'communityHtml' => manual_docs_get_option( 'show_community_cta', true ) ? manual_docs_get_buffered_markup( 'manual_docs_render_community_cta' ) : '',
 		'parent'        => (int) $post->post_parent,
 		'menuOrder'     => (int) $post->menu_order,
+		'editUrl'       => current_user_can( 'edit_post', $post_id ) ? get_edit_post_link( $post_id, 'raw' ) : '',
 	);
 
 	wp_reset_postdata();

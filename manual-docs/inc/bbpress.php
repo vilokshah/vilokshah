@@ -83,7 +83,7 @@ function manual_docs_bbpress_wrapper_class( $content ) {
  * Add community CTA on documentation pages.
  */
 function manual_docs_render_community_cta() {
-	if ( ! manual_docs_bbpress_active() || ! get_theme_mod( 'manual_docs_show_community_cta', true ) ) {
+	if ( ! manual_docs_bbpress_active() || ! manual_docs_get_option( 'show_community_cta', true ) ) {
 		return;
 	}
 

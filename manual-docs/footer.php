@@ -1,11 +1,20 @@
+<?php
+/**
+ * Theme footer.
+ *
+ * @package ManualDocs
+ */
+
+$footer_text = manual_docs_get_option( 'footer_text', '' );
+?>
 <footer class="md-footer" role="contentinfo">
 	<div class="md-footer__inner">
 		<div class="md-footer__brand">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="md-brand__text md-brand__text--footer">
 				<span class="md-brand__mark" aria-hidden="true"></span>
-				<?php bloginfo( 'name' ); ?>
+				<?php echo esc_html( manual_docs_brand_name() ); ?>
 			</a>
-			<p class="md-footer__tagline"><?php bloginfo( 'description' ); ?></p>
+			<p class="md-footer__tagline"><?php echo $footer_text ? esc_html( $footer_text ) : esc_html( get_bloginfo( 'description' ) ); ?></p>
 		</div>
 
 		<nav class="md-footer__nav" aria-label="<?php esc_attr_e( 'Footer', 'manual-docs' ); ?>">

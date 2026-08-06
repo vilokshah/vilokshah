@@ -1,110 +1,62 @@
-# Manual Docs — WordPress Theme
+# Manual Docs — WordPress Theme (v2)
 
-A secure, lightweight documentation theme inspired by Manual. Built for knowledge bases that need versioned docs, live search, PDF export, role-based category access, and bbPress community forums.
+Drop-in replacement theme for sites already using the Manual documentation stack (`manual_documentation` CPT + `manualdocumentationcategory`).
+
+## What’s different in v2
+
+- **Keeps your data** — does not invent a new category taxonomy; uses `manualdocumentationcategory`
+- **Release versions = parent pages** — e.g. `goat`, `flamingo`, `hummingbird` (same tree, different content)
+- **Docs chrome like product docs** — left search + tree only; content title + updated/PDF/edit meta; release version switcher; right “On this page” TOC
+- **Appearance → Manual Docs** — full settings for colors, branding, version roots, login gate, chrome toggles
+- **AJAX browsing** — tree / pager / search / version switch without full reloads
+
+## Install (theme swap)
+
+1. Upload / unzip `manual-docs` into `wp-content/themes/`
+2. Activate **Manual Docs** (deactivate the old Manual theme)
+3. Settings → Permalinks → Save
+4. Appearance → **Manual Docs**:
+   - Set **Version root slugs** to your parent docs, e.g. `goat,flamingo,hummingbird`
+   - Adjust brand colors to match digitate / your brand
+   - Confirm login requirement
+
+Your existing Documentation Categories (`manualdocumentationcategory`) and documents stay intact. The theme only registers the CPT/taxonomy if they are missing.
+
+## Version switching model
+
+```
+goat/                      ← version root
+  ├── installing-platform
+  └── business-health-monitoring
+flamingo/                  ← version root (same titles / structure)
+  ├── installing-platform
+  └── business-health-monitoring
+```
+
+Switcher finds the matching doc under another root by relative slug path, then title.
+
+## Admin settings
+
+**Appearance → Manual Docs**
+
+- Brand name, home hero copy, footer text
+- Colors: primary, accent, links, PDF, active tree bar, header/sidebar/content backgrounds
+- Version roots (slugs or IDs), switcher label, default version
+- Require login, TOC/PDF/updated/edit toggles, community CTA
 
 ## Features
 
-- **`manual_documentation` CPT** — hierarchical docs with archive at `/docs/`
-- **Categories** — `doc_category` taxonomy with optional per-category role access
-- **Versions** — `doc_version` taxonomy + version group keys for cross-version switching
-- **Live search** — REST + AJAX search with keyboard navigation (`/` to focus)
-- **AJAX document loading** — tree menu, TOC, pager, and version switcher update without full page reloads (History API)
-- **PDF download** — print-optimized view per document (`/docs/{slug}/pdf/`)
-- **Login gate** — guests redirected to WordPress login before viewing docs (Customizer toggle)
-- **Role-based access** — restrict categories to specific roles
-- **bbPress ready** — community templates, sidebar, and in-doc forum CTA
-- **Security hardening** — headers, XML-RPC off by default, author enumeration block, sanitized AJAX/REST
+- Live search (REST + AJAX)
+- AJAX document loading with History API
+- PDF print/download view
+- Role-based category access (Allowed Roles on category edit)
+- bbPress community templates + CTA
+- Security hardening
 
-## Requirements
+## REST
 
-- WordPress 6.0+
-- PHP 7.4+
-- Optional: [bbPress](https://bbpress.org/) for forums
-
-## Installation
-
-1. Copy the `manual-docs` folder into `wp-content/themes/`
-2. Activate **Manual Docs** under Appearance → Themes
-3. Visit Settings → Permalinks and click Save (flushes rewrite rules)
-4. Optionally install and activate bbPress
-
-## Setup guide
-
-### 1. Create documentation
-
-- Go to **Documentation → Add New**
-- Assign **Categories** and **Versions**
-- Set **Version Group Key** (Document Settings meta box) to the same value across versions of the same article so the version switcher can link them
-- Mark Featured to highlight on the home page
-
-### 2. Categories & roles
-
-Edit a Doc Category and set **Allowed Roles** (comma-separated slugs), e.g. `subscriber,contributor`.
-
-- Empty = all logged-in users (when login is required)
-- Admins always have access
-
-### 3. Login requirement
-
-Appearance → Customize → **Manual Docs Options**:
-
-- Require login to view documentation
-- Hero title / subtitle
-- Accent color
-- Community CTA toggle
-
-### 4. Menus
-
-Assign menus to:
-
-- Primary
-- Documentation Sidebar
-- Footer
-- Community
-
-### 5. PDF downloads
-
-On each document, use **Download PDF**. That opens a print view; choose “Save as PDF” in the browser (or use `?autoprint=1`).
-
-### 6. bbPress
-
-Activate bbPress, create forums, and assign the Community menu. The theme styles forums and shows a “Visit Forums” CTA on documents.
-
-## Theme structure
-
-```
-manual-docs/
-├── assets/css|js
-├── bbpress.php
-├── front-page.php
-├── single-manual_documentation.php
-├── archive-manual_documentation.php
-├── taxonomy-doc_category.php
-├── taxonomy-doc_version.php
-├── inc/
-│   ├── cpt.php
-│   ├── access-control.php
-│   ├── versioning.php
-│   ├── live-search.php
-│   ├── pdf-download.php
-│   ├── bbpress.php
-│   ├── security.php
-│   ├── customizer.php
-│   └── helpers.php
-└── template-parts/
-```
-
-## REST API
-
-`GET /wp-json/manual-docs/v1/search?q=keyword&version=1-0`
-
-`GET /wp-json/manual-docs/v1/doc/{id}` — full document payload for AJAX browsing (content, TOC, breadcrumbs, pager, version HTML)
-
-Respects login and category role restrictions.
-
-## AJAX docs browsing
-
-On single documentation pages the left tree, prev/next pager, live search hits, and version switcher load the next document via REST without a full reload. The on-this-page TOC rebuilds from the new headings, the URL updates with the History API, and browser back/forward works.
+- `GET /wp-json/manual-docs/v1/search?q=…&version=goat`
+- `GET /wp-json/manual-docs/v1/doc/{id}`
 
 ## License
 

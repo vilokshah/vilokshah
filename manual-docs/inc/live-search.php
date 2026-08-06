@@ -65,43 +65,40 @@ function manual_docs_rest_search( WP_REST_Request $request ) {
 		'post_type'      => 'manual_documentation',
 		'post_status'    => 'publish',
 		's'              => $q,
-		'posts_per_page' => 12,
+		'posts_per_page' => 24,
 		'no_found_rows'  => true,
 	);
 
-	$version = $request->get_param( 'version' );
-	if ( $version ) {
+	$tax        = manual_docs_category_taxonomy();
+	$restricted = manual_docs_get_restricted_category_ids_for_user();
+	if ( ! empty( $restricted ) && taxonomy_exists( $tax ) ) {
 		$args['tax_query'] = array(
 			array(
-				'taxonomy' => 'doc_version',
-				'field'    => 'slug',
-				'terms'    => $version,
+				'taxonomy' => $tax,
+				'field'    => 'term_id',
+				'terms'    => $restricted,
+				'operator' => 'NOT IN',
 			),
 		);
 	}
 
-	$restricted = manual_docs_get_restricted_category_ids_for_user();
-	if ( ! empty( $restricted ) ) {
-		if ( empty( $args['tax_query'] ) ) {
-			$args['tax_query'] = array();
-		}
-		$args['tax_query'][] = array(
-			'taxonomy' => 'doc_category',
-			'field'    => 'term_id',
-			'terms'    => $restricted,
-			'operator' => 'NOT IN',
-		);
-	}
-
-	$query   = new WP_Query( $args );
-	$results = array();
+	$query       = new WP_Query( $args );
+	$results     = array();
+	$version_slug = $request->get_param( 'version' );
 
 	foreach ( $query->posts as $post ) {
 		if ( ! manual_docs_user_can_view_doc( $post ) ) {
 			continue;
 		}
 
-		$cats = get_the_terms( $post->ID, 'doc_category' );
+		if ( $version_slug ) {
+			$root = manual_docs_get_version_root_for_doc( $post->ID );
+			if ( ! $root || $root->post_name !== $version_slug ) {
+				continue;
+			}
+		}
+
+		$cats = taxonomy_exists( $tax ) ? get_the_terms( $post->ID, $tax ) : false;
 		$cat  = ( ! empty( $cats ) && ! is_wp_error( $cats ) ) ? $cats[0]->name : '';
 
 		$results[] = array(
@@ -111,6 +108,10 @@ function manual_docs_rest_search( WP_REST_Request $request ) {
 			'excerpt'  => wp_trim_words( wp_strip_all_tags( $post->post_excerpt ? $post->post_excerpt : $post->post_content ), 18 ),
 			'category' => $cat,
 		);
+
+		if ( count( $results ) >= 12 ) {
+			break;
+		}
 	}
 
 	return rest_ensure_response( array( 'results' => $results ) );

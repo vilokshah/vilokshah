@@ -18,7 +18,7 @@
 			<?php else : ?>
 				<a class="md-brand__text" href="<?php echo esc_url( home_url( '/' ) ); ?>">
 					<span class="md-brand__mark" aria-hidden="true"></span>
-					<?php bloginfo( 'name' ); ?>
+					<?php echo esc_html( manual_docs_brand_name() ); ?>
 				</a>
 			<?php endif; ?>
 		</div>
