@@ -56,7 +56,7 @@
 			<?php if ( is_user_logged_in() ) : ?>
 				<a class="md-btn md-btn--ghost md-btn--sm" href="<?php echo esc_url( wp_logout_url( home_url( '/' ) ) ); ?>"><?php esc_html_e( 'Log out', 'manual-docs' ); ?></a>
 			<?php else : ?>
-				<a class="md-btn md-btn--primary md-btn--sm" href="<?php echo esc_url( wp_login_url( get_permalink() ) ); ?>"><?php esc_html_e( 'Log in', 'manual-docs' ); ?></a>
+				<a class="md-btn md-btn--primary md-btn--sm" href="<?php echo esc_url( function_exists( 'manual_docs_get_login_url' ) ? manual_docs_get_login_url( get_permalink() ) : wp_login_url( get_permalink() ) ); ?>"><?php esc_html_e( 'Log in', 'manual-docs' ); ?></a>
 			<?php endif; ?>
 
 			<button type="button" class="md-nav-toggle" aria-expanded="false" aria-controls="md-mobile-nav" data-md-nav-toggle>

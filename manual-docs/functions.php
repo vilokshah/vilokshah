@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MANUAL_DOCS_VERSION', '2.9.1' );
+define( 'MANUAL_DOCS_VERSION', '2.9.2' );
 
 /**
  * Version roots for JS (search filters).
@@ -214,7 +214,7 @@ function manual_docs_enqueue_search_assets() {
 		'nonce'     => wp_create_nonce( 'manual_docs_search' ),
 		'restNonce' => wp_create_nonce( 'wp_rest' ),
 		'homeUrl'   => home_url( '/' ),
-		'loginUrl'  => wp_login_url( home_url( '/' ) ),
+		'loginUrl'  => function_exists( 'manual_docs_get_login_url' ) ? manual_docs_get_login_url( home_url( '/' ) ) : wp_login_url( home_url( '/' ) ),
 		'ajaxDocs'  => true,
 		'versions'  => function_exists( 'manual_docs_localize_versions' ) ? manual_docs_localize_versions() : array(),
 		'i18n'      => array(

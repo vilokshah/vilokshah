@@ -32,7 +32,7 @@ Import `sample-data/manual-docs-demo.xml` via **Tools → Import → WordPress**
 
 ### PDF download
 
-PDF uses the document permalink with `?manual_docs_pdf=1` (and optional `autoprint=1`). No special rewrite slug required.
+PDF uses the document permalink with `?manual_docs_pdf=1` (and optional `autoprint=1`). Print view includes document images (absolute URLs, lazy-load unwrapped), a **Digitate Docs** watermark, and repeating header/footer on each page.
 
 ## Version switching model
 

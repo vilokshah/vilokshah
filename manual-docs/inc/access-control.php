@@ -20,6 +20,40 @@ function manual_docs_require_login_for_docs() {
 }
 
 /**
+ * Front-end login URL (defaults to /login for magic-link / custom login pages).
+ *
+ * @param string $redirect_to Optional redirect after login.
+ * @return string
+ */
+function manual_docs_get_login_url( $redirect_to = '' ) {
+	$path = (string) manual_docs_get_option( 'login_page_path', '/login/' );
+	$path = trim( $path );
+	if ( '' === $path ) {
+		$path = '/login/';
+	}
+	if ( '#' !== $path[0] && false === strpos( $path, '://' ) ) {
+		$path = '/' . ltrim( $path, '/' );
+		$url  = home_url( $path );
+	} else {
+		$url = $path;
+	}
+
+	/**
+	 * Filter the docs login URL.
+	 *
+	 * @param string $url         Login URL.
+	 * @param string $redirect_to Redirect target.
+	 */
+	$url = apply_filters( 'manual_docs_login_url', $url, $redirect_to );
+
+	if ( $redirect_to ) {
+		$url = add_query_arg( 'redirect_to', manual_docs_safe_redirect_url( $redirect_to ), $url );
+	}
+
+	return $url;
+}
+
+/**
  * Check if current user may view a document.
  *
  * @param int|WP_Post|null $post Post.
@@ -113,7 +147,7 @@ function manual_docs_enforce_access() {
 	if ( manual_docs_require_login_for_docs() && ! is_user_logged_in() ) {
 		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 		$redirect    = manual_docs_safe_redirect_url( home_url( $request_uri ) );
-		wp_safe_redirect( wp_login_url( $redirect ) );
+		wp_safe_redirect( manual_docs_get_login_url( $redirect ) );
 		exit;
 	}
 

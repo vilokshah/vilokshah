@@ -47,6 +47,8 @@ function manual_docs_default_options() {
 		'tree_lazy'            => 1,
 		'header_tagline'       => '',
 		'login_message'        => __( 'Please log in to view documentation.', 'manual-docs' ),
+		'login_page_path'      => '/login/',
+		'pdf_watermark'        => 'Digitate Docs',
 		'footer_text'          => '',
 		'footer_copyright'     => '',
 		'footer_cta_color'     => '#e11d48',
@@ -192,7 +194,7 @@ function manual_docs_save_options() {
 
 	$clean = array();
 	$color_keys = array( 'primary_color', 'accent_color', 'header_bg', 'sidebar_bg', 'content_bg', 'page_bg', 'text_color', 'link_color', 'pdf_color', 'active_bar_color', 'footer_cta_color' );
-	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'footer_text', 'footer_copyright', 'font_display', 'font_body', 'tree_scope' );
+	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'login_page_path', 'pdf_watermark', 'footer_text', 'footer_copyright', 'font_display', 'font_body', 'tree_scope' );
 	$bool_keys  = array( 'require_login', 'show_community_cta', 'show_toc', 'show_pdf', 'show_updated', 'show_edit_link', 'tree_expand_active', 'tree_lazy' );
 	$int_keys   = array( 'logo_dark_id', 'logo_light_id' );
 
@@ -544,6 +546,20 @@ function manual_docs_render_options_page() {
 				<tr>
 					<th><label for="login_message"><?php esc_html_e( 'Login message', 'manual-docs' ); ?></label></th>
 					<td><input class="large-text" type="text" id="login_message" name="manual_docs_options[login_message]" value="<?php echo esc_attr( $o['login_message'] ); ?>" /></td>
+				</tr>
+				<tr>
+					<th><label for="login_page_path"><?php esc_html_e( 'Login page path', 'manual-docs' ); ?></label></th>
+					<td>
+						<input class="regular-text" type="text" id="login_page_path" name="manual_docs_options[login_page_path]" value="<?php echo esc_attr( isset( $o['login_page_path'] ) ? $o['login_page_path'] : '/login/' ); ?>" placeholder="/login/" />
+						<p class="description"><?php esc_html_e( 'Guests are redirected here (default /login/). Use your magic-link / custom login page path.', 'manual-docs' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th><label for="pdf_watermark"><?php esc_html_e( 'PDF watermark / header', 'manual-docs' ); ?></label></th>
+					<td>
+						<input class="regular-text" type="text" id="pdf_watermark" name="manual_docs_options[pdf_watermark]" value="<?php echo esc_attr( isset( $o['pdf_watermark'] ) ? $o['pdf_watermark'] : 'Digitate Docs' ); ?>" />
+						<p class="description"><?php esc_html_e( 'Shown as the print header brand and diagonal watermark on every PDF page.', 'manual-docs' ); ?></p>
+					</td>
 				</tr>
 				<tr>
 					<th><?php esc_html_e( 'Document chrome', 'manual-docs' ); ?></th>
