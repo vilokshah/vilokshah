@@ -46,6 +46,10 @@ function manual_docs_default_options() {
 		'header_tagline'       => '',
 		'login_message'        => __( 'Please log in to view documentation.', 'manual-docs' ),
 		'footer_text'          => '',
+		'logo_dark_id'         => 0,
+		'logo_light_id'        => 0,
+		'font_display'         => 'sora',
+		'font_body'            => 'ibm-plex-sans',
 	);
 }
 
@@ -131,7 +135,33 @@ function manual_docs_options_assets( $hook ) {
 	}
 	wp_enqueue_style( 'wp-color-picker' );
 	wp_enqueue_script( 'wp-color-picker' );
-	wp_add_inline_script( 'wp-color-picker', 'jQuery(function($){$(".md-color-field").wpColorPicker();});' );
+	wp_enqueue_media();
+	wp_add_inline_script(
+		'wp-color-picker',
+		'jQuery(function($){
+			$(".md-color-field").wpColorPicker();
+			function bindLogoPicker(btnSel, inputSel, previewSel) {
+				$(document).on("click", btnSel, function(e){
+					e.preventDefault();
+					var frame = wp.media({ title: "Select logo", button: { text: "Use logo" }, multiple: false });
+					frame.on("select", function(){
+						var att = frame.state().get("selection").first().toJSON();
+						$(inputSel).val(att.id);
+						var url = (att.sizes && att.sizes.medium) ? att.sizes.medium.url : att.url;
+						$(previewSel).html("<img src=\""+url+"\" alt=\"\" style=\"max-height:48px;width:auto;\" />");
+					});
+					frame.open();
+				});
+				$(document).on("click", btnSel + "-clear", function(e){
+					e.preventDefault();
+					$(inputSel).val("0");
+					$(previewSel).empty();
+				});
+			}
+			bindLogoPicker(".md-logo-pick-dark", "#logo_dark_id", "#md-logo-dark-preview");
+			bindLogoPicker(".md-logo-pick-light", "#logo_light_id", "#md-logo-light-preview");
+		});'
+	);
 }
 add_action( 'admin_enqueue_scripts', 'manual_docs_options_assets' );
 
@@ -158,8 +188,9 @@ function manual_docs_save_options() {
 
 	$clean = array();
 	$color_keys = array( 'primary_color', 'accent_color', 'header_bg', 'sidebar_bg', 'content_bg', 'page_bg', 'text_color', 'link_color', 'pdf_color', 'active_bar_color' );
-	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'footer_text' );
+	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'footer_text', 'font_display', 'font_body' );
 	$bool_keys  = array( 'require_login', 'show_community_cta', 'show_toc', 'show_pdf', 'show_updated', 'show_edit_link', 'tree_expand_active' );
+	$int_keys   = array( 'logo_dark_id', 'logo_light_id' );
 
 	foreach ( $color_keys as $key ) {
 		$val = isset( $incoming[ $key ] ) ? sanitize_hex_color( $incoming[ $key ] ) : '';
@@ -168,6 +199,9 @@ function manual_docs_save_options() {
 	foreach ( $text_keys as $key ) {
 		$clean[ $key ] = isset( $incoming[ $key ] ) ? sanitize_text_field( $incoming[ $key ] ) : $defaults[ $key ];
 	}
+	foreach ( $int_keys as $key ) {
+		$clean[ $key ] = isset( $incoming[ $key ] ) ? absint( $incoming[ $key ] ) : 0;
+	}
 	if ( ! empty( $clean['cpt_rewrite_slug'] ) ) {
 		$clean['cpt_rewrite_slug'] = sanitize_title( $clean['cpt_rewrite_slug'] );
 	} else {
@@ -175,6 +209,15 @@ function manual_docs_save_options() {
 	}
 	$mode = isset( $clean['permalink_mode'] ) ? $clean['permalink_mode'] : 'pretty';
 	$clean['permalink_mode'] = in_array( $mode, array( 'pretty', 'index_php', 'query' ), true ) ? $mode : 'pretty';
+
+	$font_catalog = function_exists( 'manual_docs_font_catalog' ) ? array_keys( manual_docs_font_catalog() ) : array();
+	if ( ! in_array( $clean['font_display'], $font_catalog, true ) ) {
+		$clean['font_display'] = $defaults['font_display'];
+	}
+	if ( ! in_array( $clean['font_body'], $font_catalog, true ) ) {
+		$clean['font_body'] = $defaults['font_body'];
+	}
+
 	foreach ( $bool_keys as $key ) {
 		$clean[ $key ] = ! empty( $incoming[ $key ] ) ? 1 : 0;
 	}
@@ -225,27 +268,82 @@ function manual_docs_render_options_page() {
 			<h2 class="title"><?php esc_html_e( 'Branding', 'manual-docs' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th><?php esc_html_e( 'Site logo & favicon', 'manual-docs' ); ?></th>
+					<th><?php esc_html_e( 'Dark / light logos', 'manual-docs' ); ?></th>
 					<td>
+						<?php
+						$logo_dark_id  = isset( $o['logo_dark_id'] ) ? absint( $o['logo_dark_id'] ) : 0;
+						$logo_light_id = isset( $o['logo_light_id'] ) ? absint( $o['logo_light_id'] ) : 0;
+						?>
+						<div style="display:flex;flex-wrap:wrap;gap:1.5rem;">
+							<div>
+								<p><strong><?php esc_html_e( 'Dark mode logo', 'manual-docs' ); ?></strong></p>
+								<input type="hidden" id="logo_dark_id" name="manual_docs_options[logo_dark_id]" value="<?php echo esc_attr( (string) $logo_dark_id ); ?>" />
+								<div id="md-logo-dark-preview" style="min-height:48px;margin-bottom:8px;">
+									<?php
+									if ( $logo_dark_id ) {
+										echo wp_get_attachment_image( $logo_dark_id, 'medium', false, array( 'style' => 'max-height:48px;width:auto;' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+									}
+									?>
+								</div>
+								<button type="button" class="button md-logo-pick-dark"><?php esc_html_e( 'Select dark logo', 'manual-docs' ); ?></button>
+								<button type="button" class="button-link md-logo-pick-dark-clear"><?php esc_html_e( 'Clear', 'manual-docs' ); ?></button>
+							</div>
+							<div>
+								<p><strong><?php esc_html_e( 'Light mode logo', 'manual-docs' ); ?></strong></p>
+								<input type="hidden" id="logo_light_id" name="manual_docs_options[logo_light_id]" value="<?php echo esc_attr( (string) $logo_light_id ); ?>" />
+								<div id="md-logo-light-preview" style="min-height:48px;margin-bottom:8px;">
+									<?php
+									if ( $logo_light_id ) {
+										echo wp_get_attachment_image( $logo_light_id, 'medium', false, array( 'style' => 'max-height:48px;width:auto;' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+									}
+									?>
+								</div>
+								<button type="button" class="button md-logo-pick-light"><?php esc_html_e( 'Select light logo', 'manual-docs' ); ?></button>
+								<button type="button" class="button-link md-logo-pick-light-clear"><?php esc_html_e( 'Clear', 'manual-docs' ); ?></button>
+							</div>
+						</div>
+						<p class="description" style="margin-top:10px;">
+							<?php esc_html_e( 'Optional. When set, these swap with the light/dark header toggle. If empty, the Site Identity custom logo is used for both modes.', 'manual-docs' ); ?>
+						</p>
 						<p>
 							<a class="button" href="<?php echo esc_url( admin_url( 'customize.php?autofocus[control]=custom_logo' ) ); ?>">
-								<?php esc_html_e( 'Upload / change logo', 'manual-docs' ); ?>
+								<?php esc_html_e( 'Fallback logo (Site Identity)', 'manual-docs' ); ?>
 							</a>
 							<a class="button" href="<?php echo esc_url( admin_url( 'customize.php?autofocus[control]=site_icon' ) ); ?>">
 								<?php esc_html_e( 'Upload favicon (Site Icon)', 'manual-docs' ); ?>
 							</a>
 						</p>
-						<p class="description">
-							<?php esc_html_e( 'Logo appears in the header. Favicon is the browser tab icon. Both are managed in Appearance → Customize → Site Identity.', 'manual-docs' ); ?>
-						</p>
-						<?php if ( has_custom_logo() ) : ?>
-							<div style="margin-top:8px;"><?php the_custom_logo(); ?></div>
-						<?php endif; ?>
 					</td>
 				</tr>
 				<tr>
 					<th><label for="brand_name"><?php esc_html_e( 'Brand name', 'manual-docs' ); ?></label></th>
 					<td><input class="regular-text" type="text" id="brand_name" name="manual_docs_options[brand_name]" value="<?php echo esc_attr( $o['brand_name'] ); ?>" placeholder="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" /></td>
+				</tr>
+				<?php
+				$font_catalog = function_exists( 'manual_docs_font_catalog' ) ? manual_docs_font_catalog() : array();
+				$font_display = isset( $o['font_display'] ) ? $o['font_display'] : 'sora';
+				$font_body    = isset( $o['font_body'] ) ? $o['font_body'] : 'ibm-plex-sans';
+				?>
+				<tr>
+					<th><label for="font_display"><?php esc_html_e( 'Heading font', 'manual-docs' ); ?></label></th>
+					<td>
+						<select id="font_display" name="manual_docs_options[font_display]">
+							<?php foreach ( $font_catalog as $key => $font ) : ?>
+								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $font_display, $key ); ?>><?php echo esc_html( $font['label'] ); ?></option>
+							<?php endforeach; ?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th><label for="font_body"><?php esc_html_e( 'Body font', 'manual-docs' ); ?></label></th>
+					<td>
+						<select id="font_body" name="manual_docs_options[font_body]">
+							<?php foreach ( $font_catalog as $key => $font ) : ?>
+								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $font_body, $key ); ?>><?php echo esc_html( $font['label'] ); ?></option>
+							<?php endforeach; ?>
+						</select>
+						<p class="description"><?php esc_html_e( 'Google Fonts load automatically for the selected families (System UI loads nothing).', 'manual-docs' ); ?></p>
+					</td>
 				</tr>
 				<tr>
 					<th><label for="header_tagline"><?php esc_html_e( 'Header tagline', 'manual-docs' ); ?></label></th>
@@ -443,9 +541,17 @@ function manual_docs_render_options_page() {
  * Print CSS variables from options.
  */
 function manual_docs_options_css() {
-	$o = manual_docs_get_options();
+	$o            = manual_docs_get_options();
+	$font_display = function_exists( 'manual_docs_font_stack' ) ? manual_docs_font_stack( isset( $o['font_display'] ) ? $o['font_display'] : 'sora', 'sora' ) : '"Sora", "Segoe UI", sans-serif';
+	$font_body    = function_exists( 'manual_docs_font_stack' ) ? manual_docs_font_stack( isset( $o['font_body'] ) ? $o['font_body'] : 'ibm-plex-sans', 'ibm-plex-sans' ) : '"IBM Plex Sans", "Segoe UI", sans-serif';
 	?>
 	<style id="manual-docs-options-css">
+		:root,
+		html[data-md-theme="dark"],
+		html[data-md-theme="light"] {
+			--md-font-display: <?php echo esc_html( $font_display ); ?>;
+			--md-font-body: <?php echo esc_html( $font_body ); ?>;
+		}
 		/* Admin color overrides apply to dark mode; light mode keeps its own palette. */
 		html[data-md-theme="dark"] {
 			--md-primary: <?php echo esc_html( $o['primary_color'] ); ?>;

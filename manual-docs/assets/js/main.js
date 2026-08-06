@@ -93,23 +93,72 @@
     }
   });
 
-  // TOC hide toggle
+  // TOC hide/show toggle (class-based so CSS display:flex cannot override [hidden]).
+  function syncTocToggle(btn, collapsed) {
+    if (!btn) return;
+    btn.textContent = collapsed ? 'show' : 'hide';
+    btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+  }
+
   document.addEventListener('click', function (e) {
     var btn = e.target.closest('[data-md-toc-toggle]');
     if (!btn) return;
-    var card = btn.closest('.md-doc-toc__card') || btn.closest('[data-md-toc]');
+    e.preventDefault();
+    var aside = btn.closest('[data-md-toc]');
+    var card = btn.closest('.md-doc-toc__card') || aside;
     if (!card) return;
     var list = card.querySelector('[data-md-toc-list]');
     if (!list) return;
-    var hidden = list.hasAttribute('hidden');
-    if (hidden) {
-      list.removeAttribute('hidden');
-      btn.textContent = 'hide';
-    } else {
-      list.setAttribute('hidden', '');
-      btn.textContent = 'show';
-    }
+    var collapsed = !(aside && aside.classList.contains('is-collapsed'));
+    if (aside) aside.classList.toggle('is-collapsed', collapsed);
+    if (collapsed) list.setAttribute('hidden', '');
+    else list.removeAttribute('hidden');
+    syncTocToggle(btn, collapsed);
+    try { localStorage.setItem('manualDocsTocCollapsed', collapsed ? '1' : '0'); } catch (err) {}
   });
+
+  // Restore TOC collapsed preference.
+  (function initTocState() {
+    var aside = qs('[data-md-toc]');
+    if (!aside) return;
+    var btn = aside.querySelector('[data-md-toc-toggle]');
+    var list = aside.querySelector('[data-md-toc-list]');
+    var collapsed = false;
+    try { collapsed = localStorage.getItem('manualDocsTocCollapsed') === '1'; } catch (err) {}
+    aside.classList.toggle('is-collapsed', collapsed);
+    if (list) {
+      if (collapsed) list.setAttribute('hidden', '');
+      else list.removeAttribute('hidden');
+    }
+    syncTocToggle(btn, collapsed);
+  })();
+
+  // Docs tree sidebar collapse (maximize content width).
+  function applyTreeCollapsed(collapsed) {
+    var shell = qs('[data-md-ajax-shell]') || qs('.md-docs-shell');
+    if (!shell) return;
+    shell.classList.toggle('is-tree-collapsed', !!collapsed);
+    qsa('[data-md-tree-collapse]').forEach(function (btn) {
+      btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      btn.title = collapsed ? 'Show documentation tree' : 'Hide documentation tree';
+    });
+    try { localStorage.setItem('manualDocsTreeCollapsed', collapsed ? '1' : '0'); } catch (err) {}
+  }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-md-tree-collapse]');
+    if (!btn) return;
+    e.preventDefault();
+    var shell = qs('[data-md-ajax-shell]') || qs('.md-docs-shell');
+    var collapsed = !(shell && shell.classList.contains('is-tree-collapsed'));
+    applyTreeCollapsed(collapsed);
+  });
+
+  (function initTreeCollapse() {
+    var collapsed = false;
+    try { collapsed = localStorage.getItem('manualDocsTreeCollapsed') === '1'; } catch (err) {}
+    if (collapsed) applyTreeCollapsed(true);
+  })();
 
   // Version switcher is handled by ajax-docs.js when the AJAX shell is present.
   if (!document.querySelector('[data-md-ajax-shell]')) {

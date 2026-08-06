@@ -48,6 +48,161 @@ function manual_docs_brand_name() {
 }
 
 /**
+ * Curated font families available in Appearance → Manual Docs.
+ *
+ * @return array<string,array{label:string,stack:string,google:string}>
+ */
+function manual_docs_font_catalog() {
+	return array(
+		'sora'            => array(
+			'label'  => 'Sora',
+			'stack'  => '"Sora", "Segoe UI", sans-serif',
+			'google' => 'Sora:wght@500;600;700',
+		),
+		'dm-sans'         => array(
+			'label'  => 'DM Sans',
+			'stack'  => '"DM Sans", "Segoe UI", sans-serif',
+			'google' => 'DM+Sans:wght@400;500;600;700',
+		),
+		'outfit'          => array(
+			'label'  => 'Outfit',
+			'stack'  => '"Outfit", "Segoe UI", sans-serif',
+			'google' => 'Outfit:wght@400;500;600;700',
+		),
+		'space-grotesk'   => array(
+			'label'  => 'Space Grotesk',
+			'stack'  => '"Space Grotesk", "Segoe UI", sans-serif',
+			'google' => 'Space+Grotesk:wght@500;600;700',
+		),
+		'source-serif-4'  => array(
+			'label'  => 'Source Serif 4',
+			'stack'  => '"Source Serif 4", Georgia, serif',
+			'google' => 'Source+Serif+4:wght@500;600;700',
+		),
+		'ibm-plex-sans'   => array(
+			'label'  => 'IBM Plex Sans',
+			'stack'  => '"IBM Plex Sans", "Segoe UI", sans-serif',
+			'google' => 'IBM+Plex+Sans:wght@400;500;600;700',
+		),
+		'source-sans-3'   => array(
+			'label'  => 'Source Sans 3',
+			'stack'  => '"Source Sans 3", "Segoe UI", sans-serif',
+			'google' => 'Source+Sans+3:wght@400;500;600;700',
+		),
+		'nunito-sans'     => array(
+			'label'  => 'Nunito Sans',
+			'stack'  => '"Nunito Sans", "Segoe UI", sans-serif',
+			'google' => 'Nunito+Sans:wght@400;500;600;700',
+		),
+		'work-sans'       => array(
+			'label'  => 'Work Sans',
+			'stack'  => '"Work Sans", "Segoe UI", sans-serif',
+			'google' => 'Work+Sans:wght@400;500;600;700',
+		),
+		'literata'        => array(
+			'label'  => 'Literata',
+			'stack'  => '"Literata", Georgia, serif',
+			'google' => 'Literata:wght@400;500;600;700',
+		),
+		'system'          => array(
+			'label'  => 'System UI',
+			'stack'  => 'system-ui, -apple-system, "Segoe UI", sans-serif',
+			'google' => '',
+		),
+	);
+}
+
+/**
+ * Resolve a font option key to a CSS stack.
+ *
+ * @param string $key     Option key value.
+ * @param string $fallback Catalog key fallback.
+ * @return string
+ */
+function manual_docs_font_stack( $key, $fallback = 'ibm-plex-sans' ) {
+	$catalog = manual_docs_font_catalog();
+	if ( isset( $catalog[ $key ] ) ) {
+		return $catalog[ $key ]['stack'];
+	}
+	return isset( $catalog[ $fallback ] ) ? $catalog[ $fallback ]['stack'] : '"IBM Plex Sans", "Segoe UI", sans-serif';
+}
+
+/**
+ * Google Fonts CSS2 URL for the selected display + body fonts.
+ *
+ * @return string Empty when only system fonts are selected.
+ */
+function manual_docs_google_fonts_url() {
+	$catalog = manual_docs_font_catalog();
+	$display = (string) manual_docs_get_option( 'font_display', 'sora' );
+	$body    = (string) manual_docs_get_option( 'font_body', 'ibm-plex-sans' );
+	$families = array();
+	foreach ( array( $display, $body ) as $key ) {
+		if ( empty( $catalog[ $key ]['google'] ) ) {
+			continue;
+		}
+		$families[ $catalog[ $key ]['google'] ] = true;
+	}
+	if ( empty( $families ) ) {
+		return '';
+	}
+	return 'https://fonts.googleapis.com/css2?family=' . implode( '&family=', array_keys( $families ) ) . '&display=swap';
+}
+
+/**
+ * Render header logo supporting separate dark/light assets.
+ */
+function manual_docs_render_site_logo() {
+	$dark_id  = absint( manual_docs_get_option( 'logo_dark_id', 0 ) );
+	$light_id = absint( manual_docs_get_option( 'logo_light_id', 0 ) );
+	$home     = home_url( '/' );
+	$brand    = manual_docs_brand_name();
+
+	$dark_html  = $dark_id ? wp_get_attachment_image( $dark_id, 'full', false, array( 'class' => 'md-logo md-logo--dark', 'alt' => $brand ) ) : '';
+	$light_html = $light_id ? wp_get_attachment_image( $light_id, 'full', false, array( 'class' => 'md-logo md-logo--light', 'alt' => $brand ) ) : '';
+
+	// Fall back: one themed logo covers both modes; else WP custom logo.
+	if ( $dark_html && ! $light_html ) {
+		$light_html = wp_get_attachment_image( $dark_id, 'full', false, array( 'class' => 'md-logo md-logo--light', 'alt' => $brand ) );
+	} elseif ( $light_html && ! $dark_html ) {
+		$dark_html = wp_get_attachment_image( $light_id, 'full', false, array( 'class' => 'md-logo md-logo--dark', 'alt' => $brand ) );
+	}
+
+	if ( $dark_html || $light_html ) {
+		echo '<div class="md-custom-logo md-themed-logo">';
+		echo '<a class="md-logo-link" href="' . esc_url( $home ) . '" rel="home">';
+		echo $dark_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image
+		echo $light_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '</a></div>';
+		return;
+	}
+
+	if ( has_custom_logo() ) {
+		echo '<div class="md-custom-logo">';
+		the_custom_logo();
+		echo '</div>';
+		return;
+	}
+
+	echo '<a class="md-brand__text" href="' . esc_url( $home ) . '">';
+	echo '<span class="md-brand__mark" aria-hidden="true"></span>';
+	echo esc_html( $brand );
+	echo '</a>';
+}
+
+/**
+ * Collapse control for the docs tree sidebar.
+ */
+function manual_docs_render_tree_collapse_button() {
+	?>
+	<button type="button" class="md-docs-tree-collapse" data-md-tree-collapse aria-expanded="true" title="<?php esc_attr_e( 'Hide documentation tree', 'manual-docs' ); ?>">
+		<span class="md-docs-tree-collapse__icon" aria-hidden="true">‹</span>
+		<span class="screen-reader-text"><?php esc_html_e( 'Hide documentation tree', 'manual-docs' ); ?></span>
+	</button>
+	<?php
+}
+
+/**
  * Get documentation tree under a parent (version-scoped).
  *
  * @param int $parent Parent ID.

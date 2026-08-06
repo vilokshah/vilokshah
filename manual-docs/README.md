@@ -52,11 +52,14 @@ Switcher finds the matching doc under another root by relative slug path, then t
 **Appearance → Manual Docs**
 
 - Brand name, home hero copy, footer text
-- **Logo & favicon** — buttons link to Customize → Site Identity
+- **Dark + light logos** — separate uploads that swap with the theme toggle (fallback: Site Identity logo)
+- **Heading / body font families** — curated Google Fonts + System UI
 - Colors: primary, accent, links, PDF, active tree bar, header/sidebar/content backgrounds
 - Version roots (slugs or IDs), switcher label, default version
 - Require login, TOC/PDF/updated/edit toggles, community CTA
 - Light/dark toggle on the front-end header
+- Collapsible documentation tree (‹ arrow) to widen the content column
+- TOC Hide/Show on the right “On this page” panel
 
 ## Live search
 

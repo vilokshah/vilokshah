@@ -19,12 +19,17 @@ $version      = manual_docs_get_doc_version();
 <main id="main-content" class="md-main md-main--docs">
 	<div class="md-docs-shell" data-md-ajax-shell>
 		<aside class="md-docs-sidebar" id="md-docs-sidebar" aria-label="<?php esc_attr_e( 'Documentation navigation', 'manual-docs' ); ?>">
-			<div class="md-docs-sidebar__search">
-				<?php manual_docs_render_live_search( array( 'class' => 'md-live-search--sidebar', 'placeholder' => __( 'Search docs…', 'manual-docs' ) ) ); ?>
+			<div class="md-docs-sidebar__toolbar">
+				<?php manual_docs_render_tree_collapse_button(); ?>
 			</div>
-			<nav class="md-docs-sidebar__nav" data-md-doc-tree>
-				<?php manual_docs_render_doc_nav(); ?>
-			</nav>
+			<div class="md-docs-sidebar__body">
+				<div class="md-docs-sidebar__search">
+					<?php manual_docs_render_live_search( array( 'class' => 'md-live-search--sidebar', 'placeholder' => __( 'Search docs…', 'manual-docs' ) ) ); ?>
+				</div>
+				<nav class="md-docs-sidebar__nav" data-md-doc-tree>
+					<?php manual_docs_render_doc_nav(); ?>
+				</nav>
+			</div>
 		</aside>
 
 		<button type="button" class="md-sidebar-toggle" data-md-sidebar-toggle aria-controls="md-docs-sidebar" aria-expanded="false">
@@ -86,7 +91,7 @@ $version      = manual_docs_get_doc_version();
 							<div class="md-doc-toc__card">
 								<p class="md-doc-toc__title">
 									<?php esc_html_e( 'On this page', 'manual-docs' ); ?>
-									<button type="button" class="md-doc-toc__hide" data-md-toc-toggle><?php esc_html_e( 'hide', 'manual-docs' ); ?></button>
+									<button type="button" class="md-doc-toc__hide" data-md-toc-toggle aria-expanded="true" aria-controls="md-toc-list"><?php esc_html_e( 'hide', 'manual-docs' ); ?></button>
 								</p>
 								<nav id="md-toc-list" class="md-doc-toc__list" data-md-toc-list></nav>
 							</div>

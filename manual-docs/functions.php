@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MANUAL_DOCS_VERSION', '2.7.2' );
+define( 'MANUAL_DOCS_VERSION', '2.8.0' );
 
 /**
  * Version roots for JS (search filters).
@@ -114,17 +114,23 @@ add_action( 'widgets_init', 'manual_docs_widgets_init' );
  * Enqueue scripts and styles.
  */
 function manual_docs_scripts() {
-	wp_enqueue_style(
-		'manual-docs-fonts',
-		'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap',
-		array(),
-		null
-	);
+	$fonts_url = function_exists( 'manual_docs_google_fonts_url' ) ? manual_docs_google_fonts_url() : '';
+	$main_deps = array();
+
+	if ( $fonts_url ) {
+		wp_enqueue_style(
+			'manual-docs-fonts',
+			$fonts_url,
+			array(),
+			null
+		);
+		$main_deps[] = 'manual-docs-fonts';
+	}
 
 	wp_enqueue_style(
 		'manual-docs-main',
 		MANUAL_DOCS_URI . '/assets/css/main.css',
-		array( 'manual-docs-fonts' ),
+		$main_deps,
 		MANUAL_DOCS_VERSION
 	);
 

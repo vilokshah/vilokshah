@@ -26,14 +26,7 @@
 <header class="md-header" role="banner">
 	<div class="md-header__inner">
 		<div class="md-brand">
-			<?php if ( has_custom_logo() ) : ?>
-				<div class="md-custom-logo"><?php the_custom_logo(); ?></div>
-			<?php else : ?>
-				<a class="md-brand__text" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-					<span class="md-brand__mark" aria-hidden="true"></span>
-					<?php echo esc_html( manual_docs_brand_name() ); ?>
-				</a>
-			<?php endif; ?>
+			<?php manual_docs_render_site_logo(); ?>
 		</div>
 
 		<nav class="md-nav-primary" aria-label="<?php esc_attr_e( 'Primary', 'manual-docs' ); ?>">
