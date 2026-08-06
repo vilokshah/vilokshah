@@ -2,6 +2,8 @@
 /**
  * Security hardening for Manual Docs.
  *
+ * Careful not to break Gutenberg / REST JSON responses.
+ *
  * @package ManualDocs
  */
 
@@ -16,7 +18,7 @@ remove_action( 'wp_head', 'wp_generator' );
 add_filter( 'the_generator', '__return_empty_string' );
 
 /**
- * Disable XML-RPC when not needed (theme option can re-enable).
+ * Disable XML-RPC when not needed.
  */
 function manual_docs_disable_xmlrpc() {
 	if ( apply_filters( 'manual_docs_disable_xmlrpc', true ) ) {
@@ -28,10 +30,32 @@ function manual_docs_disable_xmlrpc() {
 add_action( 'init', 'manual_docs_disable_xmlrpc' );
 
 /**
- * Security headers.
+ * Whether the current request is REST / AJAX / cron (must stay clean JSON).
+ *
+ * @return bool
+ */
+function manual_docs_is_api_request() {
+	if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+		return true;
+	}
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		return true;
+	}
+	if ( defined( 'WP_CLI' ) && WP_CLI ) {
+		return true;
+	}
+	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+	if ( false !== strpos( $request_uri, '/wp-json/' ) || false !== strpos( $request_uri, 'rest_route=' ) ) {
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Security headers (front-end HTML only).
  */
 function manual_docs_security_headers() {
-	if ( headers_sent() || is_admin() ) {
+	if ( headers_sent() || is_admin() || manual_docs_is_api_request() ) {
 		return;
 	}
 
@@ -47,7 +71,7 @@ function manual_docs_security_headers() {
 add_action( 'send_headers', 'manual_docs_security_headers' );
 
 /**
- * Sanitize SVG / strip dangerous tags from content filters where we output meta.
+ * Sanitize text helper.
  *
  * @param string $text Raw text.
  * @return string
@@ -69,7 +93,8 @@ function manual_docs_verify_nonce( $action = 'manual_docs_search', $query_arg = 
 }
 
 /**
- * Restrict REST API for documentation endpoints to logged-in users when required.
+ * Restrict only Manual Docs custom REST routes when login is required.
+ * Never interfere with core /wp/v2/manual_documentation publish routes.
  *
  * @param mixed           $result  Response.
  * @param WP_REST_Server  $server  Server.
@@ -83,7 +108,7 @@ function manual_docs_rest_auth_check( $result, $server, $request ) {
 		return $result;
 	}
 
-	if ( manual_docs_require_login_for_docs() && ! is_user_logged_in() ) {
+	if ( function_exists( 'manual_docs_require_login_for_docs' ) && manual_docs_require_login_for_docs() && ! is_user_logged_in() ) {
 		return new WP_Error(
 			'manual_docs_rest_forbidden',
 			__( 'Authentication required to access documentation.', 'manual-docs' ),
@@ -99,27 +124,16 @@ add_filter( 'rest_pre_dispatch', 'manual_docs_rest_auth_check', 10, 3 );
  * Hide author enumeration via ?author=N redirects for guests.
  */
 function manual_docs_block_author_enumeration() {
-	if ( is_admin() || is_user_logged_in() ) {
+	if ( is_admin() || is_user_logged_in() || manual_docs_is_api_request() ) {
 		return;
 	}
 
-	if ( isset( $_GET['author'] ) || ( isset( $_SERVER['REQUEST_URI'] ) && preg_match( '#/author/\d+#', $_SERVER['REQUEST_URI'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+	if ( isset( $_GET['author'] ) || ( isset( $_SERVER['REQUEST_URI'] ) && preg_match( '#/author/\d+#', (string) $_SERVER['REQUEST_URI'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput
 		wp_safe_redirect( home_url( '/' ), 301 );
 		exit;
 	}
 }
-add_action( 'init', 'manual_docs_block_author_enumeration' );
-
-/**
- * Content Security Policy hint via meta (non-breaking; hosting can strengthen).
- */
-function manual_docs_csp_meta() {
-	if ( ! apply_filters( 'manual_docs_print_csp_meta', true ) ) {
-		return;
-	}
-	echo '<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">' . "\n";
-}
-add_action( 'wp_head', 'manual_docs_csp_meta', 1 );
+add_action( 'template_redirect', 'manual_docs_block_author_enumeration' );
 
 /**
  * Escape and validate redirect URLs used by the theme.

@@ -1,0 +1,1676 @@
+<?xml version="1.0" encoding="UTF-8" ?><!-- Generator: Manual Docs theme sample data -->
+<!-- Instructions: WordPress Admin → Tools → Import → WordPress → upload this file.
+     Assign author to an admin user. Then Appearance → Manual Docs → Version root slugs: goat,flamingo,hummingbird
+     Then Settings → Permalinks → Save. -->
+<rss version="2.0"
+	xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:wp="http://wordpress.org/export/1.2/">
+<channel>
+	<title>Manual Docs Demo</title>
+	<link>https://example.com</link>
+	<description>Demo documentation for Manual Docs theme</description>
+	<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+	<language>en-US</language>
+	<wp:wxr_version>1.2</wp:wxr_version>
+	<wp:base_site_url>https://example.com</wp:base_site_url>
+	<wp:base_blog_url>https://example.com</wp:base_blog_url>
+	<wp:author><wp:author_id>1</wp:author_id><wp:author_login><![CDATA[admin]]></wp:author_login><wp:author_email><![CDATA[admin@example.com]]></wp:author_email><wp:author_display_name><![CDATA[admin]]></wp:author_display_name><wp:author_first_name><![CDATA[]]></wp:author_first_name><wp:author_last_name><![CDATA[]]></wp:author_last_name></wp:author>
+	<wp:category>
+		<wp:term_id>19406</wp:term_id>
+		<wp:category_nicename>getting-started</wp:category_nicename>
+		<wp:category_parent></wp:category_parent>
+		<wp:cat_name><![CDATA[Getting Started]]></wp:cat_name>
+		<wp:taxonomy>manualdocumentationcategory</wp:taxonomy>
+	</wp:category>
+	<wp:category>
+		<wp:term_id>42619</wp:term_id>
+		<wp:category_nicename>platform</wp:category_nicename>
+		<wp:category_parent></wp:category_parent>
+		<wp:cat_name><![CDATA[Platform]]></wp:cat_name>
+		<wp:taxonomy>manualdocumentationcategory</wp:taxonomy>
+	</wp:category>
+	<wp:category>
+		<wp:term_id>92798</wp:term_id>
+		<wp:category_nicename>releases</wp:category_nicename>
+		<wp:category_parent></wp:category_parent>
+		<wp:cat_name><![CDATA[Releases]]></wp:cat_name>
+		<wp:taxonomy>manualdocumentationcategory</wp:taxonomy>
+	</wp:category>
+	<wp:category>
+		<wp:term_id>97623</wp:term_id>
+		<wp:category_nicename>adapter</wp:category_nicename>
+		<wp:category_parent></wp:category_parent>
+		<wp:cat_name><![CDATA[Adapter]]></wp:cat_name>
+		<wp:taxonomy>manualdocumentationcategory</wp:taxonomy>
+	</wp:category>
+	<wp:category>
+		<wp:term_id>85870</wp:term_id>
+		<wp:category_nicename>aiops</wp:category_nicename>
+		<wp:category_parent></wp:category_parent>
+		<wp:cat_name><![CDATA[AIOps]]></wp:cat_name>
+		<wp:taxonomy>manualdocumentationcategory</wp:taxonomy>
+	</wp:category>
+	<wp:term>
+		<wp:term_id>19406</wp:term_id>
+		<wp:term_taxonomy>manualdocumentationcategory</wp:term_taxonomy>
+		<wp:term_slug>getting-started</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[Getting Started]]></wp:term_name>
+	</wp:term>
+	<wp:term>
+		<wp:term_id>42619</wp:term_id>
+		<wp:term_taxonomy>manualdocumentationcategory</wp:term_taxonomy>
+		<wp:term_slug>platform</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[Platform]]></wp:term_name>
+	</wp:term>
+	<wp:term>
+		<wp:term_id>92798</wp:term_id>
+		<wp:term_taxonomy>manualdocumentationcategory</wp:term_taxonomy>
+		<wp:term_slug>releases</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[Releases]]></wp:term_name>
+	</wp:term>
+	<wp:term>
+		<wp:term_id>97623</wp:term_id>
+		<wp:term_taxonomy>manualdocumentationcategory</wp:term_taxonomy>
+		<wp:term_slug>adapter</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[Adapter]]></wp:term_name>
+	</wp:term>
+	<wp:term>
+		<wp:term_id>85870</wp:term_id>
+		<wp:term_taxonomy>manualdocumentationcategory</wp:term_taxonomy>
+		<wp:term_slug>aiops</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[AIOps]]></wp:term_name>
+	</wp:term>
+	<item>
+		<title><![CDATA[Goat]]></title>
+		<link>https://example.com/documentation/goat/goat/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90001</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Goat Release</strong> under the <strong>goat</strong> release. Depth level: 0.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (goat)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for goat</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Goat (goat).]]></excerpt:encoded>
+		<wp:post_id>90001</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[goat]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="releases"><![CDATA[Releases]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Getting Started]]></title>
+		<link>https://example.com/documentation/goat/getting-started/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90002</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Getting Started</strong> under the <strong>goat</strong> release. Depth level: 1.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (goat)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for goat</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Getting Started (goat).]]></excerpt:encoded>
+		<wp:post_id>90002</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[getting-started]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90001</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Installation]]></title>
+		<link>https://example.com/documentation/goat/installation/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90003</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Installation</strong> under the <strong>goat</strong> release. Depth level: 2.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (goat)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for goat</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Installation (goat).]]></excerpt:encoded>
+		<wp:post_id>90003</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[installation]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90002</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[System Requirements]]></title>
+		<link>https://example.com/documentation/goat/system-requirements/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90004</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>System Requirements</strong> under the <strong>goat</strong> release. Depth level: 3.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (goat)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for goat</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for System Requirements (goat).]]></excerpt:encoded>
+		<wp:post_id>90004</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[system-requirements]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90003</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Quick Install]]></title>
+		<link>https://example.com/documentation/goat/quick-install/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90005</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Quick Install</strong> under the <strong>goat</strong> release. Depth level: 3.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (goat)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for goat</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Quick Install (goat).]]></excerpt:encoded>
+		<wp:post_id>90005</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[quick-install]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90003</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[First Login]]></title>
+		<link>https://example.com/documentation/goat/first-login/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90006</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>First Login</strong> under the <strong>goat</strong> release. Depth level: 2.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (goat)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for goat</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for First Login (goat).]]></excerpt:encoded>
+		<wp:post_id>90006</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[first-login]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90002</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Platform Guides]]></title>
+		<link>https://example.com/documentation/goat/platform-guides/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90007</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Platform Guides</strong> under the <strong>goat</strong> release. Depth level: 1.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (goat)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for goat</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Platform Guides (goat).]]></excerpt:encoded>
+		<wp:post_id>90007</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[platform-guides]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90001</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Business Health Monitoring]]></title>
+		<link>https://example.com/documentation/goat/business-health-monitoring/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90008</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Business Health Monitoring</strong> under the <strong>goat</strong> release. Depth level: 2.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (goat)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for goat</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Business Health Monitoring (goat).]]></excerpt:encoded>
+		<wp:post_id>90008</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[business-health-monitoring]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90007</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Overview]]></title>
+		<link>https://example.com/documentation/goat/bhm-overview/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90009</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Overview</strong> under the <strong>goat</strong> release. Depth level: 3.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (goat)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for goat</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Overview (goat).]]></excerpt:encoded>
+		<wp:post_id>90009</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[bhm-overview]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90008</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Key Features]]></title>
+		<link>https://example.com/documentation/goat/bhm-key-features/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90010</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Key Features</strong> under the <strong>goat</strong> release. Depth level: 3.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (goat)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for goat</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Key Features (goat).]]></excerpt:encoded>
+		<wp:post_id>90010</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[bhm-key-features]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90008</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Intelligent Command Center]]></title>
+		<link>https://example.com/documentation/goat/intelligent-command-center/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90011</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Intelligent Command Center</strong> under the <strong>goat</strong> release. Depth level: 2.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (goat)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for goat</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Intelligent Command Center (goat).]]></excerpt:encoded>
+		<wp:post_id>90011</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[intelligent-command-center]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90007</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Release Notes]]></title>
+		<link>https://example.com/documentation/goat/release-notes/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90012</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Release Notes</strong> under the <strong>goat</strong> release. Depth level: 1.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (goat)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for goat</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Release Notes (goat).]]></excerpt:encoded>
+		<wp:post_id>90012</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[release-notes]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90001</wp:post_parent>
+		<wp:menu_order>2</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="releases"><![CDATA[Releases]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Flamingo]]></title>
+		<link>https://example.com/documentation/flamingo/flamingo/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90013</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Flamingo Release</strong> under the <strong>flamingo</strong> release. Depth level: 0.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (flamingo)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for flamingo</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Flamingo (flamingo).]]></excerpt:encoded>
+		<wp:post_id>90013</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[flamingo]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="releases"><![CDATA[Releases]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Getting Started]]></title>
+		<link>https://example.com/documentation/flamingo/getting-started/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90014</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Getting Started</strong> under the <strong>flamingo</strong> release. Depth level: 1.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (flamingo)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for flamingo</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Getting Started (flamingo).]]></excerpt:encoded>
+		<wp:post_id>90014</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[getting-started]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90013</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Installation]]></title>
+		<link>https://example.com/documentation/flamingo/installation/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90015</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Installation</strong> under the <strong>flamingo</strong> release. Depth level: 2.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (flamingo)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for flamingo</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Installation (flamingo).]]></excerpt:encoded>
+		<wp:post_id>90015</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[installation]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90014</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[System Requirements]]></title>
+		<link>https://example.com/documentation/flamingo/system-requirements/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90016</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>System Requirements</strong> under the <strong>flamingo</strong> release. Depth level: 3.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (flamingo)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for flamingo</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for System Requirements (flamingo).]]></excerpt:encoded>
+		<wp:post_id>90016</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[system-requirements]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90015</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Quick Install]]></title>
+		<link>https://example.com/documentation/flamingo/quick-install/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90017</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Quick Install</strong> under the <strong>flamingo</strong> release. Depth level: 3.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (flamingo)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for flamingo</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Quick Install (flamingo).]]></excerpt:encoded>
+		<wp:post_id>90017</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[quick-install]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90015</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[First Login]]></title>
+		<link>https://example.com/documentation/flamingo/first-login/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90018</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>First Login</strong> under the <strong>flamingo</strong> release. Depth level: 2.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (flamingo)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for flamingo</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for First Login (flamingo).]]></excerpt:encoded>
+		<wp:post_id>90018</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[first-login]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90014</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Platform Guides]]></title>
+		<link>https://example.com/documentation/flamingo/platform-guides/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90019</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Platform Guides</strong> under the <strong>flamingo</strong> release. Depth level: 1.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (flamingo)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for flamingo</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Platform Guides (flamingo).]]></excerpt:encoded>
+		<wp:post_id>90019</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[platform-guides]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90013</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Business Health Monitoring]]></title>
+		<link>https://example.com/documentation/flamingo/business-health-monitoring/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90020</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Business Health Monitoring</strong> under the <strong>flamingo</strong> release. Depth level: 2.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (flamingo)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for flamingo</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Business Health Monitoring (flamingo).]]></excerpt:encoded>
+		<wp:post_id>90020</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[business-health-monitoring]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90019</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Overview]]></title>
+		<link>https://example.com/documentation/flamingo/bhm-overview/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90021</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Overview</strong> under the <strong>flamingo</strong> release. Depth level: 3.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (flamingo)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for flamingo</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Overview (flamingo).]]></excerpt:encoded>
+		<wp:post_id>90021</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[bhm-overview]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90020</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Key Features]]></title>
+		<link>https://example.com/documentation/flamingo/bhm-key-features/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90022</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Key Features</strong> under the <strong>flamingo</strong> release. Depth level: 3.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (flamingo)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for flamingo</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Key Features (flamingo).]]></excerpt:encoded>
+		<wp:post_id>90022</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[bhm-key-features]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90020</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Intelligent Command Center]]></title>
+		<link>https://example.com/documentation/flamingo/intelligent-command-center/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90023</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Intelligent Command Center</strong> under the <strong>flamingo</strong> release. Depth level: 2.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (flamingo)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for flamingo</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Intelligent Command Center (flamingo).]]></excerpt:encoded>
+		<wp:post_id>90023</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[intelligent-command-center]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90019</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Release Notes]]></title>
+		<link>https://example.com/documentation/flamingo/release-notes/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90024</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Release Notes</strong> under the <strong>flamingo</strong> release. Depth level: 1.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (flamingo)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for flamingo</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Release Notes (flamingo).]]></excerpt:encoded>
+		<wp:post_id>90024</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[release-notes]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90013</wp:post_parent>
+		<wp:menu_order>2</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="releases"><![CDATA[Releases]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Hummingbird]]></title>
+		<link>https://example.com/documentation/hummingbird/hummingbird/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90025</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Hummingbird Release</strong> under the <strong>hummingbird</strong> release. Depth level: 0.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (hummingbird)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for hummingbird</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Hummingbird (hummingbird).]]></excerpt:encoded>
+		<wp:post_id>90025</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[hummingbird]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>2</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="releases"><![CDATA[Releases]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Getting Started]]></title>
+		<link>https://example.com/documentation/hummingbird/getting-started/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90026</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Getting Started</strong> under the <strong>hummingbird</strong> release. Depth level: 1.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (hummingbird)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for hummingbird</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Getting Started (hummingbird).]]></excerpt:encoded>
+		<wp:post_id>90026</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[getting-started]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90025</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Installation]]></title>
+		<link>https://example.com/documentation/hummingbird/installation/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90027</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Installation</strong> under the <strong>hummingbird</strong> release. Depth level: 2.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (hummingbird)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for hummingbird</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Installation (hummingbird).]]></excerpt:encoded>
+		<wp:post_id>90027</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[installation]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90026</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[System Requirements]]></title>
+		<link>https://example.com/documentation/hummingbird/system-requirements/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90028</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>System Requirements</strong> under the <strong>hummingbird</strong> release. Depth level: 3.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (hummingbird)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for hummingbird</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for System Requirements (hummingbird).]]></excerpt:encoded>
+		<wp:post_id>90028</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[system-requirements]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90027</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Quick Install]]></title>
+		<link>https://example.com/documentation/hummingbird/quick-install/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90029</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Quick Install</strong> under the <strong>hummingbird</strong> release. Depth level: 3.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (hummingbird)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for hummingbird</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Quick Install (hummingbird).]]></excerpt:encoded>
+		<wp:post_id>90029</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[quick-install]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90027</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[First Login]]></title>
+		<link>https://example.com/documentation/hummingbird/first-login/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90030</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>First Login</strong> under the <strong>hummingbird</strong> release. Depth level: 2.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (hummingbird)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for hummingbird</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for First Login (hummingbird).]]></excerpt:encoded>
+		<wp:post_id>90030</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[first-login]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90026</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="getting-started"><![CDATA[Getting Started]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Platform Guides]]></title>
+		<link>https://example.com/documentation/hummingbird/platform-guides/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90031</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Platform Guides</strong> under the <strong>hummingbird</strong> release. Depth level: 1.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (hummingbird)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for hummingbird</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Platform Guides (hummingbird).]]></excerpt:encoded>
+		<wp:post_id>90031</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[platform-guides]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90025</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Business Health Monitoring]]></title>
+		<link>https://example.com/documentation/hummingbird/business-health-monitoring/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90032</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Business Health Monitoring</strong> under the <strong>hummingbird</strong> release. Depth level: 2.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (hummingbird)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for hummingbird</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Business Health Monitoring (hummingbird).]]></excerpt:encoded>
+		<wp:post_id>90032</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[business-health-monitoring]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90031</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Overview]]></title>
+		<link>https://example.com/documentation/hummingbird/bhm-overview/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90033</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Overview</strong> under the <strong>hummingbird</strong> release. Depth level: 3.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (hummingbird)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for hummingbird</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Overview (hummingbird).]]></excerpt:encoded>
+		<wp:post_id>90033</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[bhm-overview]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90032</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Key Features]]></title>
+		<link>https://example.com/documentation/hummingbird/bhm-key-features/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90034</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Key Features</strong> under the <strong>hummingbird</strong> release. Depth level: 3.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (hummingbird)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for hummingbird</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Key Features (hummingbird).]]></excerpt:encoded>
+		<wp:post_id>90034</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[bhm-key-features]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90032</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Intelligent Command Center]]></title>
+		<link>https://example.com/documentation/hummingbird/intelligent-command-center/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90035</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Intelligent Command Center</strong> under the <strong>hummingbird</strong> release. Depth level: 2.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (hummingbird)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for hummingbird</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Intelligent Command Center (hummingbird).]]></excerpt:encoded>
+		<wp:post_id>90035</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[intelligent-command-center]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90031</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="platform"><![CDATA[Platform]]></category>
+	</item>
+	<item>
+		<title><![CDATA[Release Notes]]></title>
+		<link>https://example.com/documentation/hummingbird/release-notes/</link>
+		<pubDate>Thu, 06 Aug 2026 12:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=90036</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:heading -->
+<h2 class="wp-block-heading">Overview</h2>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>This is demo content for <strong>Release Notes</strong> under the <strong>hummingbird</strong> release. Depth level: 1.</p>
+<!-- /wp:paragraph -->
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Key points</h2>
+<!-- /wp:heading -->
+<!-- wp:list -->
+<ul><!-- wp:list-item --><li>Same document title across goat / flamingo / hummingbird</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Tree structure matches for version switching</li><!-- /wp:list-item -->
+<!-- wp:list-item --><li>Content differs slightly per release (hummingbird)</li><!-- /wp:list-item --></ul>
+<!-- /wp:list -->
+<!-- wp:heading -->
+<h3 class="wp-block-heading">Details for hummingbird</h3>
+<!-- /wp:heading -->
+<!-- wp:paragraph -->
+<p>Use the release version switcher to jump between matching pages. PDF download uses the document permalink with a query argument.</p>
+<!-- /wp:paragraph -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[Demo page for Release Notes (hummingbird).]]></excerpt:encoded>
+		<wp:post_id>90036</wp:post_id>
+		<wp:post_date><![CDATA[2026-08-06 13:25:41]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-08-06 13:25:41]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-08-06 13:25:41]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[release-notes]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>90025</wp:post_parent>
+		<wp:menu_order>2</wp:menu_order>
+		<wp:post_type><![CDATA[manual_documentation]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="manualdocumentationcategory" nicename="releases"><![CDATA[Releases]]></category>
+	</item>
+</channel>
+</rss>

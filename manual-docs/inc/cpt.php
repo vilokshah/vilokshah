@@ -4,6 +4,7 @@
  *
  * Uses existing manual_documentation CPT when present.
  * Categories: manualdocumentationcategory (existing Manual taxonomy).
+ * Forces show_in_rest so Gutenberg can assign categories + parents.
  *
  * @package ManualDocs
  */
@@ -20,6 +21,64 @@ if ( ! defined( 'ABSPATH' ) ) {
 function manual_docs_category_taxonomy() {
 	return apply_filters( 'manual_docs_category_taxonomy', 'manualdocumentationcategory' );
 }
+
+/**
+ * Force block-editor friendly args on the documentation CPT (even if a plugin registered it).
+ *
+ * @param array  $args      Args.
+ * @param string $post_type Post type.
+ * @return array
+ */
+function manual_docs_force_cpt_rest_args( $args, $post_type ) {
+	if ( 'manual_documentation' !== $post_type ) {
+		return $args;
+	}
+
+	$args['show_in_rest']   = true;
+	$args['hierarchical']   = true;
+	$args['public']         = true;
+	$args['show_ui']        = true;
+	$args['map_meta_cap']   = isset( $args['map_meta_cap'] ) ? $args['map_meta_cap'] : true;
+
+	$supports = isset( $args['supports'] ) && is_array( $args['supports'] ) ? $args['supports'] : array( 'title', 'editor' );
+	foreach ( array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'page-attributes', 'revisions', 'custom-fields' ) as $feature ) {
+		if ( ! in_array( $feature, $supports, true ) ) {
+			$supports[] = $feature;
+		}
+	}
+	$args['supports'] = $supports;
+
+	if ( empty( $args['rest_base'] ) ) {
+		$args['rest_base'] = 'manual_documentation';
+	}
+
+	return $args;
+}
+add_filter( 'register_post_type_args', 'manual_docs_force_cpt_rest_args', 20, 2 );
+
+/**
+ * Force Gutenberg category panel for Manual taxonomy.
+ *
+ * @param array  $args     Args.
+ * @param string $taxonomy Taxonomy.
+ * @return array
+ */
+function manual_docs_force_taxonomy_rest_args( $args, $taxonomy ) {
+	if ( 'manualdocumentationcategory' !== $taxonomy && $taxonomy !== manual_docs_category_taxonomy() ) {
+		return $args;
+	}
+
+	$args['show_in_rest']      = true;
+	$args['hierarchical']      = true;
+	$args['public']            = true;
+	$args['show_ui']           = true;
+	$args['show_admin_column'] = true;
+	$args['show_in_nav_menus'] = true;
+	$args['rest_base']         = ! empty( $args['rest_base'] ) ? $args['rest_base'] : 'manualdocumentationcategory';
+
+	return $args;
+}
+add_filter( 'register_taxonomy_args', 'manual_docs_force_taxonomy_rest_args', 20, 2 );
 
 /**
  * Register CPT/tax only when missing (safe theme swap).
@@ -49,12 +108,14 @@ function manual_docs_register_cpt() {
 				'show_ui'            => true,
 				'show_in_menu'       => true,
 				'show_in_rest'       => true,
+				'rest_base'          => 'manual_documentation',
 				'query_var'          => true,
 				'rewrite'            => array(
 					'slug'       => 'documentation',
 					'with_front' => false,
 				),
 				'capability_type'    => 'post',
+				'map_meta_cap'       => true,
 				'has_archive'        => true,
 				'hierarchical'       => true,
 				'menu_position'      => 5,
@@ -62,6 +123,9 @@ function manual_docs_register_cpt() {
 				'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'page-attributes', 'revisions', 'custom-fields' ),
 			)
 		);
+	} else {
+		// Ensure hierarchical parent UI + REST even if CPT was registered earlier.
+		add_post_type_support( 'manual_documentation', array( 'page-attributes', 'editor', 'title', 'excerpt', 'thumbnail', 'revisions', 'custom-fields', 'author' ) );
 	}
 
 	$tax = manual_docs_category_taxonomy();
@@ -87,6 +151,7 @@ function manual_docs_register_cpt() {
 				'show_ui'           => true,
 				'show_admin_column' => true,
 				'show_in_rest'      => true,
+				'rest_base'         => 'manualdocumentationcategory',
 				'rewrite'           => array(
 					'slug'         => 'documentation-category',
 					'with_front'   => false,
@@ -95,11 +160,36 @@ function manual_docs_register_cpt() {
 			)
 		);
 	} else {
-		// Ensure CPT is linked to existing Manual taxonomy.
 		register_taxonomy_for_object_type( $tax, 'manual_documentation' );
 	}
 }
-add_action( 'init', 'manual_docs_register_cpt', 20 );
+add_action( 'init', 'manual_docs_register_cpt', 5 );
+
+/**
+ * Late pass: attach taxonomy + REST visibility if another plugin registered first.
+ */
+function manual_docs_late_bind_taxonomy() {
+	$tax = manual_docs_category_taxonomy();
+	if ( taxonomy_exists( $tax ) ) {
+		register_taxonomy_for_object_type( $tax, 'manual_documentation' );
+	}
+
+	global $wp_taxonomies;
+	if ( isset( $wp_taxonomies[ $tax ] ) ) {
+		$wp_taxonomies[ $tax ]->show_in_rest = true;
+		$wp_taxonomies[ $tax ]->hierarchical = true;
+		if ( empty( $wp_taxonomies[ $tax ]->rest_base ) ) {
+			$wp_taxonomies[ $tax ]->rest_base = $tax;
+		}
+	}
+
+	global $wp_post_types;
+	if ( isset( $wp_post_types['manual_documentation'] ) ) {
+		$wp_post_types['manual_documentation']->show_in_rest = true;
+		$wp_post_types['manual_documentation']->hierarchical = true;
+	}
+}
+add_action( 'init', 'manual_docs_late_bind_taxonomy', 99 );
 
 /**
  * Flush rewrites on theme switch.
@@ -109,6 +199,21 @@ function manual_docs_rewrite_flush() {
 	flush_rewrite_rules();
 }
 add_action( 'after_switch_theme', 'manual_docs_rewrite_flush' );
+
+/**
+ * Admin notice: flush permalinks once after update.
+ */
+function manual_docs_permalinks_notice() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	if ( get_option( 'manual_docs_permalinks_flushed_2_1' ) ) {
+		return;
+	}
+	flush_rewrite_rules( false );
+	update_option( 'manual_docs_permalinks_flushed_2_1', 1 );
+}
+add_action( 'admin_init', 'manual_docs_permalinks_notice' );
 
 /**
  * Category access role fields (add).

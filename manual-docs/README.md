@@ -17,10 +17,22 @@ Drop-in replacement theme for sites already using the Manual documentation stack
 3. Settings → Permalinks → Save
 4. Appearance → **Manual Docs**:
    - Set **Version root slugs** to your parent docs, e.g. `goat,flamingo,hummingbird`
-   - Adjust brand colors to match digitate / your brand
+   - Adjust brand colors (defaults are a darker docs palette)
    - Confirm login requirement
 
 Your existing Documentation Categories (`manualdocumentationcategory`) and documents stay intact. The theme only registers the CPT/taxonomy if they are missing.
+
+### Gutenberg categories & parent
+
+The theme forces `show_in_rest` + `hierarchical` + `page-attributes` on the Manual CPT/taxonomy so the block editor shows **Categories** and **Parent**. After activating, save Permalinks once. If categories still do not appear, deactivate conflicting Manual plugins temporarily and re-save the document.
+
+### Demo content
+
+Import `sample-data/manual-docs-demo.xml` via **Tools → Import → WordPress** to load goat / flamingo / hummingbird trees with nested children. See `sample-data/README.md`.
+
+### PDF download
+
+PDF uses the document permalink with `?manual_docs_pdf=1` (and optional `autoprint=1`). No special rewrite slug required.
 
 ## Version switching model
 

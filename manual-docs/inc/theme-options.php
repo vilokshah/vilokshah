@@ -17,16 +17,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 function manual_docs_default_options() {
 	return array(
 		'require_login'        => 1,
-		'primary_color'        => '#1a3a6b',
-		'accent_color'         => '#2563eb',
-		'header_bg'            => '#ffffff',
-		'sidebar_bg'           => '#f4f1ea',
-		'content_bg'           => '#fbf8f2',
-		'page_bg'              => '#f7f4ee',
-		'text_color'           => '#1f2937',
-		'link_color'           => '#1d4ed8',
-		'pdf_color'            => '#dc2626',
-		'active_bar_color'     => '#e11d48',
+		'primary_color'        => '#e8eef7',
+		'accent_color'         => '#3b82f6',
+		'header_bg'            => '#0b1220',
+		'sidebar_bg'           => '#111827',
+		'content_bg'           => '#0f172a',
+		'page_bg'              => '#020617',
+		'text_color'           => '#cbd5e1',
+		'link_color'           => '#60a5fa',
+		'pdf_color'            => '#f87171',
+		'active_bar_color'     => '#f43f5e',
 		'brand_name'           => '',
 		'hero_title'           => __( 'Documentation', 'manual-docs' ),
 		'hero_text'            => __( 'Search guides, explore products, and find answers fast.', 'manual-docs' ),
@@ -35,7 +35,7 @@ function manual_docs_default_options() {
 		'version_label'        => __( 'Release version', 'manual-docs' ),
 		'version_root_slugs'   => 'goat,flamingo,hummingbird',
 		'version_root_ids'     => '',
-		'default_version_slug' => '',
+		'default_version_slug' => 'goat',
 		'show_toc'             => 1,
 		'show_pdf'             => 1,
 		'show_updated'         => 1,
@@ -59,6 +59,35 @@ function manual_docs_get_options() {
 	}
 	return array_merge( manual_docs_default_options(), $saved );
 }
+
+/**
+ * One-time upgrade to darker defaults (v2.1) when still on old light palette.
+ */
+function manual_docs_upgrade_dark_palette() {
+	if ( get_option( 'manual_docs_dark_palette_2_1' ) ) {
+		return;
+	}
+	$saved = get_option( 'manual_docs_options', array() );
+	if ( ! is_array( $saved ) ) {
+		$saved = array();
+	}
+	$old_light = array(
+		'header_bg'  => '#ffffff',
+		'sidebar_bg' => '#f4f1ea',
+		'content_bg' => '#fbf8f2',
+		'page_bg'    => '#f7f4ee',
+	);
+	$defaults = manual_docs_default_options();
+	$is_old   = empty( $saved ) || ( isset( $saved['header_bg'] ) && '#ffffff' === strtolower( $saved['header_bg'] ) );
+	if ( $is_old ) {
+		foreach ( array( 'primary_color', 'accent_color', 'header_bg', 'sidebar_bg', 'content_bg', 'page_bg', 'text_color', 'link_color', 'pdf_color', 'active_bar_color' ) as $key ) {
+			$saved[ $key ] = $defaults[ $key ];
+		}
+		update_option( 'manual_docs_options', $saved );
+	}
+	update_option( 'manual_docs_dark_palette_2_1', 1 );
+}
+add_action( 'after_setup_theme', 'manual_docs_upgrade_dark_palette', 20 );
 
 /**
  * Get a single option.
