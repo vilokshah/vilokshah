@@ -20,7 +20,7 @@ function manual_docs_customize_register( $wp_customize ) {
 		'manual_docs_options',
 		array(
 			'title'       => __( 'Manual Docs', 'manual-docs' ),
-			'description' => __( 'Most theme settings are under Appearance → Manual Docs (colors, versions, access).', 'manual-docs' ),
+			'description' => __( 'Logo and Site Icon (favicon) are under Site Identity. Full theme settings: Appearance → Manual Docs.', 'manual-docs' ),
 			'priority'    => 30,
 		)
 	);
@@ -35,11 +35,16 @@ function manual_docs_customize_register( $wp_customize ) {
 	$wp_customize->add_control(
 		'manual_docs_customizer_note',
 		array(
-			'label'       => __( 'Open theme settings', 'manual-docs' ),
-			'description' => __( 'Go to Appearance → Manual Docs to configure brand colors, release version parent pages (goat / flamingo / hummingbird), login gate, and document chrome.', 'manual-docs' ),
+			'label'       => __( 'Theme settings', 'manual-docs' ),
+			'description' => __( 'Use Site Identity for logo + favicon. Use Appearance → Manual Docs for colors, versions, and the [manual_docs_search] shortcode help.', 'manual-docs' ),
 			'section'     => 'manual_docs_options',
 			'type'        => 'hidden',
 		)
 	);
+
+	// Keep Site Identity panel easy to find.
+	if ( $wp_customize->get_section( 'title_tagline' ) ) {
+		$wp_customize->get_section( 'title_tagline' )->title = __( 'Site Identity (logo & favicon)', 'manual-docs' );
+	}
 }
 add_action( 'customize_register', 'manual_docs_customize_register' );

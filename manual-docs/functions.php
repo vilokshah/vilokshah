@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MANUAL_DOCS_VERSION', '2.7.0' );
+define( 'MANUAL_DOCS_VERSION', '2.7.1' );
 
 /**
  * Version roots for JS (search filters).
@@ -57,6 +57,7 @@ function manual_docs_setup() {
 		'flex-height' => true,
 		'flex-width'  => true,
 	) );
+	add_theme_support( 'site-icon' );
 	add_theme_support( 'responsive-embeds' );
 	add_theme_support( 'align-wide' );
 	add_theme_support( 'editor-styles' );
@@ -135,31 +136,7 @@ function manual_docs_scripts() {
 		true
 	);
 
-	wp_enqueue_script(
-		'manual-docs-live-search',
-		MANUAL_DOCS_URI . '/assets/js/live-search.js',
-		array(),
-		MANUAL_DOCS_VERSION,
-		true
-	);
-
-	wp_localize_script( 'manual-docs-live-search', 'manualDocs', array(
-		'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
-		'restUrl'   => esc_url_raw( rest_url( 'manual-docs/v1/' ) ),
-		'nonce'     => wp_create_nonce( 'manual_docs_search' ),
-		'restNonce' => wp_create_nonce( 'wp_rest' ),
-		'homeUrl'   => home_url( '/' ),
-		'loginUrl'  => wp_login_url( get_permalink() ),
-		'ajaxDocs'  => true,
-		'versions'  => manual_docs_localize_versions(),
-		'i18n'      => array(
-			'searchPlaceholder' => __( 'Search documentation…', 'manual-docs' ),
-			'noResults'         => __( 'No documents found.', 'manual-docs' ),
-			'searching'         => __( 'Searching…', 'manual-docs' ),
-			'loginRequired'     => __( 'Please log in to view documentation.', 'manual-docs' ),
-			'loadingDoc'        => __( 'Loading document…', 'manual-docs' ),
-		),
-	) );
+	manual_docs_enqueue_search_assets();
 
 	$is_docs_view = is_singular( 'manual_documentation' )
 		|| is_post_type_archive( 'manual_documentation' )
@@ -186,6 +163,41 @@ function manual_docs_scripts() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'manual_docs_scripts' );
+
+/**
+ * Enqueue live-search script + localization (safe to call multiple times).
+ */
+function manual_docs_enqueue_search_assets() {
+	if ( wp_script_is( 'manual-docs-live-search', 'enqueued' ) ) {
+		return;
+	}
+
+	wp_enqueue_script(
+		'manual-docs-live-search',
+		MANUAL_DOCS_URI . '/assets/js/live-search.js',
+		array(),
+		MANUAL_DOCS_VERSION,
+		true
+	);
+
+	wp_localize_script( 'manual-docs-live-search', 'manualDocs', array(
+		'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
+		'restUrl'   => esc_url_raw( rest_url( 'manual-docs/v1/' ) ),
+		'nonce'     => wp_create_nonce( 'manual_docs_search' ),
+		'restNonce' => wp_create_nonce( 'wp_rest' ),
+		'homeUrl'   => home_url( '/' ),
+		'loginUrl'  => wp_login_url( home_url( '/' ) ),
+		'ajaxDocs'  => true,
+		'versions'  => function_exists( 'manual_docs_localize_versions' ) ? manual_docs_localize_versions() : array(),
+		'i18n'      => array(
+			'searchPlaceholder' => __( 'Search documentation…', 'manual-docs' ),
+			'noResults'         => __( 'No documents found.', 'manual-docs' ),
+			'searching'         => __( 'Searching…', 'manual-docs' ),
+			'loginRequired'     => __( 'Please log in to view documentation.', 'manual-docs' ),
+			'loadingDoc'        => __( 'Loading document…', 'manual-docs' ),
+		),
+	) );
+}
 
 /**
  * Load theme includes.

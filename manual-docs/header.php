@@ -27,7 +27,7 @@
 	<div class="md-header__inner">
 		<div class="md-brand">
 			<?php if ( has_custom_logo() ) : ?>
-				<?php the_custom_logo(); ?>
+				<div class="md-custom-logo"><?php the_custom_logo(); ?></div>
 			<?php else : ?>
 				<a class="md-brand__text" href="<?php echo esc_url( home_url( '/' ) ); ?>">
 					<span class="md-brand__mark" aria-hidden="true"></span>

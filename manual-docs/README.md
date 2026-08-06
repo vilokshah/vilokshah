@@ -52,13 +52,29 @@ Switcher finds the matching doc under another root by relative slug path, then t
 **Appearance → Manual Docs**
 
 - Brand name, home hero copy, footer text
+- **Logo & favicon** — buttons link to Customize → Site Identity
 - Colors: primary, accent, links, PDF, active tree bar, header/sidebar/content backgrounds
 - Version roots (slugs or IDs), switcher label, default version
 - Require login, TOC/PDF/updated/edit toggles, community CTA
+- Light/dark toggle on the front-end header
+
+## Live search
+
+Configured as a REST endpoint that queries `manual_documentation` posts (optional version root scope), with an AJAX fallback.
+
+- Endpoint: `GET /wp-json/manual-docs/v1/search?q=…&version={slug|id}`
+- Used on the homepage hero, docs sidebar, and anywhere via shortcode:
+
+```
+[manual_docs_search]
+[manual_docs_search placeholder="Search docs…"]
+```
+
+Also aliased as `[manual_docs_live_search]`.
 
 ## Features
 
-- Live search (REST + AJAX)
+- Live search (REST + AJAX) + shortcode
 - AJAX document loading with History API
 - PDF print/download view
 - Role-based category access (Allowed Roles on category edit)

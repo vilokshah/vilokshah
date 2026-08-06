@@ -225,6 +225,25 @@ function manual_docs_render_options_page() {
 			<h2 class="title"><?php esc_html_e( 'Branding', 'manual-docs' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
+					<th><?php esc_html_e( 'Site logo & favicon', 'manual-docs' ); ?></th>
+					<td>
+						<p>
+							<a class="button" href="<?php echo esc_url( admin_url( 'customize.php?autofocus[control]=custom_logo' ) ); ?>">
+								<?php esc_html_e( 'Upload / change logo', 'manual-docs' ); ?>
+							</a>
+							<a class="button" href="<?php echo esc_url( admin_url( 'customize.php?autofocus[control]=site_icon' ) ); ?>">
+								<?php esc_html_e( 'Upload favicon (Site Icon)', 'manual-docs' ); ?>
+							</a>
+						</p>
+						<p class="description">
+							<?php esc_html_e( 'Logo appears in the header. Favicon is the browser tab icon. Both are managed in Appearance → Customize → Site Identity.', 'manual-docs' ); ?>
+						</p>
+						<?php if ( has_custom_logo() ) : ?>
+							<div style="margin-top:8px;"><?php the_custom_logo(); ?></div>
+						<?php endif; ?>
+					</td>
+				</tr>
+				<tr>
 					<th><label for="brand_name"><?php esc_html_e( 'Brand name', 'manual-docs' ); ?></label></th>
 					<td><input class="regular-text" type="text" id="brand_name" name="manual_docs_options[brand_name]" value="<?php echo esc_attr( $o['brand_name'] ); ?>" placeholder="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" /></td>
 				</tr>
@@ -382,7 +401,12 @@ function manual_docs_render_options_page() {
 				<p class="description"><?php esc_html_e( 'Only needed for Pretty mode. Put this in your WordPress root .htaccess (the digidocs folder). If Local still 404s, use index.php mode instead.', 'manual-docs' ); ?></p>
 			</details>
 
-			<h2 class="title"><?php esc_html_e( 'Access & UI', 'manual-docs' ); ?></h2>
+			<h2 class="title"><?php esc_html_e( 'Live search shortcode', 'manual-docs' ); ?></h2>
+			<p class="description">
+				<?php esc_html_e( 'Search hits the Manual Docs REST endpoint (/wp-json/manual-docs/v1/search) and can filter by release version. Place it on any page or post:', 'manual-docs' ); ?>
+			</p>
+			<pre style="background:#1e1e1e;color:#eee;padding:12px;overflow:auto;">[manual_docs_search]
+[manual_docs_search placeholder="Search docs…" class="md-live-search--shortcode"]</pre>
 			<table class="form-table" role="presentation">
 				<tr>
 					<th><?php esc_html_e( 'Access', 'manual-docs' ); ?></th>

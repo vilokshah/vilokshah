@@ -204,19 +204,23 @@ add_action( 'wp_ajax_nopriv_manual_docs_search', 'manual_docs_ajax_search' );
  * @param array $args Args.
  */
 function manual_docs_render_live_search( $args = array() ) {
+	static $instance = 0;
+	$instance++;
+
 	$defaults = array(
 		'placeholder' => __( 'Search documentation…', 'manual-docs' ),
 		'class'       => '',
 	);
 	$args = wp_parse_args( $args, $defaults );
+	$input_id = 'md-live-search-input-' . $instance;
 	?>
 	<div class="md-live-search <?php echo esc_attr( $args['class'] ); ?>" role="search">
-		<label class="screen-reader-text" for="md-live-search-input"><?php esc_html_e( 'Search documentation', 'manual-docs' ); ?></label>
+		<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php esc_html_e( 'Search documentation', 'manual-docs' ); ?></label>
 		<div class="md-live-search__field">
 			<svg class="md-live-search__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
 			<input
 				type="search"
-				id="md-live-search-input"
+				id="<?php echo esc_attr( $input_id ); ?>"
 				class="md-live-search__input"
 				placeholder="<?php echo esc_attr( $args['placeholder'] ); ?>"
 				autocomplete="off"
@@ -225,7 +229,44 @@ function manual_docs_render_live_search( $args = array() ) {
 			/>
 			<span class="md-live-search__spinner" hidden aria-hidden="true"></span>
 		</div>
-		<div class="md-live-search__results" id="md-live-search-results" role="listbox" hidden></div>
+		<div class="md-live-search__results" role="listbox" hidden></div>
 	</div>
 	<?php
 }
+
+/**
+ * Shortcode: [manual_docs_search] or [manual_docs_search placeholder="Search…" class="my-class"]
+ *
+ * Uses the same REST live search as the homepage / docs sidebar.
+ *
+ * @param array $atts Attributes.
+ * @return string
+ */
+function manual_docs_search_shortcode( $atts = array() ) {
+	$atts = shortcode_atts(
+		array(
+			'placeholder' => __( 'Search documentation…', 'manual-docs' ),
+			'class'       => 'md-live-search--shortcode',
+		),
+		$atts,
+		'manual_docs_search'
+	);
+
+	// Ensure assets are present even on non-theme templates that only print the shortcode late.
+	if ( function_exists( 'manual_docs_enqueue_search_assets' ) ) {
+		manual_docs_enqueue_search_assets();
+	}
+
+	ob_start();
+	echo '<div class="md-search-shortcode">';
+	manual_docs_render_live_search(
+		array(
+			'placeholder' => $atts['placeholder'],
+			'class'       => $atts['class'],
+		)
+	);
+	echo '</div>';
+	return (string) ob_get_clean();
+}
+add_shortcode( 'manual_docs_search', 'manual_docs_search_shortcode' );
+add_shortcode( 'manual_docs_live_search', 'manual_docs_search_shortcode' );
