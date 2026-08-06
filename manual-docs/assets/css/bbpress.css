@@ -1,0 +1,77 @@
+/* bbPress refinements for Manual Docs */
+
+.md-bbpress #bbpress-forums {
+  font-size: 0.95rem;
+  color: var(--md-ink-soft);
+}
+
+.md-bbpress #bbpress-forums ul.bbp-forums,
+.md-bbpress #bbpress-forums ul.bbp-topics,
+.md-bbpress #bbpress-forums ul.bbp-replies {
+  border: 1px solid var(--md-line);
+  border-radius: var(--md-radius);
+  overflow: hidden;
+  background: #fff;
+}
+
+.md-bbpress #bbpress-forums li.bbp-header,
+.md-bbpress #bbpress-forums li.bbp-footer {
+  background: #f8fafc;
+  border-color: var(--md-line);
+  color: var(--md-muted);
+  font-weight: 600;
+}
+
+.md-bbpress #bbpress-forums li.bbp-body ul.forum,
+.md-bbpress #bbpress-forums li.bbp-body ul.topic {
+  border-top: 1px solid var(--md-line);
+}
+
+.md-bbpress #bbpress-forums .bbp-forum-title,
+.md-bbpress #bbpress-forums .bbp-topic-permalink {
+  font-family: var(--md-font-display);
+  font-weight: 600;
+  color: var(--md-ink);
+  text-decoration: none;
+}
+
+.md-bbpress #bbpress-forums .bbp-forum-title:hover,
+.md-bbpress #bbpress-forums .bbp-topic-permalink:hover {
+  color: var(--md-accent);
+}
+
+.md-bbpress #bbpress-forums button,
+.md-bbpress #bbpress-forums .button,
+.md-bbpress #bbpress-forums .bbp-submit-wrapper button {
+  background: var(--md-accent) !important;
+  border: 0 !important;
+  color: #fff !important;
+  border-radius: var(--md-radius-sm) !important;
+  padding: 0.65rem 1rem !important;
+  font-weight: 600 !important;
+}
+
+.md-bbpress #bbpress-forums input[type="text"],
+.md-bbpress #bbpress-forums input[type="password"],
+.md-bbpress #bbpress-forums textarea,
+.md-bbpress #bbpress-forums select {
+  border: 1px solid var(--md-line);
+  border-radius: var(--md-radius-sm);
+  padding: 0.6rem 0.75rem;
+  background: #fff;
+}
+
+.md-bbpress .bbp-breadcrumb {
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: var(--md-muted);
+}
+
+.md-bbpress .bbp-pagination {
+  margin: 1rem 0;
+}
+
+.md-community-header .md-menu a {
+  background: var(--md-accent-soft);
+  color: var(--md-accent);
+}
