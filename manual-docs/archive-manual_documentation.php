@@ -11,19 +11,7 @@ $versions = manual_docs_get_version_roots();
 
 <main id="main-content" class="md-main md-main--docs-archive">
 	<div class="md-docs-shell">
-		<aside class="md-docs-sidebar" id="md-docs-sidebar" aria-label="<?php esc_attr_e( 'Documentation navigation', 'manual-docs' ); ?>">
-			<div class="md-docs-sidebar__toolbar">
-				<?php manual_docs_render_tree_collapse_button(); ?>
-			</div>
-			<div class="md-docs-sidebar__body">
-				<div class="md-docs-sidebar__search">
-					<?php manual_docs_render_live_search( array( 'class' => 'md-live-search--sidebar' ) ); ?>
-				</div>
-				<nav class="md-docs-sidebar__nav" data-md-doc-tree>
-					<?php manual_docs_render_doc_nav(); ?>
-				</nav>
-			</div>
-		</aside>
+		<?php manual_docs_render_docs_sidebar(); ?>
 
 		<button type="button" class="md-sidebar-toggle" data-md-sidebar-toggle aria-controls="md-docs-sidebar" aria-expanded="false">
 			<?php esc_html_e( 'Docs menu', 'manual-docs' ); ?>

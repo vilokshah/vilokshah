@@ -275,15 +275,21 @@
     }
   });
 
-  // Live search result clicks inside docs shell.
+  // Live search result clicks (sidebar modal or in-shell search).
   document.addEventListener('click', function (e) {
     var item = e.target.closest('.md-live-search__item');
-    if (!item || !shell.contains(item.closest('.md-live-search') || item)) return;
-    // Search items may not have doc id; enhance live-search separately.
+    if (!item) return;
+    var wrap = item.closest('.md-live-search');
+    var inShell = wrap && shell.contains(wrap);
+    var inModal = wrap && wrap.classList.contains('md-live-search--modal');
+    if (!inShell && !inModal) return;
     var id = parseInt(item.getAttribute('data-md-doc-id') || '0', 10);
     if (!id) return;
     e.preventDefault();
     navigateToDoc(id, { href: item.href, pushState: true });
+    if (inModal && window.ManualDocsSearchModal && typeof window.ManualDocsSearchModal.close === 'function') {
+      window.ManualDocsSearchModal.close();
+    }
   });
 
   window.addEventListener('popstate', function (e) {

@@ -196,10 +196,116 @@ function manual_docs_render_site_logo() {
 function manual_docs_render_tree_collapse_button() {
 	?>
 	<button type="button" class="md-docs-tree-collapse" data-md-tree-collapse aria-expanded="true" title="<?php esc_attr_e( 'Hide documentation tree', 'manual-docs' ); ?>">
-		<span class="md-docs-tree-collapse__icon" aria-hidden="true">‹</span>
+		<svg class="md-docs-tree-collapse__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+			<rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="2"/>
+			<path d="M9 4v16" stroke="currentColor" stroke-width="2"/>
+			<rect x="3.75" y="5" width="4.5" height="14" rx="1.5" fill="currentColor" opacity="0.4"/>
+		</svg>
 		<span class="screen-reader-text"><?php esc_html_e( 'Hide documentation tree', 'manual-docs' ); ?></span>
 	</button>
 	<?php
+}
+
+/**
+ * Small brand mark for the docs tree chrome (site icon / logo / fallback).
+ */
+function manual_docs_render_sidebar_favicon() {
+	$home  = home_url( '/' );
+	$brand = manual_docs_brand_name();
+	$icon  = function_exists( 'get_site_icon_url' ) ? get_site_icon_url( 64 ) : '';
+
+	if ( ! $icon ) {
+		$logo_dark  = absint( manual_docs_get_option( 'logo_dark_id', 0 ) );
+		$logo_light = absint( manual_docs_get_option( 'logo_light_id', 0 ) );
+		$logo_id    = $logo_dark ? $logo_dark : $logo_light;
+		if ( ! $logo_id && has_custom_logo() ) {
+			$custom = get_theme_mod( 'custom_logo' );
+			$logo_id = $custom ? absint( $custom ) : 0;
+		}
+		if ( $logo_id ) {
+			$icon = wp_get_attachment_image_url( $logo_id, 'thumbnail' );
+		}
+	}
+	?>
+	<a class="md-docs-sidebar__brand" href="<?php echo esc_url( $home ); ?>" title="<?php echo esc_attr( $brand ); ?>">
+		<?php if ( $icon ) : ?>
+			<img class="md-docs-sidebar__favicon" src="<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $brand ); ?>" width="28" height="28" decoding="async" />
+		<?php else : ?>
+			<span class="md-docs-sidebar__favicon md-docs-sidebar__favicon--mark" aria-hidden="true"></span>
+			<span class="screen-reader-text"><?php echo esc_html( $brand ); ?></span>
+		<?php endif; ?>
+	</a>
+	<?php
+}
+
+/**
+ * Centered docs search modal (opened from the tree chrome).
+ *
+ * @param string $placeholder Search placeholder.
+ */
+function manual_docs_render_docs_search_modal( $placeholder = '' ) {
+	static $rendered = false;
+	if ( $rendered ) {
+		return;
+	}
+	$rendered = true;
+	if ( ! $placeholder ) {
+		$placeholder = __( 'Search documentation…', 'manual-docs' );
+	}
+	?>
+	<div class="md-docs-search-modal" data-md-docs-search-modal hidden>
+		<div class="md-docs-search-modal__backdrop" data-md-docs-search-close tabindex="-1"></div>
+		<div class="md-docs-search-modal__dialog" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Search documentation', 'manual-docs' ); ?>">
+			<button type="button" class="md-docs-search-modal__close" data-md-docs-search-close aria-label="<?php esc_attr_e( 'Close search', 'manual-docs' ); ?>">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+			</button>
+			<?php
+			manual_docs_render_live_search(
+				array(
+					'class'       => 'md-live-search--modal',
+					'placeholder' => $placeholder,
+				)
+			);
+			?>
+		</div>
+	</div>
+	<?php
+}
+
+/**
+ * Docs left tree: favicon + collapse/search chrome, truncated nav, centered search modal.
+ *
+ * @param array $args {
+ *     @type string $search_placeholder Placeholder for the modal search.
+ * }
+ */
+function manual_docs_render_docs_sidebar( $args = array() ) {
+	$args = wp_parse_args(
+		$args,
+		array(
+			'search_placeholder' => __( 'Search docs…', 'manual-docs' ),
+		)
+	);
+	?>
+	<aside class="md-docs-sidebar" id="md-docs-sidebar" aria-label="<?php esc_attr_e( 'Documentation navigation', 'manual-docs' ); ?>">
+		<div class="md-docs-sidebar__chrome">
+			<?php manual_docs_render_sidebar_favicon(); ?>
+			<div class="md-docs-sidebar__chrome-actions">
+				<?php manual_docs_render_tree_collapse_button(); ?>
+				<button type="button" class="md-docs-search-trigger" data-md-docs-search-open aria-haspopup="dialog" title="<?php esc_attr_e( 'Search documentation', 'manual-docs' ); ?>">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+					<span class="screen-reader-text"><?php esc_html_e( 'Search documentation', 'manual-docs' ); ?></span>
+				</button>
+			</div>
+		</div>
+		<div class="md-docs-sidebar__body">
+			<nav class="md-docs-sidebar__nav" data-md-doc-tree>
+				<?php manual_docs_render_doc_nav(); ?>
+			</nav>
+		</div>
+	</aside>
+	<?php
+	manual_docs_render_docs_search_modal( $args['search_placeholder'] );
 }
 
 /**
@@ -355,9 +461,10 @@ function manual_docs_render_doc_nav_nodes( $tree, $current, $ancestors, $expand 
 			echo '<button type="button" class="md-doc-nav__twist" aria-expanded="' . ( $is_open ? 'true' : 'false' ) . '" data-md-tree-toggle><span class="screen-reader-text">' . esc_html__( 'Toggle section', 'manual-docs' ) . '</span></button>';
 		}
 		printf(
-			'<a href="%s" data-md-ajax-doc data-md-doc-id="%d"%s>%s</a>',
+			'<a href="%s" data-md-ajax-doc data-md-doc-id="%d" title="%s"%s>%s</a>',
 			esc_url( get_permalink( $post ) ),
 			(int) $post->ID,
+			esc_attr( get_the_title( $post ) ),
 			$is_active ? ' aria-current="page"' : '',
 			esc_html( get_the_title( $post ) )
 		);

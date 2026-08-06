@@ -211,12 +211,18 @@
           window.ManualDocsAjax.navigateToDoc(docId, { href: active.href, pushState: true });
           resultsEl.hidden = true;
           setOpenState(wrap, false);
+          if (wrap.classList.contains('md-live-search--modal') && window.ManualDocsSearchModal) {
+            window.ManualDocsSearchModal.close();
+          }
         } else {
           window.location.href = active.href;
         }
       } else if (e.key === 'Escape') {
         resultsEl.hidden = true;
         setOpenState(wrap, false);
+        if (wrap.classList.contains('md-live-search--modal') && window.ManualDocsSearchModal) {
+          window.ManualDocsSearchModal.close();
+        }
       }
     });
 

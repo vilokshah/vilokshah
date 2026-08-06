@@ -160,6 +160,63 @@
     if (collapsed) applyTreeCollapsed(true);
   })();
 
+  // Centered docs search modal (tree chrome magnifier).
+  var docsSearchLastFocus = null;
+
+  function getDocsSearchModal() {
+    return qs('[data-md-docs-search-modal]');
+  }
+
+  function openDocsSearchModal() {
+    var modal = getDocsSearchModal();
+    if (!modal) return;
+    docsSearchLastFocus = document.activeElement;
+    modal.hidden = false;
+    document.documentElement.classList.add('md-docs-search-open');
+    var input = qs('.md-live-search--modal .md-live-search__input', modal) || qs('.md-live-search__input', modal);
+    if (input) {
+      setTimeout(function () { input.focus(); input.select && input.select(); }, 10);
+    }
+  }
+
+  function closeDocsSearchModal() {
+    var modal = getDocsSearchModal();
+    if (!modal || modal.hidden) return;
+    modal.hidden = true;
+    document.documentElement.classList.remove('md-docs-search-open');
+    var results = qs('.md-live-search__results', modal);
+    if (results) results.hidden = true;
+    if (docsSearchLastFocus && typeof docsSearchLastFocus.focus === 'function') {
+      docsSearchLastFocus.focus();
+    }
+  }
+
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-md-docs-search-open]')) {
+      e.preventDefault();
+      openDocsSearchModal();
+      return;
+    }
+    if (e.target.closest('[data-md-docs-search-close]')) {
+      e.preventDefault();
+      closeDocsSearchModal();
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      var modal = getDocsSearchModal();
+      if (modal && !modal.hidden) {
+        closeDocsSearchModal();
+      }
+    }
+  });
+
+  window.ManualDocsSearchModal = {
+    open: openDocsSearchModal,
+    close: closeDocsSearchModal
+  };
+
   // Version switcher is handled by ajax-docs.js when the AJAX shell is present.
   if (!document.querySelector('[data-md-ajax-shell]')) {
     qsa('.md-version-select').forEach(function (select) {
@@ -178,6 +235,10 @@
     var tag = (e.target && e.target.tagName) || '';
     if (/INPUT|TEXTAREA|SELECT/.test(tag) || (e.target && e.target.isContentEditable)) return;
     e.preventDefault();
+    if (getDocsSearchModal()) {
+      openDocsSearchModal();
+      return;
+    }
     var input = qs('.md-live-search--hero .md-live-search__input') ||
       qs('.md-live-search--sidebar .md-live-search__input') ||
       qs('.md-live-search__input');

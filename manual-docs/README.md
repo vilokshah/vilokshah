@@ -60,6 +60,7 @@ Switcher finds the matching doc under another root by relative slug path, then t
 - Light/dark toggle on the front-end header
 - Collapsible documentation tree (‹ arrow) to widen the content column
 - TOC Hide/Show on the right “On this page” panel
+- Docs tree chrome: favicon left, panel toggle + search icons right; search opens a centered modal so long titles stay readable
 
 ## Live search
 
