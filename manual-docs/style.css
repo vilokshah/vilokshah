@@ -1,0 +1,17 @@
+/*
+Theme Name: Manual Docs
+Theme URI: https://github.com/vilokshah/vilokshah
+Author: Manual Docs
+Author URI: https://github.com/vilokshah/vilokshah
+Description: A secure, lightweight documentation theme inspired by Manual. Features live search, document versioning, PDF download, role-based category access, bbPress community integration, and the manual_documentation custom post type.
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.7
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: manual-docs
+Tags: documentation, knowledge-base, bbpress, custom-post-type, two-columns, accessibility-ready
+*/
+
+/* Base styles loaded via assets/css/main.css for performance. */

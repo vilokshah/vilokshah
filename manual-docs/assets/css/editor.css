@@ -1,0 +1,13 @@
+/* Editor styles — mirror front-end reading experience */
+body {
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  color: #1e293b;
+  line-height: 1.6;
+}
+
+.editor-styles-wrapper h1,
+.editor-styles-wrapper h2,
+.editor-styles-wrapper h3 {
+  font-family: "Sora", "Segoe UI", sans-serif;
+  color: #0b1220;
+}
