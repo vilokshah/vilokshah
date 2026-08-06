@@ -23,7 +23,23 @@ function manual_docs_category_taxonomy() {
 }
 
 /**
- * Force block-editor friendly args on the documentation CPT (even if a plugin registered it).
+ * CPT permalink base (e.g. documentation).
+ *
+ * @return string
+ */
+function manual_docs_cpt_rewrite_slug() {
+	$slug = 'documentation';
+	if ( function_exists( 'manual_docs_get_option' ) ) {
+		$saved = manual_docs_get_option( 'cpt_rewrite_slug', '' );
+		if ( is_string( $saved ) && $saved !== '' ) {
+			$slug = $saved;
+		}
+	}
+	return sanitize_title( apply_filters( 'manual_docs_cpt_rewrite_slug', $slug ) );
+}
+
+/**
+ * Force block-editor friendly args + hierarchical rewrites on the documentation CPT.
  *
  * @param array  $args      Args.
  * @param string $post_type Post type.
@@ -34,11 +50,13 @@ function manual_docs_force_cpt_rest_args( $args, $post_type ) {
 		return $args;
 	}
 
-	$args['show_in_rest']   = true;
-	$args['hierarchical']   = true;
-	$args['public']         = true;
-	$args['show_ui']        = true;
-	$args['map_meta_cap']   = isset( $args['map_meta_cap'] ) ? $args['map_meta_cap'] : true;
+	$args['show_in_rest']       = true;
+	$args['hierarchical']       = true;
+	$args['public']             = true;
+	$args['publicly_queryable'] = true;
+	$args['show_ui']            = true;
+	$args['map_meta_cap']       = isset( $args['map_meta_cap'] ) ? $args['map_meta_cap'] : true;
+	$args['query_var']          = true;
 
 	$supports = isset( $args['supports'] ) && is_array( $args['supports'] ) ? $args['supports'] : array( 'title', 'editor' );
 	foreach ( array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'page-attributes', 'revisions', 'custom-fields' ) as $feature ) {
@@ -50,6 +68,26 @@ function manual_docs_force_cpt_rest_args( $args, $post_type ) {
 
 	if ( empty( $args['rest_base'] ) ) {
 		$args['rest_base'] = 'manual_documentation';
+	}
+
+	// Critical: hierarchical rewrite so /documentation/flamingo/ and nested URLs resolve.
+	$slug = manual_docs_cpt_rewrite_slug();
+	if ( empty( $args['rewrite'] ) || false === $args['rewrite'] ) {
+		$args['rewrite'] = array(
+			'slug'         => $slug,
+			'with_front'   => false,
+			'hierarchical' => true,
+		);
+	} elseif ( is_array( $args['rewrite'] ) ) {
+		$args['rewrite']['hierarchical'] = true;
+		$args['rewrite']['with_front']   = false;
+		if ( empty( $args['rewrite']['slug'] ) ) {
+			$args['rewrite']['slug'] = $slug;
+		}
+	}
+
+	if ( ! isset( $args['has_archive'] ) || false === $args['has_archive'] ) {
+		$args['has_archive'] = $slug;
 	}
 
 	return $args;
@@ -111,12 +149,13 @@ function manual_docs_register_cpt() {
 				'rest_base'          => 'manual_documentation',
 				'query_var'          => true,
 				'rewrite'            => array(
-					'slug'       => 'documentation',
-					'with_front' => false,
+					'slug'         => manual_docs_cpt_rewrite_slug(),
+					'with_front'   => false,
+					'hierarchical' => true,
 				),
 				'capability_type'    => 'post',
 				'map_meta_cap'       => true,
-				'has_archive'        => true,
+				'has_archive'        => manual_docs_cpt_rewrite_slug(),
 				'hierarchical'       => true,
 				'menu_position'      => 5,
 				'menu_icon'          => 'dashicons-book-alt',
@@ -192,29 +231,96 @@ function manual_docs_late_bind_taxonomy() {
 add_action( 'init', 'manual_docs_late_bind_taxonomy', 99 );
 
 /**
- * Flush rewrite rules on theme switch only (never on ordinary admin loads).
+ * Extra rewrite fallbacks for documentation/{slug}/ paths.
+ */
+function manual_docs_register_doc_rewrites() {
+	$slug = manual_docs_cpt_rewrite_slug();
+	if ( ! $slug ) {
+		return;
+	}
+
+	// Top-level doc: /documentation/flamingo/
+	add_rewrite_rule(
+		'^' . preg_quote( $slug, '/' ) . '/([^/]+)/?$',
+		'index.php?manual_documentation=$matches[1]',
+		'top'
+	);
+
+	// Nested docs: /documentation/flamingo/getting-started/installation/
+	add_rewrite_rule(
+		'^' . preg_quote( $slug, '/' ) . '/(.+?)/?$',
+		'index.php?manual_documentation=$matches[1]',
+		'top'
+	);
+}
+add_action( 'init', 'manual_docs_register_doc_rewrites', 30 );
+
+/**
+ * Flush rewrite rules on theme switch only.
  */
 function manual_docs_rewrite_flush() {
 	manual_docs_register_cpt();
+	manual_docs_register_doc_rewrites();
 	flush_rewrite_rules();
-	update_option( 'manual_docs_permalinks_flushed_2_2', 1 );
+	update_option( 'manual_docs_permalinks_flushed_2_3', 1 );
 }
 add_action( 'after_switch_theme', 'manual_docs_rewrite_flush' );
 
 /**
- * One-time permalink flush after 2.2 update (safe single run).
+ * One-time permalink flush after 2.3 rewrite fix.
  */
 function manual_docs_maybe_flush_permalinks_once() {
 	if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
-	if ( get_option( 'manual_docs_permalinks_flushed_2_2' ) ) {
+	if ( get_option( 'manual_docs_permalinks_flushed_2_3' ) ) {
 		return;
 	}
+	manual_docs_register_cpt();
+	manual_docs_register_doc_rewrites();
 	flush_rewrite_rules( false );
-	update_option( 'manual_docs_permalinks_flushed_2_2', 1 );
+	update_option( 'manual_docs_permalinks_flushed_2_3', 1 );
 }
 add_action( 'admin_init', 'manual_docs_maybe_flush_permalinks_once', 1 );
+
+/**
+ * Handle manual "Flush permalinks" from theme settings.
+ */
+function manual_docs_handle_flush_permalinks() {
+	if ( ! isset( $_POST['manual_docs_flush_permalinks'] ) ) {
+		return;
+	}
+	if ( ! isset( $_POST['manual_docs_options_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['manual_docs_options_nonce'] ) ), 'manual_docs_save_options' ) ) {
+		return;
+	}
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	manual_docs_register_cpt();
+	manual_docs_register_doc_rewrites();
+	flush_rewrite_rules();
+	update_option( 'manual_docs_permalinks_flushed_2_3', 1 );
+	add_settings_error( 'manual_docs_options', 'manual_docs_flushed', __( 'Permalinks flushed. Try your documentation URL again.', 'manual-docs' ), 'updated' );
+}
+add_action( 'admin_init', 'manual_docs_handle_flush_permalinks', 0 );
+
+/**
+ * Admin notice when pretty permalinks are disabled (causes Apache 404 on /documentation/...).
+ */
+function manual_docs_permalink_structure_notice() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	$structure = get_option( 'permalink_structure' );
+	if ( ! empty( $structure ) ) {
+		return;
+	}
+	echo '<div class="notice notice-error"><p>';
+	echo esc_html__( 'Manual Docs: Pretty permalinks are disabled. Documentation URLs like /documentation/flamingo/ will 404.', 'manual-docs' );
+	echo ' <a href="' . esc_url( admin_url( 'options-permalink.php' ) ) . '">' . esc_html__( 'Enable pretty permalinks', 'manual-docs' ) . '</a>';
+	echo '</p></div>';
+}
+add_action( 'admin_notices', 'manual_docs_permalink_structure_notice' );
 
 /**
  * Category access role fields (add).

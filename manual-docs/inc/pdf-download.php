@@ -28,16 +28,19 @@ add_filter( 'query_vars', 'manual_docs_pdf_query_var' );
  * Optional pretty rewrite for PDF under documentation paths only.
  */
 function manual_docs_pdf_rewrite() {
+	$slug = function_exists( 'manual_docs_cpt_rewrite_slug' ) ? manual_docs_cpt_rewrite_slug() : 'documentation';
 	add_rewrite_rule(
-		'^documentation/(.+?)/pdf/?$',
+		'^' . preg_quote( $slug, '/' ) . '/(.+?)/pdf/?$',
 		'index.php?manual_documentation=$matches[1]&manual_docs_pdf=1',
 		'top'
 	);
-	add_rewrite_rule(
-		'^docs/(.+?)/pdf/?$',
-		'index.php?manual_documentation=$matches[1]&manual_docs_pdf=1',
-		'top'
-	);
+	if ( 'docs' !== $slug ) {
+		add_rewrite_rule(
+			'^docs/(.+?)/pdf/?$',
+			'index.php?manual_documentation=$matches[1]&manual_docs_pdf=1',
+			'top'
+		);
+	}
 }
 add_action( 'init', 'manual_docs_pdf_rewrite', 30 );
 

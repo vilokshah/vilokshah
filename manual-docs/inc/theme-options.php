@@ -36,6 +36,7 @@ function manual_docs_default_options() {
 		'version_root_slugs'   => 'goat,flamingo,hummingbird',
 		'version_root_ids'     => '',
 		'default_version_slug' => 'goat',
+		'cpt_rewrite_slug'     => 'documentation',
 		'show_toc'             => 1,
 		'show_pdf'             => 1,
 		'show_updated'         => 1,
@@ -152,7 +153,7 @@ function manual_docs_save_options() {
 
 	$clean = array();
 	$color_keys = array( 'primary_color', 'accent_color', 'header_bg', 'sidebar_bg', 'content_bg', 'page_bg', 'text_color', 'link_color', 'pdf_color', 'active_bar_color' );
-	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'header_tagline', 'login_message', 'footer_text' );
+	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'header_tagline', 'login_message', 'footer_text' );
 	$bool_keys  = array( 'require_login', 'show_community_cta', 'show_toc', 'show_pdf', 'show_updated', 'show_edit_link', 'tree_expand_active' );
 
 	foreach ( $color_keys as $key ) {
@@ -162,11 +163,26 @@ function manual_docs_save_options() {
 	foreach ( $text_keys as $key ) {
 		$clean[ $key ] = isset( $incoming[ $key ] ) ? sanitize_text_field( $incoming[ $key ] ) : $defaults[ $key ];
 	}
+	if ( ! empty( $clean['cpt_rewrite_slug'] ) ) {
+		$clean['cpt_rewrite_slug'] = sanitize_title( $clean['cpt_rewrite_slug'] );
+	} else {
+		$clean['cpt_rewrite_slug'] = 'documentation';
+	}
 	foreach ( $bool_keys as $key ) {
 		$clean[ $key ] = ! empty( $incoming[ $key ] ) ? 1 : 0;
 	}
 
+	$old = get_option( 'manual_docs_options', array() );
 	update_option( 'manual_docs_options', $clean );
+
+	// Flush when rewrite slug changes.
+	$old_slug = is_array( $old ) && ! empty( $old['cpt_rewrite_slug'] ) ? $old['cpt_rewrite_slug'] : 'documentation';
+	if ( $old_slug !== $clean['cpt_rewrite_slug'] ) {
+		delete_option( 'manual_docs_permalinks_flushed_2_3' );
+		flush_rewrite_rules( false );
+		update_option( 'manual_docs_permalinks_flushed_2_3', 1 );
+	}
+
 	add_settings_error( 'manual_docs_options', 'manual_docs_saved', __( 'Settings saved.', 'manual-docs' ), 'updated' );
 }
 add_action( 'admin_init', 'manual_docs_save_options' );
@@ -264,7 +280,37 @@ function manual_docs_render_options_page() {
 					<th><label for="default_version_slug"><?php esc_html_e( 'Default version slug', 'manual-docs' ); ?></label></th>
 					<td><input class="regular-text" type="text" id="default_version_slug" name="manual_docs_options[default_version_slug]" value="<?php echo esc_attr( $o['default_version_slug'] ); ?>" /></td>
 				</tr>
+				<tr>
+					<th><label for="cpt_rewrite_slug"><?php esc_html_e( 'Documentation URL base', 'manual-docs' ); ?></label></th>
+					<td>
+						<input class="regular-text" type="text" id="cpt_rewrite_slug" name="manual_docs_options[cpt_rewrite_slug]" value="<?php echo esc_attr( $o['cpt_rewrite_slug'] ); ?>" />
+						<p class="description">
+							<?php
+							printf(
+								/* translators: %s: example URL path */
+								esc_html__( 'Permalink base for docs. Example: %s', 'manual-docs' ),
+								'<code>/' . esc_html( $o['cpt_rewrite_slug'] ? $o['cpt_rewrite_slug'] : 'documentation' ) . '/flamingo/</code>'
+							);
+							?>
+						</p>
+					</td>
+				</tr>
 			</table>
+
+			<h2 class="title"><?php esc_html_e( 'Permalinks / 404 fix', 'manual-docs' ); ?></h2>
+			<p class="description"><?php esc_html_e( 'If /documentation/flamingo/ shows a server “Not Found” page, pretty permalinks need a flush.', 'manual-docs' ); ?></p>
+			<p>
+				<a class="button" href="<?php echo esc_url( admin_url( 'options-permalink.php' ) ); ?>"><?php esc_html_e( 'Open Permalinks settings', 'manual-docs' ); ?></a>
+				<?php submit_button( __( 'Flush documentation permalinks', 'manual-docs' ), 'secondary', 'manual_docs_flush_permalinks', false ); ?>
+			</p>
+			<?php
+			$structure = get_option( 'permalink_structure' );
+			if ( empty( $structure ) ) :
+				?>
+				<p style="color:#b32d2e;"><strong><?php esc_html_e( 'Pretty permalinks are currently OFF. Choose “Post name” under Settings → Permalinks, then save.', 'manual-docs' ); ?></strong></p>
+			<?php else : ?>
+				<p><?php esc_html_e( 'Current permalink structure:', 'manual-docs' ); ?> <code><?php echo esc_html( $structure ); ?></code></p>
+			<?php endif; ?>
 
 			<h2 class="title"><?php esc_html_e( 'Access & UI', 'manual-docs' ); ?></h2>
 			<table class="form-table" role="presentation">
