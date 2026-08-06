@@ -37,6 +37,7 @@ function manual_docs_default_options() {
 		'version_root_ids'     => '',
 		'default_version_slug' => 'goat',
 		'cpt_rewrite_slug'     => 'documentation',
+		'permalink_mode'       => 'pretty',
 		'show_toc'             => 1,
 		'show_pdf'             => 1,
 		'show_updated'         => 1,
@@ -141,6 +142,10 @@ function manual_docs_save_options() {
 	if ( ! isset( $_POST['manual_docs_options_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['manual_docs_options_nonce'] ) ), 'manual_docs_save_options' ) ) {
 		return;
 	}
+	// Dedicated buttons handle their own actions — don't overwrite options mid-fix.
+	if ( isset( $_POST['manual_docs_flush_permalinks'] ) || isset( $_POST['manual_docs_fix_local_404'] ) ) {
+		return;
+	}
 	if ( ! current_user_can( 'edit_theme_options' ) ) {
 		return;
 	}
@@ -153,7 +158,7 @@ function manual_docs_save_options() {
 
 	$clean = array();
 	$color_keys = array( 'primary_color', 'accent_color', 'header_bg', 'sidebar_bg', 'content_bg', 'page_bg', 'text_color', 'link_color', 'pdf_color', 'active_bar_color' );
-	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'header_tagline', 'login_message', 'footer_text' );
+	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'footer_text' );
 	$bool_keys  = array( 'require_login', 'show_community_cta', 'show_toc', 'show_pdf', 'show_updated', 'show_edit_link', 'tree_expand_active' );
 
 	foreach ( $color_keys as $key ) {
@@ -168,6 +173,8 @@ function manual_docs_save_options() {
 	} else {
 		$clean['cpt_rewrite_slug'] = 'documentation';
 	}
+	$mode = isset( $clean['permalink_mode'] ) ? $clean['permalink_mode'] : 'pretty';
+	$clean['permalink_mode'] = in_array( $mode, array( 'pretty', 'index_php', 'query' ), true ) ? $mode : 'pretty';
 	foreach ( $bool_keys as $key ) {
 		$clean[ $key ] = ! empty( $incoming[ $key ] ) ? 1 : 0;
 	}
@@ -175,12 +182,24 @@ function manual_docs_save_options() {
 	$old = get_option( 'manual_docs_options', array() );
 	update_option( 'manual_docs_options', $clean );
 
-	// Flush when rewrite slug changes.
+	// Align WP permalink structure with index.php mode (fixes Apache 404 on Local).
+	if ( 'index_php' === $clean['permalink_mode'] ) {
+		$structure = (string) get_option( 'permalink_structure' );
+		if ( false === strpos( $structure, 'index.php' ) ) {
+			update_option( 'permalink_structure', '/index.php/%postname%/' );
+		}
+	}
+
+	// Flush when rewrite slug or permalink mode changes.
 	$old_slug = is_array( $old ) && ! empty( $old['cpt_rewrite_slug'] ) ? $old['cpt_rewrite_slug'] : 'documentation';
-	if ( $old_slug !== $clean['cpt_rewrite_slug'] ) {
-		delete_option( 'manual_docs_permalinks_flushed_2_3' );
-		flush_rewrite_rules( false );
-		update_option( 'manual_docs_permalinks_flushed_2_3', 1 );
+	$old_mode = is_array( $old ) && ! empty( $old['permalink_mode'] ) ? $old['permalink_mode'] : 'pretty';
+	if ( $old_slug !== $clean['cpt_rewrite_slug'] || $old_mode !== $clean['permalink_mode'] ) {
+		delete_option( 'manual_docs_permalinks_flushed_2_5' );
+		if ( function_exists( 'manual_docs_hard_flush_rewrites' ) ) {
+			manual_docs_hard_flush_rewrites();
+		} else {
+			flush_rewrite_rules( true );
+		}
 	}
 
 	add_settings_error( 'manual_docs_options', 'manual_docs_saved', __( 'Settings saved.', 'manual-docs' ), 'updated' );
@@ -298,19 +317,66 @@ function manual_docs_render_options_page() {
 			</table>
 
 			<h2 class="title"><?php esc_html_e( 'Permalinks / 404 fix', 'manual-docs' ); ?></h2>
-			<p class="description"><?php esc_html_e( 'If /documentation/flamingo/ shows a server “Not Found” page, pretty permalinks need a flush.', 'manual-docs' ); ?></p>
+			<p class="description" style="color:#b32d2e;">
+				<?php esc_html_e( 'If the browser shows a plain Apache “Not Found” page (not a WordPress theme 404), the request never reached WordPress. Use “index.php URLs” below — that fixes Local/subdirectory installs without relying on .htaccess.', 'manual-docs' ); ?>
+			</p>
+			<table class="form-table" role="presentation">
+				<tr>
+					<th><?php esc_html_e( 'Documentation URL mode', 'manual-docs' ); ?></th>
+					<td>
+						<?php $mode = isset( $o['permalink_mode'] ) ? $o['permalink_mode'] : 'pretty'; ?>
+						<label style="display:block;margin-bottom:6px;">
+							<input type="radio" name="manual_docs_options[permalink_mode]" value="pretty" <?php checked( $mode, 'pretty' ); ?> />
+							<?php esc_html_e( 'Pretty (/documentation/…/) — needs working Apache/Nginx rewrite', 'manual-docs' ); ?>
+						</label>
+						<label style="display:block;margin-bottom:6px;">
+							<input type="radio" name="manual_docs_options[permalink_mode]" value="index_php" <?php checked( $mode, 'index_php' ); ?> />
+							<strong><?php esc_html_e( 'index.php URLs (recommended for Local 404s)', 'manual-docs' ); ?></strong>
+							— <code>/digidocs/index.php/documentation/goat-2/…/</code>
+						</label>
+						<label style="display:block;">
+							<input type="radio" name="manual_docs_options[permalink_mode]" value="query" <?php checked( $mode, 'query' ); ?> />
+							<?php esc_html_e( 'Query string (always works)', 'manual-docs' ); ?>
+							— <code>/digidocs/?manual_documentation=goat-2/…</code>
+						</label>
+					</td>
+				</tr>
+			</table>
 			<p>
 				<a class="button" href="<?php echo esc_url( admin_url( 'options-permalink.php' ) ); ?>"><?php esc_html_e( 'Open Permalinks settings', 'manual-docs' ); ?></a>
-				<?php submit_button( __( 'Flush documentation permalinks', 'manual-docs' ), 'secondary', 'manual_docs_flush_permalinks', false ); ?>
+				<?php submit_button( __( 'Flush + write .htaccess', 'manual-docs' ), 'secondary', 'manual_docs_flush_permalinks', false ); ?>
+				<?php submit_button( __( 'Fix Local 404s now', 'manual-docs' ), 'primary', 'manual_docs_fix_local_404', false ); ?>
 			</p>
 			<?php
 			$structure = get_option( 'permalink_structure' );
+			$home_path = trim( (string) wp_parse_url( home_url( '/' ), PHP_URL_PATH ), '/' );
+			$htaccess  = ABSPATH . '.htaccess';
 			if ( empty( $structure ) ) :
 				?>
-				<p style="color:#b32d2e;"><strong><?php esc_html_e( 'Pretty permalinks are currently OFF. Choose “Post name” under Settings → Permalinks, then save.', 'manual-docs' ); ?></strong></p>
+				<p style="color:#b32d2e;"><strong><?php esc_html_e( 'Pretty permalinks are currently OFF. Choose “Post name” under Settings → Permalinks, then save — or click “Fix Local 404s now”.', 'manual-docs' ); ?></strong></p>
 			<?php else : ?>
 				<p><?php esc_html_e( 'Current permalink structure:', 'manual-docs' ); ?> <code><?php echo esc_html( $structure ); ?></code></p>
 			<?php endif; ?>
+			<p>
+				<?php esc_html_e( 'Site path:', 'manual-docs' ); ?>
+				<code>/<?php echo esc_html( $home_path ? $home_path . '/' : '' ); ?></code>
+				·
+				<?php esc_html_e( '.htaccess:', 'manual-docs' ); ?>
+				<?php echo file_exists( $htaccess ) ? esc_html__( 'found', 'manual-docs' ) : esc_html__( 'missing (create/writable needed)', 'manual-docs' ); ?>
+			</p>
+			<?php if ( function_exists( 'manual_docs_example_working_url' ) ) : ?>
+				<p>
+					<?php esc_html_e( 'Try this URL after saving:', 'manual-docs' ); ?>
+					<code><?php echo esc_html( manual_docs_example_working_url() ); ?></code>
+				</p>
+			<?php endif; ?>
+			<details style="margin:1em 0;">
+				<summary><?php esc_html_e( 'Show recommended .htaccess for subdirectory installs', 'manual-docs' ); ?></summary>
+				<pre style="background:#1e1e1e;color:#eee;padding:12px;overflow:auto;"><?php
+				echo esc_html( function_exists( 'manual_docs_recommended_htaccess' ) ? manual_docs_recommended_htaccess() : '' );
+				?></pre>
+				<p class="description"><?php esc_html_e( 'Only needed for Pretty mode. Put this in your WordPress root .htaccess (the digidocs folder). If Local still 404s, use index.php mode instead.', 'manual-docs' ); ?></p>
+			</details>
 
 			<h2 class="title"><?php esc_html_e( 'Access & UI', 'manual-docs' ); ?></h2>
 			<table class="form-table" role="presentation">

@@ -1,0 +1,19 @@
+# BEGIN WordPress
+# Copy into your WordPress root (e.g. htdocs/digidocs/.htaccess)
+# Then WP Admin → Appearance → Manual Docs → Flush + write .htaccess
+#
+# If you still see a plain Apache "Not Found" page, skip .htaccess and instead:
+# Appearance → Manual Docs → Fix Local 404s now
+# Then open URLs like:
+#   http://localhost:8888/digidocs/index.php/documentation/goat-2/getting-started/first-login/
+#
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /digidocs/
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /digidocs/index.php [L]
+</IfModule>
+# END WordPress

@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MANUAL_DOCS_VERSION', '2.3.0' );
+define( 'MANUAL_DOCS_VERSION', '2.5.0' );
 define( 'MANUAL_DOCS_DIR', get_template_directory() );
 define( 'MANUAL_DOCS_URI', get_template_directory_uri() );
 
@@ -174,6 +174,7 @@ $manual_docs_includes = array(
 	'rest-compat.php',
 	'security.php',
 	'cpt.php',
+	'permalinks.php',
 	'access-control.php',
 	'versioning.php',
 	'live-search.php',

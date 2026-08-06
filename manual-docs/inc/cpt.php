@@ -259,27 +259,35 @@ add_action( 'init', 'manual_docs_register_doc_rewrites', 30 );
  * Flush rewrite rules on theme switch only.
  */
 function manual_docs_rewrite_flush() {
+	if ( function_exists( 'manual_docs_hard_flush_rewrites' ) ) {
+		manual_docs_hard_flush_rewrites();
+		return;
+	}
 	manual_docs_register_cpt();
 	manual_docs_register_doc_rewrites();
-	flush_rewrite_rules();
-	update_option( 'manual_docs_permalinks_flushed_2_3', 1 );
+	flush_rewrite_rules( true );
+	update_option( 'manual_docs_permalinks_flushed_2_5', 1 );
 }
 add_action( 'after_switch_theme', 'manual_docs_rewrite_flush' );
 
 /**
- * One-time permalink flush after 2.3 rewrite fix.
+ * One-time hard permalink flush after 2.5 fix.
  */
 function manual_docs_maybe_flush_permalinks_once() {
 	if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
-	if ( get_option( 'manual_docs_permalinks_flushed_2_3' ) ) {
+	if ( get_option( 'manual_docs_permalinks_flushed_2_5' ) ) {
 		return;
 	}
-	manual_docs_register_cpt();
-	manual_docs_register_doc_rewrites();
-	flush_rewrite_rules( false );
-	update_option( 'manual_docs_permalinks_flushed_2_3', 1 );
+	if ( function_exists( 'manual_docs_hard_flush_rewrites' ) ) {
+		manual_docs_hard_flush_rewrites();
+	} else {
+		manual_docs_register_cpt();
+		manual_docs_register_doc_rewrites();
+		flush_rewrite_rules( true );
+		update_option( 'manual_docs_permalinks_flushed_2_5', 1 );
+	}
 }
 add_action( 'admin_init', 'manual_docs_maybe_flush_permalinks_once', 1 );
 
@@ -296,16 +304,70 @@ function manual_docs_handle_flush_permalinks() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
-	manual_docs_register_cpt();
-	manual_docs_register_doc_rewrites();
-	flush_rewrite_rules();
-	update_option( 'manual_docs_permalinks_flushed_2_3', 1 );
-	add_settings_error( 'manual_docs_options', 'manual_docs_flushed', __( 'Permalinks flushed. Try your documentation URL again.', 'manual-docs' ), 'updated' );
+
+	if ( ! get_option( 'permalink_structure' ) ) {
+		update_option( 'permalink_structure', '/%postname%/' );
+	}
+
+	$result = function_exists( 'manual_docs_hard_flush_rewrites' ) ? manual_docs_hard_flush_rewrites() : null;
+	$msg    = __( 'Permalinks hard-flushed.', 'manual-docs' );
+	if ( is_array( $result ) ) {
+		if ( true === $result['htaccess'] ) {
+			$msg .= ' ' . __( '.htaccess updated.', 'manual-docs' );
+		} elseif ( is_wp_error( $result['htaccess'] ) ) {
+			$msg .= ' ' . $result['htaccess']->get_error_message();
+			$msg .= ' ' . __( 'Use “Fix Local 404s now” (index.php URLs) instead.', 'manual-docs' );
+		}
+	}
+
+	add_settings_error( 'manual_docs_options', 'manual_docs_flushed', $msg, 'updated' );
 }
 add_action( 'admin_init', 'manual_docs_handle_flush_permalinks', 0 );
 
 /**
- * Admin notice when pretty permalinks are disabled (causes Apache 404 on /documentation/...).
+ * One-click Local 404 fix: switch to index.php permalinks + hard flush.
+ */
+function manual_docs_handle_fix_local_404() {
+	if ( ! isset( $_POST['manual_docs_fix_local_404'] ) ) {
+		return;
+	}
+	if ( ! isset( $_POST['manual_docs_options_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['manual_docs_options_nonce'] ) ), 'manual_docs_save_options' ) ) {
+		return;
+	}
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	$opts = get_option( 'manual_docs_options', array() );
+	if ( ! is_array( $opts ) ) {
+		$opts = array();
+	}
+	$opts['permalink_mode'] = 'index_php';
+	update_option( 'manual_docs_options', $opts );
+	update_option( 'permalink_structure', '/index.php/%postname%/' );
+
+	if ( function_exists( 'manual_docs_hard_flush_rewrites' ) ) {
+		manual_docs_hard_flush_rewrites();
+	} else {
+		flush_rewrite_rules( true );
+	}
+
+	$example = function_exists( 'manual_docs_example_working_url' ) ? manual_docs_example_working_url() : home_url( '/index.php/documentation/' );
+	add_settings_error(
+		'manual_docs_options',
+		'manual_docs_local_fixed',
+		sprintf(
+			/* translators: %s: example URL */
+			__( 'Switched to index.php URLs (no Apache rewrite needed). Open: %s', 'manual-docs' ),
+			esc_html( $example )
+		),
+		'updated'
+	);
+}
+add_action( 'admin_init', 'manual_docs_handle_fix_local_404', 0 );
+
+/**
+ * Admin notice when pretty permalinks are disabled.
  */
 function manual_docs_permalink_structure_notice() {
 	if ( ! current_user_can( 'manage_options' ) ) {
