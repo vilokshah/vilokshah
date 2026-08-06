@@ -1,0 +1,776 @@
+//@version=6
+strategy("SMC Professional Strategy", shorttitle="SMC Pro Strat",
+     overlay=true,
+     initial_capital=100000,
+     default_qty_type=strategy.percent_of_equity,
+     default_qty_value=5,
+     commission_type=strategy.commission.percent,
+     commission_value=0.02,
+     slippage=1,
+     pyramiding=0,
+     process_orders_on_close=true,
+     calc_on_every_tick=false,
+     max_lines_count=500,
+     max_labels_count=500,
+     max_boxes_count=100)
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SMC PROFESSIONAL STRATEGY — Pine Script v6
+// Non-repainting | Confirmed-bar entries only | No lookahead
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── Input Groups ─────────────────────────────────────────────────────────────
+string grpEma   = "1. Higher Timeframe EMA Trend"
+string grpCpr   = "2. Central Pivot Range (CPR)"
+string grpVwap  = "3. VWAP"
+string grpLiq   = "4. Liquidity Sweep"
+string grpBo    = "5. Breakout & Retest"
+string grpVol   = "6. Volume Confirmation"
+string grpRr    = "7. Risk Reward Filter"
+string grpAtr   = "8. ATR Volatility Filter"
+string grpSide  = "9. Sideways Market Filter"
+string grpTrade = "10. Trade Management"
+string grpVis   = "11. Visualization"
+string grpDash  = "12. Dashboard"
+string grpAlert = "13. Alerts"
+
+// ── Enable / Disable Modules ─────────────────────────────────────────────────
+bool useEmaFilter   = input.bool(true,  "Enable HTF EMA Trend",       group=grpEma)
+bool useCprFilter   = input.bool(true,  "Enable CPR Filter",          group=grpCpr)
+bool useVwapFilter  = input.bool(true,  "Enable VWAP Filter",         group=grpVwap)
+bool useLiqSweep    = input.bool(true,  "Enable Liquidity Sweep",     group=grpLiq)
+bool useBreakout    = input.bool(true,  "Enable Breakout",            group=grpBo)
+bool useRetest      = input.bool(true,  "Enable Retest",              group=grpBo)
+bool useVolFilter   = input.bool(true,  "Enable Volume Filter",       group=grpVol)
+bool useRrFilter    = input.bool(true,  "Enable Risk Reward Filter",  group=grpRr)
+bool useAtrFilter   = input.bool(true,  "Enable ATR Filter",          group=grpAtr)
+bool useSideFilter  = input.bool(true,  "Avoid Sideways Market",      group=grpSide)
+bool showDashboard  = input.bool(true,  "Show Dashboard",             group=grpDash)
+bool showLines      = input.bool(true,  "Show Entry/SL/Target Lines", group=grpVis)
+bool showTargets    = input.bool(true,  "Show Target Levels",         group=grpVis)
+bool showArrows     = input.bool(true,  "Show Buy/Sell Arrows",       group=grpVis)
+bool enableAlerts   = input.bool(true,  "Enable Alert Conditions",    group=grpAlert)
+
+// ── EMA Inputs ───────────────────────────────────────────────────────────────
+string htfTf    = input.timeframe("60", "Higher Timeframe", group=grpEma)
+int emaFastLen  = input.int(50,  "Fast EMA Length", minval=1, group=grpEma)
+int emaSlowLen  = input.int(200, "Slow EMA Length", minval=1, group=grpEma)
+
+// ── CPR Inputs ───────────────────────────────────────────────────────────────
+string cprTf        = input.timeframe("D", "CPR Timeframe", group=grpCpr)
+float narrowCprPct  = input.float(0.25, "Narrow CPR % of Price", minval=0.01, step=0.01, group=grpCpr)
+float wideCprPct    = input.float(0.75, "Wide CPR % of Price",   minval=0.01, step=0.01, group=grpCpr)
+bool preferNarrowCpr = input.bool(true, "Prefer Narrow CPR for Entries", group=grpCpr)
+
+// ── VWAP Inputs ──────────────────────────────────────────────────────────────
+string vwapAnchor = input.string("Session", "VWAP Anchor", options=["Session", "Week", "Month"], group=grpVwap)
+
+// ── Liquidity Sweep Inputs ───────────────────────────────────────────────────
+int swingLen       = input.int(5,   "Swing Lookback", minval=2, maxval=50, group=grpLiq)
+int sweepLookback  = input.int(20,  "Sweep Search Bars", minval=5, maxval=100, group=grpLiq)
+float sweepTolPct  = input.float(0.05, "Sweep Tolerance %", minval=0.0, step=0.01, group=grpLiq)
+
+// ── Breakout / Retest Inputs ─────────────────────────────────────────────────
+int boLookback     = input.int(20, "Breakout Lookback", minval=5, maxval=100, group=grpBo)
+int retestBars     = input.int(8,  "Retest Window (bars)", minval=1, maxval=50, group=grpBo)
+float retestTolPct = input.float(0.15, "Retest Tolerance %", minval=0.0, step=0.01, group=grpBo)
+
+// ── Volume Inputs ────────────────────────────────────────────────────────────
+int volMaLen       = input.int(20, "Volume MA Length", minval=1, group=grpVol)
+float volMult      = input.float(1.0, "Volume > MA Multiplier", minval=0.1, step=0.1, group=grpVol)
+
+// ── Risk Reward Inputs ───────────────────────────────────────────────────────
+float minRr        = input.float(2.0, "Minimum RR (1:X)", minval=1.0, step=0.1, group=grpRr)
+float t1Rr         = input.float(1.5, "Target 1 RR Floor", minval=0.5, step=0.1, group=grpRr)
+float t2Rr         = input.float(2.5, "Target 2 RR Floor", minval=0.5, step=0.1, group=grpRr)
+float t3Rr         = input.float(4.0, "Target 3 RR Floor", minval=0.5, step=0.1, group=grpRr)
+float t1QtyPct     = input.float(40.0, "T1 Exit Qty %", minval=1, maxval=98, group=grpRr)
+float t2QtyPct     = input.float(35.0, "T2 Exit Qty %", minval=1, maxval=98, group=grpRr)
+
+// ── ATR Inputs ───────────────────────────────────────────────────────────────
+int atrLen           = input.int(14, "ATR Length", minval=1, group=grpAtr)
+float atrAbnormalMult = input.float(2.5, "Abnormal Candle ATR Mult", minval=1.0, step=0.1, group=grpAtr)
+float atrSlBufferMult = input.float(0.5, "ATR SL Buffer Mult", minval=0.0, step=0.1, group=grpAtr)
+
+// ── Sideways Filter Inputs ───────────────────────────────────────────────────
+int adxLen         = input.int(14, "ADX Length", minval=1, group=grpSide)
+float adxThreshold = input.float(20.0, "Min ADX (trend strength)", minval=1.0, step=0.5, group=grpSide)
+float emaSpreadPct = input.float(0.15, "Min EMA Spread %", minval=0.0, step=0.01, group=grpSide)
+
+// ── Trade Management ─────────────────────────────────────────────────────────
+bool allowLongs      = input.bool(true, "Allow Long Entries", group=grpTrade)
+bool allowShorts     = input.bool(true, "Allow Short Entries", group=grpTrade)
+int minConfirmations = input.int(5, "Minimum Confirmations Required", minval=1, maxval=10, group=grpTrade)
+int cooldownBars     = input.int(3, "Cooldown Bars After Exit", minval=0, maxval=50, group=grpTrade)
+
+// ── Visualization Colors ─────────────────────────────────────────────────────
+color buyColor  = input.color(color.new(color.teal, 0),   "Buy Color",  group=grpVis)
+color sellColor = input.color(color.new(color.red, 0),    "Sell Color", group=grpVis)
+color slColor   = input.color(color.new(color.orange, 0), "SL Color",   group=grpVis)
+color t1Color   = input.color(color.new(color.lime, 0),   "T1 Color",   group=grpVis)
+color t2Color   = input.color(color.new(color.green, 0),  "T2 Color",   group=grpVis)
+color t3Color   = input.color(color.new(color.aqua, 0),   "T3 Color",   group=grpVis)
+
+// ══════════════════════════════════════════════════════════════════════════════
+// HELPER FUNCTIONS (≤10 params each; no const-style args through params)
+// ══════════════════════════════════════════════════════════════════════════════
+
+// Returns true only on a closed (confirmed) bar — prevents repainting.
+f_isConfirmed() =>
+    barstate.isconfirmed
+
+// Safe percentage distance between two prices.
+f_pctDist(float a, float b) =>
+    float mid = (math.abs(a) + math.abs(b)) * 0.5
+    mid == 0.0 ? 0.0 : math.abs(a - b) / mid * 100.0
+
+// Risk-reward ratio given entry, stop, and target (absolute).
+f_rr(float entry, float stop, float target) =>
+    float risk = math.abs(entry - stop)
+    risk == 0.0 ? 0.0 : math.abs(target - entry) / risk
+
+// Picks the nearest level above price from four candidates.
+f_nearestAbove(float px, float l1, float l2, float l3, float l4) =>
+    float best = na
+    float dBest = na
+    if not na(l1) and l1 > px
+        best := l1
+        dBest := l1 - px
+    if not na(l2) and l2 > px
+        float d2 = l2 - px
+        if na(dBest) or d2 < dBest
+            best := l2
+            dBest := d2
+    if not na(l3) and l3 > px
+        float d3 = l3 - px
+        if na(dBest) or d3 < dBest
+            best := l3
+            dBest := d3
+    if not na(l4) and l4 > px
+        float d4 = l4 - px
+        if na(dBest) or d4 < dBest
+            best := l4
+            dBest := d4
+    best
+
+// Picks the nearest level below price from four candidates.
+f_nearestBelow(float px, float l1, float l2, float l3, float l4) =>
+    float best = na
+    float dBest = na
+    if not na(l1) and l1 < px
+        best := l1
+        dBest := px - l1
+    if not na(l2) and l2 < px
+        float d2 = px - l2
+        if na(dBest) or d2 < dBest
+            best := l2
+            dBest := d2
+    if not na(l3) and l3 < px
+        float d3 = px - l3
+        if na(dBest) or d3 < dBest
+            best := l3
+            dBest := d3
+    if not na(l4) and l4 < px
+        float d4 = px - l4
+        if na(dBest) or d4 < dBest
+            best := l4
+            dBest := d4
+    best
+
+// Classic ADX computation (Wilder).
+f_adx(int len) =>
+    float upMove = high - high[1]
+    float dnMove = low[1] - low
+    float plusDM = upMove > dnMove and upMove > 0 ? upMove : 0.0
+    float minusDM = dnMove > upMove and dnMove > 0 ? dnMove : 0.0
+    float tr = math.max(high - low, math.max(math.abs(high - close[1]), math.abs(low - close[1])))
+    float atrW = ta.rma(tr, len)
+    float plusDI = atrW == 0.0 ? 0.0 : 100.0 * ta.rma(plusDM, len) / atrW
+    float minusDI = atrW == 0.0 ? 0.0 : 100.0 * ta.rma(minusDM, len) / atrW
+    float diSum = plusDI + minusDI
+    float dx = diSum == 0.0 ? 0.0 : 100.0 * math.abs(plusDI - minusDI) / diSum
+    ta.rma(dx, len)
+
+// Detects confirmed pivot high.
+f_pivotHigh(int len) =>
+    ta.pivothigh(high, len, len)
+
+// Detects confirmed pivot low.
+f_pivotLow(int len) =>
+    ta.pivotlow(low, len, len)
+
+// Returns true when a new VWAP anchor period begins.
+f_vwapIsNewPeriod(string anchor) =>
+    anchor == "Session" ? ta.change(time("D")) != 0 : anchor == "Week" ? ta.change(time("W")) != 0 : ta.change(time("M")) != 0
+
+// Incremental VWAP without lookahead.
+f_vwap(string anchor) =>
+    var float cumPV = 0.0
+    var float cumV = 0.0
+    float tp = hlc3
+    float vol = nz(volume, 1.0)
+    if f_vwapIsNewPeriod(anchor)
+        cumPV := tp * vol
+        cumV := vol
+    else
+        cumPV += tp * vol
+        cumV += vol
+    cumV == 0.0 ? tp : cumPV / cumV
+
+// Computes CPR from prior period OHLC.
+// Returns [pivot, tc, bc, widthPct, isNarrow, isWide, isBullish, isBearish]
+f_cprFromOhlc(float ph, float pl, float pc, float narrowPct, float widePct) =>
+    float piv = (ph + pl + pc) / 3.0
+    float bc = (ph + pl) / 2.0
+    float tc = (piv - bc) + piv
+    float width = math.abs(tc - bc)
+    float widthPct = piv == 0.0 ? 0.0 : width / piv * 100.0
+    bool isNarrow = widthPct <= narrowPct
+    bool isWide = widthPct >= widePct
+    bool isBullish = pc > piv
+    bool isBearish = pc < piv
+    [piv, tc, bc, widthPct, isNarrow, isWide, isBullish, isBearish]
+
+// Counts true flags among nine confirmations.
+f_countFlags(bool a, bool b, bool c, bool d, bool e, bool f, bool g, bool h, bool i) =>
+    (a ? 1 : 0) + (b ? 1 : 0) + (c ? 1 : 0) + (d ? 1 : 0) + (e ? 1 : 0) + (f ? 1 : 0) + (g ? 1 : 0) + (h ? 1 : 0) + (i ? 1 : 0)
+
+// Formats a float for dashboard cells.
+f_fmt2(float v) =>
+    str.tostring(v, "#.##")
+
+// Long stop priority: Sweep → Swing → CPR → ATR.
+f_longStop(float sweepLvl, float swingLvl, float cprLvl, float atrBuf, float entryPx) =>
+    float sl = na
+    if not na(sweepLvl)
+        sl := sweepLvl - atrBuf
+    else if not na(swingLvl)
+        sl := swingLvl - atrBuf
+    else if not na(cprLvl)
+        sl := cprLvl - atrBuf
+    else
+        sl := entryPx - atrBuf * 2.0
+    sl
+
+// Short stop priority: Sweep → Swing → CPR → ATR.
+f_shortStop(float sweepLvl, float swingLvl, float cprLvl, float atrBuf, float entryPx) =>
+    float sl = na
+    if not na(sweepLvl)
+        sl := sweepLvl + atrBuf
+    else if not na(swingLvl)
+        sl := swingLvl + atrBuf
+    else if not na(cprLvl)
+        sl := cprLvl + atrBuf
+    else
+        sl := entryPx + atrBuf * 2.0
+    sl
+
+// Builds long targets using structure levels + RR floors (≤10 params).
+// c1..c4 = structure candidates above entry; rrA/B/C = RR floors.
+f_longTargets(float entry, float stop, float c1, float c2, float c3, float c4, float rrA, float rrB, float rrC) =>
+    float risk = math.abs(entry - stop)
+    float rr1 = entry + risk * rrA
+    float rr2 = entry + risk * rrB
+    float rr3 = entry + risk * rrC
+    float n1 = f_nearestAbove(entry, c1, c2, c3, c4)
+    float t1 = not na(n1) and n1 >= entry + risk * math.min(1.0, rrA) ? n1 : rr1
+    float n2 = f_nearestAbove(t1, c1, c2, c3, c4)
+    float t2 = not na(n2) and n2 > t1 and n2 >= entry + risk * rrB * 0.8 ? n2 : rr2
+    float n3 = f_nearestAbove(t2, c1, c2, c3, c4)
+    float t3 = not na(n3) and n3 > t2 ? n3 : rr3
+    if t2 <= t1
+        t2 := rr2
+    if t3 <= t2
+        t3 := rr3
+    [t1, t2, t3]
+
+// Builds short targets using structure levels + RR floors (≤10 params).
+f_shortTargets(float entry, float stop, float c1, float c2, float c3, float c4, float rrA, float rrB, float rrC) =>
+    float risk = math.abs(entry - stop)
+    float rr1 = entry - risk * rrA
+    float rr2 = entry - risk * rrB
+    float rr3 = entry - risk * rrC
+    float n1 = f_nearestBelow(entry, c1, c2, c3, c4)
+    float t1 = not na(n1) and n1 <= entry - risk * math.min(1.0, rrA) ? n1 : rr1
+    float n2 = f_nearestBelow(t1, c1, c2, c3, c4)
+    float t2 = not na(n2) and n2 < t1 and n2 <= entry - risk * rrB * 0.8 ? n2 : rr2
+    float n3 = f_nearestBelow(t2, c1, c2, c3, c4)
+    float t3 = not na(n3) and n3 < t2 ? n3 : rr3
+    if t2 >= t1
+        t2 := rr2
+    if t3 >= t2
+        t3 := rr3
+    [t1, t2, t3]
+
+// Creates a solid trade line (style is const — not passed as param).
+f_lineSolid(int x1, float y1, int x2, float y2, color col) =>
+    line.new(x1, y1, x2, y2, xloc=xloc.bar_index, extend=extend.none, color=col, width=2, style=line.style_solid)
+
+// Creates a dashed trade line.
+f_lineDash(int x1, float y1, int x2, float y2, color col) =>
+    line.new(x1, y1, x2, y2, xloc=xloc.bar_index, extend=extend.none, color=col, width=2, style=line.style_dashed)
+
+// Creates a dotted trade line.
+f_lineDot(int x1, float y1, int x2, float y2, color col) =>
+    line.new(x1, y1, x2, y2, xloc=xloc.bar_index, extend=extend.none, color=col, width=2, style=line.style_dotted)
+
+// Creates an upward label.
+f_labelUp(int x, float y, string txt, color col) =>
+    label.new(x, y, txt, xloc=xloc.bar_index, yloc=yloc.price, color=color.new(col, 70), textcolor=col, style=label.style_label_up, size=size.small)
+
+// Creates a downward label.
+f_labelDown(int x, float y, string txt, color col) =>
+    label.new(x, y, txt, xloc=xloc.bar_index, yloc=yloc.price, color=color.new(col, 70), textcolor=col, style=label.style_label_down, size=size.small)
+
+// Creates a left-pointing label.
+f_labelLeft(int x, float y, string txt, color col) =>
+    label.new(x, y, txt, xloc=xloc.bar_index, yloc=yloc.price, color=color.new(col, 70), textcolor=col, style=label.style_label_left, size=size.small)
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CORE SERIES
+// ══════════════════════════════════════════════════════════════════════════════
+
+float atrValue = ta.atr(atrLen)
+float volMa = ta.sma(volume, volMaLen)
+float adxValue = f_adx(adxLen)
+float localEmaFast = ta.ema(close, emaFastLen)
+float localEmaSlow = ta.ema(close, emaSlowLen)
+
+float candleRange = high - low
+bool isAbnormalCandle = candleRange > atrValue * atrAbnormalMult
+bool volConfirmed = volume > volMa * volMult
+
+float emaSpread = f_pctDist(localEmaFast, localEmaSlow)
+bool isTrending = adxValue >= adxThreshold and emaSpread >= emaSpreadPct
+bool isSideways = not isTrending
+
+// ══════════════════════════════════════════════════════════════════════════════
+// HTF EMA TREND (no lookahead)
+// ══════════════════════════════════════════════════════════════════════════════
+
+float htfClose = request.security(syminfo.tickerid, htfTf, close, lookahead=barmerge.lookahead_off, gaps=barmerge.gaps_off)
+float htfEmaFast = request.security(syminfo.tickerid, htfTf, ta.ema(close, emaFastLen), lookahead=barmerge.lookahead_off, gaps=barmerge.gaps_off)
+float htfEmaSlow = request.security(syminfo.tickerid, htfTf, ta.ema(close, emaSlowLen), lookahead=barmerge.lookahead_off, gaps=barmerge.gaps_off)
+
+bool htfBullTrend = htfEmaFast > htfEmaSlow and htfClose > htfEmaFast
+bool htfBearTrend = htfEmaFast < htfEmaSlow and htfClose < htfEmaFast
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CPR (prior period, no lookahead)
+// ══════════════════════════════════════════════════════════════════════════════
+
+[cprPh, cprPl, cprPc] = request.security(syminfo.tickerid, cprTf, [high[1], low[1], close[1]], lookahead=barmerge.lookahead_off, gaps=barmerge.gaps_off)
+[cprPivot, cprTc, cprBc, cprWidthPct, cprNarrow, cprWide, cprBullish, cprBearish] = f_cprFromOhlc(cprPh, cprPl, cprPc, narrowCprPct, wideCprPct)
+
+bool cprLongOk = not useCprFilter or (cprBullish and (not preferNarrowCpr or cprNarrow or not cprWide))
+bool cprShortOk = not useCprFilter or (cprBearish and (not preferNarrowCpr or cprNarrow or not cprWide))
+
+// ══════════════════════════════════════════════════════════════════════════════
+// VWAP
+// ══════════════════════════════════════════════════════════════════════════════
+
+float vwapValue = f_vwap(vwapAnchor)
+bool vwapLongOk = not useVwapFilter or close > vwapValue
+bool vwapShortOk = not useVwapFilter or close < vwapValue
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SWINGS & LIQUIDITY SWEEP
+// ══════════════════════════════════════════════════════════════════════════════
+
+float phRaw = f_pivotHigh(swingLen)
+float plRaw = f_pivotLow(swingLen)
+
+var array<float> swingHighs = array.new_float()
+var array<float> swingLows = array.new_float()
+var array<int> swingHighBars = array.new_int()
+var array<int> swingLowBars = array.new_int()
+
+if not na(phRaw)
+    array.push(swingHighs, phRaw)
+    array.push(swingHighBars, bar_index - swingLen)
+    if array.size(swingHighs) > 30
+        array.shift(swingHighs)
+        array.shift(swingHighBars)
+
+if not na(plRaw)
+    array.push(swingLows, plRaw)
+    array.push(swingLowBars, bar_index - swingLen)
+    if array.size(swingLows) > 30
+        array.shift(swingLows)
+        array.shift(swingLowBars)
+
+float lastSwingHigh = array.size(swingHighs) > 0 ? array.get(swingHighs, array.size(swingHighs) - 1) : na
+float lastSwingLow = array.size(swingLows) > 0 ? array.get(swingLows, array.size(swingLows) - 1) : na
+float priorSwingHigh = array.size(swingHighs) > 1 ? array.get(swingHighs, array.size(swingHighs) - 2) : na
+float priorSwingLow = array.size(swingLows) > 1 ? array.get(swingLows, array.size(swingLows) - 2) : na
+
+bool bullishSweep = false
+float bullSweepLevel = na
+if useLiqSweep and not na(lastSwingLow)
+    bool bullTookLiq = low < lastSwingLow
+    bool bullReclaim = close > lastSwingLow
+    int bullSwingAge = array.size(swingLowBars) > 0 ? bar_index - array.get(swingLowBars, array.size(swingLowBars) - 1) : 999999
+    bool bullSwingAged = bullSwingAge <= sweepLookback and bullSwingAge >= swingLen
+    bullishSweep := bullTookLiq and bullReclaim and bullSwingAged
+    if bullishSweep
+        bullSweepLevel := lastSwingLow
+
+bool bearishSweep = false
+float bearSweepLevel = na
+if useLiqSweep and not na(lastSwingHigh)
+    bool bearTookLiq = high > lastSwingHigh
+    bool bearReclaim = close < lastSwingHigh
+    int bearSwingAge = array.size(swingHighBars) > 0 ? bar_index - array.get(swingHighBars, array.size(swingHighBars) - 1) : 999999
+    bool bearSwingAged = bearSwingAge <= sweepLookback and bearSwingAge >= swingLen
+    bearishSweep := bearTookLiq and bearReclaim and bearSwingAged
+    if bearishSweep
+        bearSweepLevel := lastSwingHigh
+
+// ══════════════════════════════════════════════════════════════════════════════
+// BREAKOUT & RETEST
+// ══════════════════════════════════════════════════════════════════════════════
+
+float boHigh = ta.highest(high[1], boLookback)
+float boLow = ta.lowest(low[1], boLookback)
+
+bool bullBreakout = close > boHigh and close[1] <= boHigh
+bool bearBreakout = close < boLow and close[1] >= boLow
+
+var int lastBullBoBar = na
+var float lastBullBoLevel = na
+var int lastBearBoBar = na
+var float lastBearBoLevel = na
+
+if bullBreakout
+    lastBullBoBar := bar_index
+    lastBullBoLevel := boHigh
+if bearBreakout
+    lastBearBoBar := bar_index
+    lastBearBoLevel := boLow
+
+bool bullRetest = false
+bool bearRetest = false
+
+if useRetest and not na(lastBullBoBar) and not na(lastBullBoLevel)
+    int bullAge = bar_index - lastBullBoBar
+    if bullAge > 0 and bullAge <= retestBars
+        bool bullTouched = low <= lastBullBoLevel * (1.0 + retestTolPct / 100.0) and low >= lastBullBoLevel * (1.0 - retestTolPct / 100.0)
+        bool bullHeld = close >= lastBullBoLevel
+        bullRetest := bullTouched and bullHeld
+
+if useRetest and not na(lastBearBoBar) and not na(lastBearBoLevel)
+    int bearAge = bar_index - lastBearBoBar
+    if bearAge > 0 and bearAge <= retestBars
+        bool bearTouched = high >= lastBearBoLevel * (1.0 - retestTolPct / 100.0) and high <= lastBearBoLevel * (1.0 + retestTolPct / 100.0)
+        bool bearHeld = close <= lastBearBoLevel
+        bearRetest := bearTouched and bearHeld
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DYNAMIC STOP LOSS
+// ══════════════════════════════════════════════════════════════════════════════
+
+float atrBuf = atrValue * atrSlBufferMult
+float cprLongSl = not na(cprBc) ? math.min(cprBc, cprPivot) : na
+float cprShortSl = not na(cprTc) ? math.max(cprTc, cprPivot) : na
+
+float longStopCandidate = f_longStop(bullishSweep ? bullSweepLevel : na, lastSwingLow, cprLongSl, atrBuf, close)
+float shortStopCandidate = f_shortStop(bearishSweep ? bearSweepLevel : na, lastSwingHigh, cprShortSl, atrBuf, close)
+longStopCandidate := math.min(longStopCandidate, close - math.max(atrBuf, syminfo.mintick))
+shortStopCandidate := math.max(shortStopCandidate, close + math.max(atrBuf, syminfo.mintick))
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DYNAMIC TARGETS
+// ══════════════════════════════════════════════════════════════════════════════
+
+[prevDayHigh, prevDayLow] = request.security(syminfo.tickerid, "D", [high[1], low[1]], lookahead=barmerge.lookahead_off, gaps=barmerge.gaps_off)
+
+float longC1 = lastSwingHigh
+float longC2 = priorSwingHigh
+float longC3 = prevDayHigh
+float longC4 = cprTc
+float shortC1 = lastSwingLow
+float shortC2 = priorSwingLow
+float shortC3 = prevDayLow
+float shortC4 = cprBc
+
+[longT1, longT2, longT3] = f_longTargets(close, longStopCandidate, longC1, longC2, longC3, longC4, t1Rr, t2Rr, t3Rr)
+[shortT1, shortT2, shortT3] = f_shortTargets(close, shortStopCandidate, shortC1, shortC2, shortC3, shortC4, t1Rr, t2Rr, t3Rr)
+
+bool longRrOk = not useRrFilter or f_rr(close, longStopCandidate, longT2) >= minRr
+bool shortRrOk = not useRrFilter or f_rr(close, shortStopCandidate, shortT2) >= minRr
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CONFIRMATION AGGREGATION
+// ══════════════════════════════════════════════════════════════════════════════
+
+bool emaLongOk = not useEmaFilter or htfBullTrend
+bool emaShortOk = not useEmaFilter or htfBearTrend
+bool liqLongOk = not useLiqSweep or bullishSweep
+bool liqShortOk = not useLiqSweep or bearishSweep
+bool volOk = not useVolFilter or volConfirmed
+bool atrOk = not useAtrFilter or not isAbnormalCandle
+bool sideOk = not useSideFilter or not isSideways
+
+bool structLongOk = true
+bool structShortOk = true
+if useBreakout and useRetest
+    structLongOk := bullBreakout or bullRetest
+    structShortOk := bearBreakout or bearRetest
+else if useBreakout
+    structLongOk := bullBreakout
+    structShortOk := bearBreakout
+else if useRetest
+    structLongOk := bullRetest
+    structShortOk := bearRetest
+
+int longConfCount = f_countFlags(emaLongOk, cprLongOk, vwapLongOk, liqLongOk, structLongOk, volOk, longRrOk, atrOk, sideOk)
+int shortConfCount = f_countFlags(emaShortOk, cprShortOk, vwapShortOk, liqShortOk, structShortOk, volOk, shortRrOk, atrOk, sideOk)
+
+bool longReady = allowLongs and longConfCount >= minConfirmations and emaLongOk and cprLongOk and vwapLongOk and liqLongOk and structLongOk and volOk and longRrOk and atrOk and sideOk and longStopCandidate < close
+bool shortReady = allowShorts and shortConfCount >= minConfirmations and emaShortOk and cprShortOk and vwapShortOk and liqShortOk and structShortOk and volOk and shortRrOk and atrOk and sideOk and shortStopCandidate > close
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TRADE STATE
+// ══════════════════════════════════════════════════════════════════════════════
+
+var float activeEntry = na
+var float activeStop = na
+var float activeT1 = na
+var float activeT2 = na
+var float activeT3 = na
+var int activeDir = 0
+var int activeEntryBar = na
+var int lastExitBar = na
+
+var line lnEntry = na
+var line lnStop = na
+var line lnT1 = na
+var line lnT2 = na
+var line lnT3 = na
+
+var array<line> histLines = array.new_line()
+var array<label> histLabels = array.new_label()
+
+var int statTotal = 0
+var int statWins = 0
+var int statLosses = 0
+var int statSlHits = 0
+var int statTpHits = 0
+var float statGrossProfit = 0.0
+var float statGrossLoss = 0.0
+var float statPeakEquity = strategy.equity
+var float statMaxDD = 0.0
+
+var bool alertBuy = false
+var bool alertSell = false
+var bool alertSL = false
+var bool alertTP = false
+
+alertBuy := false
+alertSell := false
+alertSL := false
+alertTP := false
+
+bool canTrade = na(lastExitBar) or (bar_index - lastExitBar) >= cooldownBars
+bool isFlat = strategy.position_size == 0
+float t3QtyPct = math.max(1.0, 100.0 - t1QtyPct - t2QtyPct)
+
+// Opposite-signal flatten
+if f_isConfirmed() and not isFlat
+    if strategy.position_size > 0 and shortReady
+        strategy.close("Long", comment="Opposite short signal")
+    if strategy.position_size < 0 and longReady
+        strategy.close("Short", comment="Opposite long signal")
+
+// Confirmed-bar entries only
+if f_isConfirmed() and strategy.position_size == 0 and canTrade
+    if longReady and not shortReady
+        activeEntry := close
+        activeStop := longStopCandidate
+        activeT1 := longT1
+        activeT2 := longT2
+        activeT3 := longT3
+        activeDir := 1
+        activeEntryBar := bar_index
+        strategy.entry("Long", strategy.long)
+        strategy.exit("L-T1", from_entry="Long", qty_percent=t1QtyPct, limit=activeT1, stop=activeStop)
+        strategy.exit("L-T2", from_entry="Long", qty_percent=t2QtyPct, limit=activeT2, stop=activeStop)
+        strategy.exit("L-T3", from_entry="Long", qty_percent=t3QtyPct, limit=activeT3, stop=activeStop)
+        alertBuy := true
+        if showArrows
+            array.push(histLabels, f_labelUp(bar_index, low, "BUY", buyColor))
+        if showLines
+            lnEntry := f_lineSolid(bar_index, activeEntry, bar_index + 1, activeEntry, buyColor)
+            lnStop := f_lineDash(bar_index, activeStop, bar_index + 1, activeStop, slColor)
+            array.push(histLines, lnEntry)
+            array.push(histLines, lnStop)
+            if showTargets
+                lnT1 := f_lineDot(bar_index, activeT1, bar_index + 1, activeT1, t1Color)
+                lnT2 := f_lineDot(bar_index, activeT2, bar_index + 1, activeT2, t2Color)
+                lnT3 := f_lineDot(bar_index, activeT3, bar_index + 1, activeT3, t3Color)
+                array.push(histLines, lnT1)
+                array.push(histLines, lnT2)
+                array.push(histLines, lnT3)
+            array.push(histLabels, f_labelLeft(bar_index, activeEntry, "ENTRY", buyColor))
+
+    else if shortReady and not longReady
+        activeEntry := close
+        activeStop := shortStopCandidate
+        activeT1 := shortT1
+        activeT2 := shortT2
+        activeT3 := shortT3
+        activeDir := -1
+        activeEntryBar := bar_index
+        strategy.entry("Short", strategy.short)
+        strategy.exit("S-T1", from_entry="Short", qty_percent=t1QtyPct, limit=activeT1, stop=activeStop)
+        strategy.exit("S-T2", from_entry="Short", qty_percent=t2QtyPct, limit=activeT2, stop=activeStop)
+        strategy.exit("S-T3", from_entry="Short", qty_percent=t3QtyPct, limit=activeT3, stop=activeStop)
+        alertSell := true
+        if showArrows
+            array.push(histLabels, f_labelDown(bar_index, high, "SELL", sellColor))
+        if showLines
+            lnEntry := f_lineSolid(bar_index, activeEntry, bar_index + 1, activeEntry, sellColor)
+            lnStop := f_lineDash(bar_index, activeStop, bar_index + 1, activeStop, slColor)
+            array.push(histLines, lnEntry)
+            array.push(histLines, lnStop)
+            if showTargets
+                lnT1 := f_lineDot(bar_index, activeT1, bar_index + 1, activeT1, t1Color)
+                lnT2 := f_lineDot(bar_index, activeT2, bar_index + 1, activeT2, t2Color)
+                lnT3 := f_lineDot(bar_index, activeT3, bar_index + 1, activeT3, t3Color)
+                array.push(histLines, lnT1)
+                array.push(histLines, lnT2)
+                array.push(histLines, lnT3)
+            array.push(histLabels, f_labelLeft(bar_index, activeEntry, "ENTRY", sellColor))
+
+// Extend active lines
+if strategy.position_size != 0 and showLines
+    if not na(lnEntry)
+        line.set_x2(lnEntry, bar_index)
+    if not na(lnStop)
+        line.set_x2(lnStop, bar_index)
+    if showTargets
+        if not na(lnT1)
+            line.set_x2(lnT1, bar_index)
+        if not na(lnT2)
+            line.set_x2(lnT2, bar_index)
+        if not na(lnT3)
+            line.set_x2(lnT3, bar_index)
+
+// Exit stats / marks
+bool justClosed = strategy.position_size == 0 and strategy.position_size[1] != 0
+
+if f_isConfirmed() and justClosed and activeDir != 0 and strategy.closedtrades > 0
+    float exitPrice = strategy.closedtrades.exit_price(strategy.closedtrades - 1)
+    float pnl = strategy.closedtrades.profit(strategy.closedtrades - 1)
+    statTotal += 1
+    if pnl > 0.0
+        statWins += 1
+        statGrossProfit += pnl
+        statTpHits += 1
+        alertTP := true
+    else
+        statLosses += 1
+        statGrossLoss += math.abs(pnl)
+        bool hitSl = activeDir == 1 ? low <= activeStop : high >= activeStop
+        if hitSl
+            statSlHits += 1
+            alertSL := true
+        else if pnl >= 0.0
+            statTpHits += 1
+            alertTP := true
+
+    if showArrows or showLines
+        color exitCol = pnl >= 0.0 ? t1Color : slColor
+        array.push(histLabels, f_labelLeft(bar_index, exitPrice, "EXIT", exitCol))
+
+    lastExitBar := bar_index
+    activeDir := 0
+    activeEntry := na
+    activeStop := na
+    activeT1 := na
+    activeT2 := na
+    activeT3 := na
+    activeEntryBar := na
+    lnEntry := na
+    lnStop := na
+    lnT1 := na
+    lnT2 := na
+    lnT3 := na
+
+statPeakEquity := math.max(statPeakEquity, strategy.equity)
+float dd = statPeakEquity > 0.0 ? (statPeakEquity - strategy.equity) / statPeakEquity * 100.0 : 0.0
+statMaxDD := math.max(statMaxDD, dd)
+
+if array.size(histLines) > 400
+    line.delete(array.shift(histLines))
+if array.size(histLabels) > 400
+    label.delete(array.shift(histLabels))
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PLOTS
+// ══════════════════════════════════════════════════════════════════════════════
+
+plot(useVwapFilter ? vwapValue : na, "VWAP", color=color.new(color.blue, 30), linewidth=2)
+plot(useEmaFilter ? htfEmaFast : na, "HTF EMA Fast", color=color.new(color.teal, 40), linewidth=1)
+plot(useEmaFilter ? htfEmaSlow : na, "HTF EMA Slow", color=color.new(color.fuchsia, 40), linewidth=1)
+plot(useCprFilter ? cprPivot : na, "CPR Pivot", color=color.new(color.gray, 50), style=plot.style_circles, linewidth=1)
+plot(useCprFilter ? cprTc : na, "CPR TC", color=color.new(color.green, 60), style=plot.style_linebr, linewidth=1)
+plot(useCprFilter ? cprBc : na, "CPR BC", color=color.new(color.red, 60), style=plot.style_linebr, linewidth=1)
+
+plotshape(showArrows and alertBuy, title="Buy Arrow", style=shape.triangleup, location=location.belowbar, color=buyColor, size=size.small, text="B")
+plotshape(showArrows and alertSell, title="Sell Arrow", style=shape.triangledown, location=location.abovebar, color=sellColor, size=size.small, text="S")
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════════════════════════════════════════
+
+var table dash = table.new(position.top_right, 2, 12, bgcolor=color.new(color.black, 75), border_width=1, border_color=color.new(color.gray, 50))
+
+if showDashboard and barstate.islast
+    float winRate = statTotal > 0 ? statWins * 100.0 / statTotal : 0.0
+    float profitFactor = statGrossLoss > 0.0 ? statGrossProfit / statGrossLoss : (statGrossProfit > 0.0 ? 999.0 : 0.0)
+    float netPnl = strategy.netprofit
+
+    table.cell(dash, 0, 0, "SMC PRO", text_color=color.white, text_size=size.small)
+    table.cell(dash, 1, 0, "STATS", text_color=color.aqua, text_size=size.small)
+    table.cell(dash, 0, 1, "Total Trades", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 1, str.tostring(statTotal), text_color=color.white, text_size=size.tiny)
+    table.cell(dash, 0, 2, "Winning", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 2, str.tostring(statWins), text_color=color.lime, text_size=size.tiny)
+    table.cell(dash, 0, 3, "Losing", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 3, str.tostring(statLosses), text_color=color.red, text_size=size.tiny)
+    table.cell(dash, 0, 4, "SL Hits", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 4, str.tostring(statSlHits), text_color=color.orange, text_size=size.tiny)
+    table.cell(dash, 0, 5, "Target Hits", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 5, str.tostring(statTpHits), text_color=color.lime, text_size=size.tiny)
+    table.cell(dash, 0, 6, "Win Rate %", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 6, f_fmt2(winRate), text_color=winRate >= 50.0 ? color.lime : color.red, text_size=size.tiny)
+    table.cell(dash, 0, 7, "Profit Factor", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 7, f_fmt2(profitFactor), text_color=profitFactor >= 1.0 ? color.lime : color.red, text_size=size.tiny)
+    table.cell(dash, 0, 8, "Net Profit", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 8, f_fmt2(netPnl), text_color=netPnl >= 0.0 ? color.lime : color.red, text_size=size.tiny)
+    table.cell(dash, 0, 9, "Max DD %", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 9, f_fmt2(statMaxDD), text_color=color.orange, text_size=size.tiny)
+    table.cell(dash, 0, 10, "Long Conf", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 10, str.tostring(longConfCount) + "/" + str.tostring(minConfirmations), text_color=color.teal, text_size=size.tiny)
+    table.cell(dash, 0, 11, "Short Conf", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 11, str.tostring(shortConfCount) + "/" + str.tostring(minConfirmations), text_color=color.red, text_size=size.tiny)
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ALERTS
+// ══════════════════════════════════════════════════════════════════════════════
+
+if enableAlerts and f_isConfirmed()
+    if alertBuy
+        alert("SMC PRO BUY | " + syminfo.ticker + " @ " + str.tostring(close) + " | SL " + str.tostring(activeStop) + " | T1 " + str.tostring(activeT1) + " | T2 " + str.tostring(activeT2) + " | T3 " + str.tostring(activeT3), alert.freq_once_per_bar_close)
+    if alertSell
+        alert("SMC PRO SELL | " + syminfo.ticker + " @ " + str.tostring(close) + " | SL " + str.tostring(activeStop) + " | T1 " + str.tostring(activeT1) + " | T2 " + str.tostring(activeT2) + " | T3 " + str.tostring(activeT3), alert.freq_once_per_bar_close)
+    if alertSL
+        alert("SMC PRO STOP LOSS HIT | " + syminfo.ticker + " @ " + str.tostring(close), alert.freq_once_per_bar_close)
+    if alertTP
+        alert("SMC PRO TARGET HIT | " + syminfo.ticker + " @ " + str.tostring(close), alert.freq_once_per_bar_close)
+
+alertcondition(alertBuy, title="SMC Buy Alert", message="SMC Professional Strategy BUY signal confirmed")
+alertcondition(alertSell, title="SMC Sell Alert", message="SMC Professional Strategy SELL signal confirmed")
+alertcondition(alertSL, title="SMC Stop Loss Alert", message="SMC Professional Strategy Stop Loss hit")
+alertcondition(alertTP, title="SMC Target Hit Alert", message="SMC Professional Strategy Target hit")
