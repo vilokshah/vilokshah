@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MANUAL_DOCS_VERSION', '2.9.0' );
+define( 'MANUAL_DOCS_VERSION', '2.9.1' );
 
 /**
  * Version roots for JS (search filters).
@@ -64,10 +64,12 @@ function manual_docs_setup() {
 	add_editor_style( 'assets/css/editor.css' );
 
 	register_nav_menus( array(
-		'primary'   => __( 'Primary Menu', 'manual-docs' ),
-		'docs'      => __( 'Documentation Sidebar', 'manual-docs' ),
-		'footer'    => __( 'Footer Menu', 'manual-docs' ),
-		'community' => __( 'Community Menu', 'manual-docs' ),
+		'primary'         => __( 'Primary Menu', 'manual-docs' ),
+		'docs'            => __( 'Documentation Sidebar', 'manual-docs' ),
+		'footer'          => __( 'Footer Menu (legacy)', 'manual-docs' ),
+		'footer-company'  => __( 'Footer — Company', 'manual-docs' ),
+		'footer-support'  => __( 'Footer — Support', 'manual-docs' ),
+		'community'       => __( 'Community Menu', 'manual-docs' ),
 	) );
 
 	add_image_size( 'manual-docs-card', 640, 360, true );
@@ -98,10 +100,30 @@ function manual_docs_widgets_init() {
 		'after_title'   => '</h3>',
 	) );
 
+	$footer_columns = array(
+		'footer-1' => __( 'Footer Column 1 — Contacts', 'manual-docs' ),
+		'footer-2' => __( 'Footer Column 2 — Company', 'manual-docs' ),
+		'footer-3' => __( 'Footer Column 3 — Support', 'manual-docs' ),
+		'footer-4' => __( 'Footer Column 4 — Stay Connected', 'manual-docs' ),
+	);
+
+	foreach ( $footer_columns as $id => $name ) {
+		register_sidebar( array(
+			'name'          => $name,
+			'id'            => $id,
+			'description'   => __( 'One column in the site footer. Use Manual Docs Contacts / Newsletter widgets, Navigation Menu, or Custom HTML.', 'manual-docs' ),
+			'before_widget' => '<section id="%1$s" class="widget footer-widget %2$s">',
+			'after_widget'  => '</section>',
+			'before_title'  => '<h3 class="widget-title">',
+			'after_title'   => '</h3>',
+		) );
+	}
+
+	// Legacy single footer area (still rendered if columns are empty).
 	register_sidebar( array(
-		'name'          => __( 'Footer Widgets', 'manual-docs' ),
+		'name'          => __( 'Footer Widgets (legacy)', 'manual-docs' ),
 		'id'            => 'footer-widgets',
-		'description'   => __( 'Footer column widgets.', 'manual-docs' ),
+		'description'   => __( 'Used only when the four footer columns are empty. Prefer Footer Columns 1–4.', 'manual-docs' ),
 		'before_widget' => '<section id="%1$s" class="widget footer-widget %2$s">',
 		'after_widget'  => '</section>',
 		'before_title'  => '<h3 class="widget-title">',
@@ -223,6 +245,7 @@ $manual_docs_includes = array(
 	'bbpress.php',
 	'customizer.php',
 	'helpers.php',
+	'widgets.php',
 );
 
 foreach ( $manual_docs_includes as $file ) {

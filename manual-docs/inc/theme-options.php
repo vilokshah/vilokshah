@@ -48,6 +48,8 @@ function manual_docs_default_options() {
 		'header_tagline'       => '',
 		'login_message'        => __( 'Please log in to view documentation.', 'manual-docs' ),
 		'footer_text'          => '',
+		'footer_copyright'     => '',
+		'footer_cta_color'     => '#e11d48',
 		'logo_dark_id'         => 0,
 		'logo_light_id'        => 0,
 		'font_display'         => 'sora',
@@ -189,8 +191,8 @@ function manual_docs_save_options() {
 	}
 
 	$clean = array();
-	$color_keys = array( 'primary_color', 'accent_color', 'header_bg', 'sidebar_bg', 'content_bg', 'page_bg', 'text_color', 'link_color', 'pdf_color', 'active_bar_color' );
-	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'footer_text', 'font_display', 'font_body', 'tree_scope' );
+	$color_keys = array( 'primary_color', 'accent_color', 'header_bg', 'sidebar_bg', 'content_bg', 'page_bg', 'text_color', 'link_color', 'pdf_color', 'active_bar_color', 'footer_cta_color' );
+	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'footer_text', 'footer_copyright', 'font_display', 'font_body', 'tree_scope' );
 	$bool_keys  = array( 'require_login', 'show_community_cta', 'show_toc', 'show_pdf', 'show_updated', 'show_edit_link', 'tree_expand_active', 'tree_lazy' );
 	$int_keys   = array( 'logo_dark_id', 'logo_light_id' );
 
@@ -367,8 +369,27 @@ function manual_docs_render_options_page() {
 					<td><input class="large-text" type="text" id="hero_text" name="manual_docs_options[hero_text]" value="<?php echo esc_attr( $o['hero_text'] ); ?>" /></td>
 				</tr>
 				<tr>
-					<th><label for="footer_text"><?php esc_html_e( 'Footer text', 'manual-docs' ); ?></label></th>
+					<th><label for="footer_text"><?php esc_html_e( 'Footer tagline (legacy layout)', 'manual-docs' ); ?></label></th>
 					<td><input class="large-text" type="text" id="footer_text" name="manual_docs_options[footer_text]" value="<?php echo esc_attr( $o['footer_text'] ); ?>" /></td>
+				</tr>
+				<tr>
+					<th><label for="footer_copyright"><?php esc_html_e( 'Copyright bar text', 'manual-docs' ); ?></label></th>
+					<td>
+						<input class="large-text" type="text" id="footer_copyright" name="manual_docs_options[footer_copyright]" value="<?php echo esc_attr( isset( $o['footer_copyright'] ) ? $o['footer_copyright'] : '' ); ?>" placeholder="<?php echo esc_attr( sprintf( __( '© %s Your Company. All rights reserved.', 'manual-docs' ), gmdate( 'Y' ) ) ); ?>" />
+						<p class="description"><?php esc_html_e( 'Leave empty to use “© {year} {site name}. All rights reserved.”', 'manual-docs' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th><?php esc_html_e( 'Footer columns', 'manual-docs' ); ?></th>
+					<td>
+						<p>
+							<a class="button button-primary" href="<?php echo esc_url( admin_url( 'widgets.php' ) ); ?>"><?php esc_html_e( 'Manage footer widgets', 'manual-docs' ); ?></a>
+							<a class="button" href="<?php echo esc_url( admin_url( 'nav-menus.php' ) ); ?>"><?php esc_html_e( 'Manage menus', 'manual-docs' ); ?></a>
+						</p>
+						<p class="description">
+							<?php esc_html_e( 'Use Appearance → Widgets → Footer Column 1–4. Suggested setup: Column 1 = “Manual Docs: Contacts”, Columns 2–3 = Navigation Menu (Company / Support), Column 4 = “Manual Docs: Newsletter”.', 'manual-docs' ); ?>
+						</p>
+					</td>
 				</tr>
 			</table>
 
@@ -381,6 +402,7 @@ function manual_docs_render_options_page() {
 					'link_color'       => __( 'Link color', 'manual-docs' ),
 					'active_bar_color' => __( 'Active tree bar', 'manual-docs' ),
 					'pdf_color'        => __( 'PDF button', 'manual-docs' ),
+					'footer_cta_color' => __( 'Footer Subscribe button', 'manual-docs' ),
 					'header_bg'        => __( 'Header background', 'manual-docs' ),
 					'sidebar_bg'       => __( 'Sidebar background', 'manual-docs' ),
 					'content_bg'       => __( 'Content panel background', 'manual-docs' ),
@@ -573,6 +595,7 @@ function manual_docs_options_css() {
 		:root {
 			--md-font-display: <?php echo $font_display; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sanitized above ?>;
 			--md-font-body: <?php echo $font_body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
+			--md-footer-cta: <?php echo esc_html( ! empty( $o['footer_cta_color'] ) ? $o['footer_cta_color'] : '#e11d48' ); ?>;
 		}
 		html[data-md-theme="dark"],
 		html[data-md-theme="light"] {

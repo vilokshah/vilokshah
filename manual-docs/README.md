@@ -62,6 +62,18 @@ Switcher finds the matching doc under another root by relative slug path, then t
 - TOC Hide/Show on the right “On this page” panel
 - Docs tree chrome: favicon left, panel toggle + search icons right; search opens a centered modal so long titles stay readable
 - **Large libraries** — tree defaults to active version only + lazy-load children; reading-order cache for prev/next
+- **Customizable footer** — 4 widget columns (Contacts / Company / Support / Stay Connected) + copyright bar
+
+## Footer setup
+
+Appearance → **Widgets**:
+
+1. **Footer Column 1 — Contacts** → add widget **Manual Docs: Contacts** (address + social URLs)
+2. **Footer Column 2 — Company** → Navigation Menu (or Custom HTML / app badge image)
+3. **Footer Column 3 — Support** → Navigation Menu (policies / support links)
+4. **Footer Column 4 — Stay Connected** → **Manual Docs: Newsletter** (set Mailchimp/ESP form action URL + privacy link)
+
+Copyright text and Subscribe button color are under Appearance → Manual Docs.
 
 ## Live search
 
