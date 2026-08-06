@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?><!-- Generator: Manual Docs large demo (~1000 docs) -->
+<?xml version="1.0" encoding="UTF-8" ?><!-- Generator: Manual Docs large demo -->
 <!-- Tools → Import → WordPress. Version root slugs: goat,flamingo,hummingbird -->
 <rss version="2.0"
 	xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
@@ -9,7 +9,7 @@
 <channel>
 	<title>Manual Docs Large Demo</title>
 	<link>https://example.com</link>
-	<description>Large demo (~1002 docs) across goat / flamingo / hummingbird for version switch testing</description>
+	<description>Large demo (1002 docs) across goat / flamingo / hummingbird for version switch testing</description>
 	<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 	<language>en-US</language>
 	<wp:wxr_version>1.2</wp:wxr_version>

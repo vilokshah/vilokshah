@@ -37,16 +37,16 @@ $version      = manual_docs_get_doc_version();
 				<div class="md-ajax-progress" data-md-ajax-progress hidden><span class="md-ajax-progress__bar"></span></div>
 
 				<header class="md-doc-header">
-					<div class="md-doc-header__top">
-						<div data-md-breadcrumbs class="md-doc-header__crumbs">
-							<?php manual_docs_breadcrumbs(); ?>
-						</div>
+					<div data-md-breadcrumbs class="md-doc-header__crumbs">
+						<?php manual_docs_breadcrumbs(); ?>
+					</div>
+
+					<div class="md-doc-header__title-row">
+						<h1 class="md-doc-title" data-md-doc-title><?php the_title(); ?></h1>
 						<div class="md-doc-header__version" data-md-version-slot>
 							<?php manual_docs_render_version_switcher(); ?>
 						</div>
 					</div>
-
-					<h1 class="md-doc-title" data-md-doc-title><?php the_title(); ?></h1>
 
 					<div class="md-doc-meta-bar" data-md-doc-meta>
 						<?php if ( $show_updated ) : ?>

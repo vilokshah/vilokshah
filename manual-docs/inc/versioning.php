@@ -29,41 +29,99 @@ function manual_docs_get_version_roots() {
 	if ( empty( $ids ) && ! empty( $options['version_root_slugs'] ) ) {
 		$slugs = array_filter( array_map( 'sanitize_title', array_map( 'trim', explode( ',', $options['version_root_slugs'] ) ) ) );
 		foreach ( $slugs as $slug ) {
-			$found = get_posts( array(
-				'name'           => $slug,
-				'post_type'      => 'manual_documentation',
-				'post_parent'    => 0,
-				'posts_per_page' => 1,
-				'post_status'    => 'publish',
-			) );
+			$found = manual_docs_find_top_level_doc_by_slug( $slug );
 			if ( $found ) {
-				$ids[] = (int) $found[0]->ID;
+				$ids[] = (int) $found->ID;
 			}
 		}
 	}
 
-	if ( empty( $ids ) ) {
-		// Auto: all top-level documentation pages are versions.
-		$roots = get_posts( array(
+	// Always merge in other top-level docs so flamingo/hummingbird appear even if
+	// only one configured slug matched (partial import / -2 slug suffixes).
+	$top_level = get_posts(
+		array(
 			'post_type'      => 'manual_documentation',
 			'post_parent'    => 0,
 			'posts_per_page' => 50,
 			'orderby'        => 'menu_order title',
 			'order'          => 'ASC',
 			'post_status'    => 'publish',
-		) );
-		return $roots;
+		)
+	);
+
+	if ( empty( $ids ) ) {
+		return $top_level;
 	}
 
-	$posts = get_posts( array(
-		'post_type'      => 'manual_documentation',
-		'post__in'       => $ids,
-		'posts_per_page' => count( $ids ),
-		'orderby'        => 'post__in',
-		'post_status'    => 'publish',
-	) );
+	$id_set = array_map( 'intval', $ids );
+	foreach ( $top_level as $post ) {
+		if ( ! in_array( (int) $post->ID, $id_set, true ) ) {
+			$ids[]    = (int) $post->ID;
+			$id_set[] = (int) $post->ID;
+		}
+	}
+
+	$posts = get_posts(
+		array(
+			'post_type'      => 'manual_documentation',
+			'post__in'       => $ids,
+			'posts_per_page' => count( $ids ),
+			'orderby'        => 'post__in',
+			'post_status'    => 'publish',
+		)
+	);
 
 	return $posts;
+}
+
+/**
+ * Find a top-level documentation post by slug (exact, then slug-N import suffixes).
+ *
+ * @param string $slug Desired slug.
+ * @return WP_Post|null
+ */
+function manual_docs_find_top_level_doc_by_slug( $slug ) {
+	$slug = sanitize_title( $slug );
+	if ( ! $slug ) {
+		return null;
+	}
+
+	$exact = get_posts(
+		array(
+			'name'           => $slug,
+			'post_type'      => 'manual_documentation',
+			'post_parent'    => 0,
+			'posts_per_page' => 1,
+			'post_status'    => 'publish',
+		)
+	);
+	if ( $exact ) {
+		return $exact[0];
+	}
+
+	// WordPress importer may create goat-2 / flamingo-2 when re-importing.
+	$candidates = get_posts(
+		array(
+			'post_type'      => 'manual_documentation',
+			'post_parent'    => 0,
+			'posts_per_page' => 50,
+			'post_status'    => 'publish',
+			'orderby'        => 'ID',
+			'order'          => 'DESC',
+		)
+	);
+
+	foreach ( $candidates as $post ) {
+		$name = $post->post_name;
+		if ( $name === $slug || 0 === strpos( $name, $slug . '-' ) ) {
+			return $post;
+		}
+		if ( strtolower( $post->post_title ) === strtolower( $slug ) ) {
+			return $post;
+		}
+	}
+
+	return null;
 }
 
 /**
@@ -309,22 +367,19 @@ function manual_docs_render_version_switcher( $post_id = null ) {
 		<select id="md-version-select" class="md-version-select" data-post-id="<?php echo esc_attr( (string) $post_id ); ?>">
 			<?php foreach ( $roots as $root ) : ?>
 				<?php
-				$sibling  = manual_docs_find_version_sibling( $post_id, $root->ID );
-				$url      = $sibling ? get_permalink( $sibling ) : get_permalink( $root );
-				$disabled = ! $sibling;
-				$sib_id   = $sibling ? (int) $sibling->ID : 0;
+				$sibling = manual_docs_find_version_sibling( $post_id, $root->ID );
+				// Always allow switching — fall back to the version root when no twin page.
+				$target  = $sibling ? $sibling : $root;
+				$url     = get_permalink( $target );
+				$sib_id  = (int) $target->ID;
 				?>
 				<option
 					value="<?php echo esc_url( $url ); ?>"
 					data-md-doc-id="<?php echo esc_attr( (string) $sib_id ); ?>"
 					data-version-root="<?php echo esc_attr( (string) $root->ID ); ?>"
 					<?php selected( $current_id, (int) $root->ID ); ?>
-					<?php disabled( $disabled && (int) $root->ID !== $current_id ); ?>
 				>
 					<?php echo esc_html( get_the_title( $root ) ); ?>
-					<?php if ( $disabled && (int) $root->ID !== $current_id ) : ?>
-						<?php echo esc_html( ' — ' . __( 'unavailable', 'manual-docs' ) ); ?>
-					<?php endif; ?>
 				</option>
 			<?php endforeach; ?>
 		</select>

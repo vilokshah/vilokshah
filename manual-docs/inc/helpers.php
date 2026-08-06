@@ -95,18 +95,35 @@ function manual_docs_get_doc_tree( $parent = 0, $depth = 0 ) {
 }
 
 /**
- * Tree for the current document's version root (children of root, not the root itself as only item).
+ * Tree for sidebar: all version roots (so goat/flamingo/hummingbird are visible),
+ * each with its children. Falls back to full tree when no roots.
  *
  * @param int|null $post_id Current doc.
  * @return array
  */
 function manual_docs_get_version_scoped_tree( $post_id = null ) {
 	$post_id = $post_id ? $post_id : get_queried_object_id();
-	$root    = $post_id ? manual_docs_get_version_root_for_doc( $post_id ) : null;
+	$roots   = function_exists( 'manual_docs_get_version_roots' ) ? manual_docs_get_version_roots() : array();
+
+	// Show every release root in the left nav so other versions are discoverable.
+	if ( count( $roots ) >= 2 ) {
+		$tree = array();
+		foreach ( $roots as $root ) {
+			$tree[] = array(
+				'post'     => $root,
+				'children' => manual_docs_get_doc_tree( (int) $root->ID ),
+				'depth'    => 0,
+			);
+		}
+		return $tree;
+	}
+
+	$root = $post_id && function_exists( 'manual_docs_get_version_root_for_doc' )
+		? manual_docs_get_version_root_for_doc( $post_id )
+		: null;
 
 	if ( ! $root ) {
-		$roots = manual_docs_get_version_roots();
-		$slug  = manual_docs_get_option( 'default_version_slug', '' );
+		$slug = manual_docs_get_option( 'default_version_slug', '' );
 		if ( $slug ) {
 			foreach ( $roots as $r ) {
 				if ( $r->post_name === $slug ) {
@@ -124,8 +141,6 @@ function manual_docs_get_version_scoped_tree( $post_id = null ) {
 		return manual_docs_get_doc_tree( 0 );
 	}
 
-	// Include root as top node with its children, or just children?
-	// Digitate shows sections under the version — show children of root, and if root has content link it.
 	return manual_docs_get_doc_tree( (int) $root->ID );
 }
 
@@ -287,34 +302,105 @@ function manual_docs_breadcrumbs( $post_id = null ) {
 }
 
 /**
- * Adjacent docs within same parent.
+ * Depth-first reading order of all docs under a version root (pre-order).
+ * Children are visited before the next sibling — used by Previous/Next.
+ *
+ * @param int $root_id Version root post ID.
+ * @return int[]
+ */
+function manual_docs_get_version_reading_order( $root_id ) {
+	$root_id = (int) $root_id;
+	static $cache = array();
+	if ( isset( $cache[ $root_id ] ) ) {
+		return $cache[ $root_id ];
+	}
+
+	$order = array();
+	manual_docs_collect_doc_ids_dfs( $root_id, $order );
+	$cache[ $root_id ] = $order;
+	return $order;
+}
+
+/**
+ * Collect descendant IDs in DFS pre-order.
+ *
+ * @param int   $parent_id Parent.
+ * @param int[] $out       Collector.
+ */
+function manual_docs_collect_doc_ids_dfs( $parent_id, &$out ) {
+	$children = get_posts(
+		array(
+			'post_type'              => 'manual_documentation',
+			'post_parent'            => (int) $parent_id,
+			'posts_per_page'         => -1,
+			'orderby'                => 'menu_order title',
+			'order'                  => 'ASC',
+			'post_status'            => 'publish',
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		)
+	);
+
+	foreach ( $children as $cid ) {
+		$cid   = (int) $cid;
+		$out[] = $cid;
+		manual_docs_collect_doc_ids_dfs( $cid, $out );
+	}
+}
+
+/**
+ * Adjacent docs in version DFS order (first child before next sibling).
  *
  * @param int|null $post_id Post ID.
  * @return array{prev:?WP_Post,next:?WP_Post}
  */
 function manual_docs_adjacent_docs( $post_id = null ) {
-	$post_id  = $post_id ? $post_id : get_the_ID();
-	$post     = get_post( $post_id );
-	$siblings = get_posts( array(
-		'post_type'      => 'manual_documentation',
-		'post_parent'    => $post->post_parent,
-		'posts_per_page' => -1,
-		'orderby'        => 'menu_order title',
-		'order'          => 'ASC',
-		'post_status'    => 'publish',
-		'fields'         => 'ids',
-	) );
+	$post_id = $post_id ? (int) $post_id : (int) get_the_ID();
+	$post    = get_post( $post_id );
+	if ( ! $post || 'manual_documentation' !== $post->post_type ) {
+		return array(
+			'prev' => null,
+			'next' => null,
+		);
+	}
 
+	$root = function_exists( 'manual_docs_get_version_root_for_doc' )
+		? manual_docs_get_version_root_for_doc( $post_id )
+		: null;
+
+	if ( $root ) {
+		$order = manual_docs_get_version_reading_order( (int) $root->ID );
+		// Include the version root at the start of the reading path.
+		array_unshift( $order, (int) $root->ID );
+		$order = array_values( array_unique( array_map( 'intval', $order ) ) );
+	} else {
+		// Fallback: siblings only when no version root.
+		$order = get_posts(
+			array(
+				'post_type'      => 'manual_documentation',
+				'post_parent'    => (int) $post->post_parent,
+				'posts_per_page' => -1,
+				'orderby'        => 'menu_order title',
+				'order'          => 'ASC',
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+			)
+		);
+		$order = array_map( 'intval', $order );
+	}
+
+	$pos  = array_search( $post_id, $order, true );
 	$prev = null;
 	$next = null;
-	$pos  = array_search( (int) $post_id, array_map( 'intval', $siblings ), true );
 
 	if ( false !== $pos ) {
-		if ( isset( $siblings[ $pos - 1 ] ) ) {
-			$prev = get_post( $siblings[ $pos - 1 ] );
+		if ( isset( $order[ $pos - 1 ] ) ) {
+			$prev = get_post( $order[ $pos - 1 ] );
 		}
-		if ( isset( $siblings[ $pos + 1 ] ) ) {
-			$next = get_post( $siblings[ $pos + 1 ] );
+		if ( isset( $order[ $pos + 1 ] ) ) {
+			$next = get_post( $order[ $pos + 1 ] );
 		}
 	}
 

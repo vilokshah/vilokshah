@@ -1,10 +1,19 @@
 #!/usr/bin/env python3
-"""Generate a large WXR import (~1002 docs) for Manual Docs version-switch testing."""
+"""Generate large WXR imports for Manual Docs version-switch testing.
+
+Writes:
+  - manual-docs-demo-1000.xml          (all 3 versions, ~1002 docs)
+  - manual-docs-demo-goat.xml          (334 docs — import first)
+  - manual-docs-demo-flamingo.xml      (334 docs)
+  - manual-docs-demo-hummingbird.xml   (334 docs)
+
+Import the three smaller files separately if the combined file times out.
+"""
 
 from pathlib import Path
 from xml.sax.saxutils import escape
 
-OUT = Path(__file__).with_name('manual-docs-demo-1000.xml')
+DIR = Path(__file__).resolve().parent
 
 VERSIONS = [
 	('goat', 'Goat'),
@@ -81,6 +90,50 @@ def content_html(title, version_slug, version_label, path, depth):
 <!-- /wp:paragraph -->'''
 
 
+def channel_header(title, description):
+	parts = [
+		'<?xml version="1.0" encoding="UTF-8" ?><!-- Generator: Manual Docs large demo -->',
+		'<!-- Tools → Import → WordPress. Version root slugs: goat,flamingo,hummingbird -->',
+		f'''<rss version="2.0"
+	xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:wp="http://wordpress.org/export/1.2/">
+<channel>
+	<title>{title}</title>
+	<link>https://example.com</link>
+	<description>{description}</description>
+	<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
+	<language>en-US</language>
+	<wp:wxr_version>1.2</wp:wxr_version>
+	<wp:base_site_url>https://example.com</wp:base_site_url>
+	<wp:base_blog_url>https://example.com</wp:base_blog_url>
+	<wp:author><wp:author_id>1</wp:author_id><wp:author_login><![CDATA[admin]]></wp:author_login><wp:author_email><![CDATA[admin@example.com]]></wp:author_email><wp:author_display_name><![CDATA[admin]]></wp:author_display_name><wp:author_first_name><![CDATA[]]></wp:author_first_name><wp:author_last_name><![CDATA[]]></wp:author_last_name></wp:author>''',
+	]
+	for tid, slug, name in CATEGORIES:
+		parts.append(
+			f'''	<wp:category>
+		<wp:term_id>{tid}</wp:term_id>
+		<wp:category_nicename>{slug}</wp:category_nicename>
+		<wp:category_parent></wp:category_parent>
+		<wp:cat_name><![CDATA[{name}]]></wp:cat_name>
+		<wp:taxonomy>manualdocumentationcategory</wp:taxonomy>
+	</wp:category>'''
+		)
+	for tid, slug, name in CATEGORIES:
+		parts.append(
+			f'''	<wp:term>
+		<wp:term_id>{tid}</wp:term_id>
+		<wp:term_taxonomy>manualdocumentationcategory</wp:term_taxonomy>
+		<wp:term_slug>{slug}</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[{name}]]></wp:term_name>
+	</wp:term>'''
+		)
+	return parts
+
+
 def emit_item(lines, post_id, title, slug, parent_id, menu_order, cat_slug, depth, rel_path, v_slug, v_label):
 	body = content_html(title, v_slug, v_label, rel_path, depth)
 	cat_name = CAT_NAME.get(cat_slug, 'Platform')
@@ -113,116 +166,96 @@ def emit_item(lines, post_id, title, slug, parent_id, menu_order, cat_slug, dept
 	)
 
 
-def main():
-	lines = [
-		'<?xml version="1.0" encoding="UTF-8" ?><!-- Generator: Manual Docs large demo (~1000 docs) -->',
-		'<!-- Tools → Import → WordPress. Version root slugs: goat,flamingo,hummingbird -->',
-		'''<rss version="2.0"
-	xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
-	xmlns:content="http://purl.org/rss/1.0/modules/content/"
-	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
-	xmlns:dc="http://purl.org/dc/elements/1.1/"
-	xmlns:wp="http://wordpress.org/export/1.2/">
-<channel>
-	<title>Manual Docs Large Demo</title>
-	<link>https://example.com</link>
-	<description>Large demo (~1002 docs) across goat / flamingo / hummingbird for version switch testing</description>
-	<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
-	<language>en-US</language>
-	<wp:wxr_version>1.2</wp:wxr_version>
-	<wp:base_site_url>https://example.com</wp:base_site_url>
-	<wp:base_blog_url>https://example.com</wp:base_blog_url>
-	<wp:author><wp:author_id>1</wp:author_id><wp:author_login><![CDATA[admin]]></wp:author_login><wp:author_email><![CDATA[admin@example.com]]></wp:author_email><wp:author_display_name><![CDATA[admin]]></wp:author_display_name><wp:author_first_name><![CDATA[]]></wp:author_first_name><wp:author_last_name><![CDATA[]]></wp:author_last_name></wp:author>''',
-	]
+def build_version_items(v_idx, v_slug, v_label):
+	"""Return (lines, post_count) for one version tree."""
+	lines = []
+	base_id = 100000 + (v_idx + 1) * 10000
+	local = [0]
+	count = [0]
 
-	for tid, slug, name in CATEGORIES:
-		lines.append(
-			f'''	<wp:category>
-		<wp:term_id>{tid}</wp:term_id>
-		<wp:category_nicename>{slug}</wp:category_nicename>
-		<wp:category_parent></wp:category_parent>
-		<wp:cat_name><![CDATA[{name}]]></wp:cat_name>
-		<wp:taxonomy>manualdocumentationcategory</wp:taxonomy>
-	</wp:category>'''
-		)
+	def nid():
+		local[0] += 1
+		count[0] += 1
+		return base_id + local[0]
 
-	for tid, slug, name in CATEGORIES:
-		lines.append(
-			f'''	<wp:term>
-		<wp:term_id>{tid}</wp:term_id>
-		<wp:term_taxonomy>manualdocumentationcategory</wp:term_taxonomy>
-		<wp:term_slug>{slug}</wp:term_slug>
-		<wp:term_parent></wp:term_parent>
-		<wp:term_name><![CDATA[{name}]]></wp:term_name>
-	</wp:term>'''
-		)
+	root_id = nid()
+	emit_item(lines, root_id, v_label, v_slug, 0, v_idx, 'releases', 0, v_slug, v_slug, v_label)
 
-	post_count = 0
+	for c_i, (c_slug, c_title, c_cat) in enumerate(CHAPTERS):
+		chapter_id = nid()
+		chapter_path = f'{v_slug}/{c_slug}'
+		emit_item(lines, chapter_id, c_title, c_slug, root_id, c_i, c_cat, 1, chapter_path, v_slug, v_label)
 
-	for v_idx, (v_slug, v_label) in enumerate(VERSIONS):
-		base_id = 100000 + (v_idx + 1) * 10000
-		local = [0]
+		for s_i, (s_slug, s_title) in enumerate(SECTIONS):
+			section_id = nid()
+			sec_slug = f'{c_slug}-{s_slug}'
+			section_path = f'{chapter_path}/{sec_slug}'
+			emit_item(
+				lines,
+				section_id,
+				f'{c_title}: {s_title}',
+				sec_slug,
+				chapter_id,
+				s_i,
+				c_cat,
+				2,
+				section_path,
+				v_slug,
+				v_label,
+			)
 
-		def nid():
-			local[0] += 1
-			return base_id + local[0]
-
-		# Track with outer counter after each emit
-		root_id = nid()
-		post_count += 1
-		emit_item(lines, root_id, v_label, v_slug, 0, v_idx, 'releases', 0, v_slug, v_slug, v_label)
-
-		for c_i, (c_slug, c_title, c_cat) in enumerate(CHAPTERS):
-			chapter_id = nid()
-			post_count += 1
-			chapter_path = f'{v_slug}/{c_slug}'
-			emit_item(lines, chapter_id, c_title, c_slug, root_id, c_i, c_cat, 1, chapter_path, v_slug, v_label)
-
-			for s_i, (s_slug, s_title) in enumerate(SECTIONS):
-				section_id = nid()
-				post_count += 1
-				sec_slug = f'{c_slug}-{s_slug}'
-				section_path = f'{chapter_path}/{sec_slug}'
+			for t_i, (t_slug, t_title) in enumerate(TOPICS):
+				topic_id = nid()
+				topic_slug = f'{sec_slug}-{t_slug}'
+				topic_path = f'{section_path}/{topic_slug}'
 				emit_item(
 					lines,
+					topic_id,
+					f'{c_title} — {s_title}: {t_title}',
+					topic_slug,
 					section_id,
-					f'{c_title}: {s_title}',
-					sec_slug,
-					chapter_id,
-					s_i,
+					t_i,
 					c_cat,
-					2,
-					section_path,
+					3,
+					topic_path,
 					v_slug,
 					v_label,
 				)
 
-				for t_i, (t_slug, t_title) in enumerate(TOPICS):
-					topic_id = nid()
-					post_count += 1
-					topic_slug = f'{sec_slug}-{t_slug}'
-					topic_path = f'{section_path}/{topic_slug}'
-					emit_item(
-						lines,
-						topic_id,
-						f'{c_title} — {s_title}: {t_title}',
-						topic_slug,
-						section_id,
-						t_i,
-						c_cat,
-						3,
-						topic_path,
-						v_slug,
-						v_label,
-					)
+	return lines, count[0]
 
+
+def write_wxr(path, title, description, item_lines):
+	lines = channel_header(title, description)
+	lines.extend(item_lines)
 	lines.append('</channel>\n</rss>')
-	OUT.write_text('\n'.join(lines), encoding='utf-8')
-	size = OUT.stat().st_size
-	print(f'Wrote {OUT}')
-	print(f'Posts: {post_count}')
-	print(f'Size: {size:,} bytes ({size / 1024 / 1024:.2f} MB)')
-	print(f'Per version: {post_count // 3}')
+	path.write_text('\n'.join(lines), encoding='utf-8')
+	size = path.stat().st_size
+	print(f'Wrote {path.name}: {size:,} bytes ({size / 1024 / 1024:.2f} MB)')
+
+
+def main():
+	all_items = []
+	total = 0
+
+	for v_idx, (v_slug, v_label) in enumerate(VERSIONS):
+		items, count = build_version_items(v_idx, v_slug, v_label)
+		total += count
+		write_wxr(
+			DIR / f'manual-docs-demo-{v_slug}.xml',
+			f'Manual Docs Demo — {v_label}',
+			f'{count} docs for the {v_label} release only. Import goat, then flamingo, then hummingbird.',
+			items,
+		)
+		all_items.extend(items)
+
+	write_wxr(
+		DIR / 'manual-docs-demo-1000.xml',
+		'Manual Docs Large Demo',
+		f'Large demo ({total} docs) across goat / flamingo / hummingbird for version switch testing',
+		all_items,
+	)
+	print(f'Total posts: {total} ({total // 3} per version)')
 
 
 if __name__ == '__main__':
