@@ -76,7 +76,47 @@
     });
   });
 
-  // Tree expand/collapse (delegated for AJAX-replaced trees)
+  // Tree expand/collapse (delegated for AJAX-replaced trees) + lazy children.
+  function loadLazyChildren(li, kids, open) {
+    if (!open || !kids || !kids.hasAttribute('data-md-lazy-parent')) return Promise.resolve();
+    if (kids.getAttribute('data-md-loading') === '1') return Promise.resolve();
+    if (kids.querySelector('li')) {
+      kids.removeAttribute('data-md-lazy-parent');
+      return Promise.resolve();
+    }
+    if (typeof manualDocs === 'undefined' || !manualDocs.restUrl) return Promise.resolve();
+
+    var parentId = kids.getAttribute('data-md-lazy-parent');
+    var article = document.getElementById('md-doc-article');
+    var currentId = article ? (article.getAttribute('data-md-doc-id') || '0') : '0';
+    kids.setAttribute('data-md-loading', '1');
+    kids.innerHTML = '<li class="md-doc-nav__item"><span class="md-nav-empty">Loading…</span></li>';
+
+    var url = manualDocs.restUrl + 'nav-children?parent=' + encodeURIComponent(parentId) +
+      '&current=' + encodeURIComponent(currentId);
+
+    return fetch(url, {
+      credentials: 'same-origin',
+      headers: {
+        'Accept': 'application/json',
+        'X-WP-Nonce': manualDocs.restNonce || manualDocs.nonce
+      }
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('nav-fail');
+        return res.json();
+      })
+      .then(function (data) {
+        kids.innerHTML = (data && data.html) ? data.html : '';
+        kids.removeAttribute('data-md-lazy-parent');
+        kids.removeAttribute('data-md-loading');
+      })
+      .catch(function () {
+        kids.innerHTML = '<li class="md-doc-nav__item"><span class="md-nav-empty">Could not load</span></li>';
+        kids.removeAttribute('data-md-loading');
+      });
+  }
+
   document.addEventListener('click', function (e) {
     var twist = e.target.closest('[data-md-tree-toggle]');
     if (!twist) return;
@@ -90,6 +130,7 @@
     if (kids) {
       if (open) kids.removeAttribute('hidden');
       else kids.setAttribute('hidden', '');
+      loadLazyChildren(li, kids, open);
     }
   });
 

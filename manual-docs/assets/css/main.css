@@ -1,5 +1,16 @@
 /* Manual Docs 2.0 — documentation chrome inspired by modern product docs */
 
+:root {
+  --md-font-display: "Sora", "Segoe UI", sans-serif;
+  --md-font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --md-radius: 10px;
+  --md-radius-sm: 8px;
+  --md-header-h: 60px;
+  --md-sidebar-w: 300px;
+  --md-toc-w: 240px;
+  --md-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 :root,
 html[data-md-theme="dark"] {
   --md-primary: #e8eef7;
@@ -17,15 +28,7 @@ html[data-md-theme="dark"] {
   --md-line: #1e293b;
   --md-ink: #f8fafc;
   --md-surface: #111827;
-  --md-radius: 10px;
-  --md-radius-sm: 8px;
   --md-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-  --md-font-display: "Sora", "Segoe UI", sans-serif;
-  --md-font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
-  --md-header-h: 60px;
-  --md-sidebar-w: 300px;
-  --md-toc-w: 240px;
-  --md-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --md-hero-grad-a: #0f1c33;
   --md-hero-grad-b: #1a3a6b;
   --md-hero-grad-c: #1e4d8c;
@@ -605,7 +608,9 @@ html[data-md-theme="light"] .md-docs-search-trigger:hover {
   display: block; padding: 0.38rem 0.5rem; border-radius: 6px;
   color: var(--md-text); text-decoration: none; font-size: 0.9rem;
   border-left: 3px solid transparent; margin-left: -1px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }
 .md-doc-nav a:hover { background: rgba(255,255,255,0.06); color: var(--md-accent); }
 .md-doc-nav__item.is-active > a {

@@ -46,8 +46,66 @@ function manual_docs_register_doc_routes() {
 			),
 		)
 	);
+
+	register_rest_route(
+		'manual-docs/v1',
+		'/nav-children',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'manual_docs_rest_nav_children',
+			'permission_callback' => 'manual_docs_search_permission',
+			'args'                => array(
+				'parent'  => array(
+					'required'          => true,
+					'type'              => 'integer',
+					'sanitize_callback' => 'absint',
+				),
+				'current' => array(
+					'required'          => false,
+					'type'              => 'integer',
+					'sanitize_callback' => 'absint',
+					'default'           => 0,
+				),
+			),
+		)
+	);
 }
 add_action( 'rest_api_init', 'manual_docs_register_doc_routes' );
+
+/**
+ * REST: lazy tree children HTML for a parent node.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function manual_docs_rest_nav_children( WP_REST_Request $request ) {
+	$parent_id = (int) $request->get_param( 'parent' );
+	$current   = (int) $request->get_param( 'current' );
+	$parent    = get_post( $parent_id );
+
+	if ( ! $parent || 'manual_documentation' !== $parent->post_type || 'publish' !== $parent->post_status ) {
+		return new WP_Error( 'manual_docs_not_found', __( 'Parent document not found.', 'manual-docs' ), array( 'status' => 404 ) );
+	}
+
+	if ( ! manual_docs_user_can_view_doc( $parent ) ) {
+		return new WP_Error(
+			'manual_docs_forbidden',
+			__( 'You do not have permission to view this document.', 'manual-docs' ),
+			array( 'status' => is_user_logged_in() ? 403 : 401 )
+		);
+	}
+
+	ob_start();
+	manual_docs_render_nav_children_html( $parent_id, $current );
+	$html = (string) ob_get_clean();
+
+	return rest_ensure_response(
+		array(
+			'parent' => $parent_id,
+			'html'   => $html,
+		)
+	);
+}
 
 /**
  * Resolve document by slug.

@@ -61,13 +61,14 @@ Switcher finds the matching doc under another root by relative slug path, then t
 - Collapsible documentation tree (‹ arrow) to widen the content column
 - TOC Hide/Show on the right “On this page” panel
 - Docs tree chrome: favicon left, panel toggle + search icons right; search opens a centered modal so long titles stay readable
+- **Large libraries** — tree defaults to active version only + lazy-load children; reading-order cache for prev/next
 
 ## Live search
 
 Configured as a REST endpoint that queries `manual_documentation` posts (optional version root scope), with an AJAX fallback.
 
 - Endpoint: `GET /wp-json/manual-docs/v1/search?q=…&version={slug|id}`
-- Used on the homepage hero, docs sidebar, and anywhere via shortcode:
+- Used on the homepage hero, docs search modal, and anywhere via shortcode:
 
 ```
 [manual_docs_search]
@@ -76,12 +77,39 @@ Configured as a REST endpoint that queries `manual_documentation` posts (optiona
 
 Also aliased as `[manual_docs_live_search]`.
 
+## Scaling to 20,000+ documents
+
+Recommended settings (Appearance → Manual Docs):
+
+1. **Tree scope = Active release only** — never render goat+flamingo+hummingbird trees at once
+2. **Lazy-load tree children** — collapsed branches fetch children on expand via `/wp-json/manual-docs/v1/nav-children`
+3. Use the **release version switcher** + **centered search** to jump across long titles
+4. Keep object/page caching (host Redis/Varnish) and a MySQL host sized for your post volume
+
+Prev/Next reading order is cached per version root (12h, busted on doc save).
+
+## Security (production)
+
+Theme controls (complement your magic-link login plugin; do not replace WP hardening):
+
+| Control | Status |
+| --- | --- |
+| Docs login gate | Yes (`Require login`) |
+| Category Allowed Roles | Yes (checkbox UI) |
+| REST/AJAX access checks + nonces | Yes |
+| Hide WP generator / XML-RPC off on front | Yes |
+| `nosniff`, `SAMEORIGIN`, referrer policy | Yes |
+| CSP / HSTS / WAF / brute-force | **Not in theme** — use host + security plugin |
+| File upload / auth / updates | **WordPress core + your plugins** |
+
+**Production-ready with:** login plugin + HTTPS + keep WP/plugins updated + security plugin (rate limit / firewall) + `Require login` on. Theme alone is not a full security stack.
+
 ## Features
 
 - Live search (REST + AJAX) + shortcode
 - AJAX document loading with History API
 - PDF print/download view
-- Role-based category access (Allowed Roles on category edit)
+- Role-based category access (Allowed Roles checkboxes on category edit)
 - bbPress community templates + CTA
 - Security hardening
 

@@ -423,11 +423,22 @@ add_action( 'admin_notices', 'manual_docs_permalink_structure_notice' );
  * Category access role fields (add).
  */
 function manual_docs_category_add_fields() {
+	$roles     = manual_docs_get_editable_roles_list();
+	$selected  = array();
 	?>
 	<div class="form-field">
-		<label for="manual_docs_allowed_roles"><?php esc_html_e( 'Allowed Roles', 'manual-docs' ); ?></label>
-		<input type="text" name="manual_docs_allowed_roles" id="manual_docs_allowed_roles" value="" />
-		<p><?php esc_html_e( 'Comma-separated role slugs (e.g. subscriber,contributor). Empty = all logged-in users.', 'manual-docs' ); ?></p>
+		<span><?php esc_html_e( 'Allowed Roles', 'manual-docs' ); ?></span>
+		<input type="hidden" name="manual_docs_allowed_roles_present" value="1" />
+		<fieldset style="border:0;margin:0.5em 0 0;padding:0;">
+			<?php foreach ( $roles as $slug => $label ) : ?>
+				<label style="display:block;margin:0.25em 0;">
+					<input type="checkbox" name="manual_docs_allowed_roles[]" value="<?php echo esc_attr( $slug ); ?>" <?php checked( in_array( $slug, $selected, true ) ); ?> />
+					<?php echo esc_html( $label ); ?>
+					<code style="opacity:0.65;"><?php echo esc_html( $slug ); ?></code>
+				</label>
+			<?php endforeach; ?>
+		</fieldset>
+		<p><?php esc_html_e( 'Leave all unchecked to allow every logged-in user. Checked roles restrict this category to those roles only.', 'manual-docs' ); ?></p>
 	</div>
 	<?php
 }
@@ -438,16 +449,48 @@ function manual_docs_category_add_fields() {
  * @param WP_Term $term Term.
  */
 function manual_docs_category_edit_fields( $term ) {
-	$roles = get_term_meta( $term->term_id, 'manual_docs_allowed_roles', true );
+	$roles_raw = get_term_meta( $term->term_id, 'manual_docs_allowed_roles', true );
+	$selected  = array_filter( array_map( 'sanitize_key', array_map( 'trim', explode( ',', (string) $roles_raw ) ) ) );
+	$roles     = manual_docs_get_editable_roles_list();
 	?>
 	<tr class="form-field">
-		<th scope="row"><label for="manual_docs_allowed_roles"><?php esc_html_e( 'Allowed Roles', 'manual-docs' ); ?></label></th>
+		<th scope="row"><?php esc_html_e( 'Allowed Roles', 'manual-docs' ); ?></th>
 		<td>
-			<input type="text" name="manual_docs_allowed_roles" id="manual_docs_allowed_roles" value="<?php echo esc_attr( $roles ); ?>" class="regular-text" />
-			<p class="description"><?php esc_html_e( 'Comma-separated role slugs. Empty = all logged-in users.', 'manual-docs' ); ?></p>
+			<input type="hidden" name="manual_docs_allowed_roles_present" value="1" />
+			<fieldset style="border:0;margin:0;padding:0;">
+				<?php foreach ( $roles as $slug => $label ) : ?>
+					<label style="display:block;margin:0.35em 0;">
+						<input type="checkbox" name="manual_docs_allowed_roles[]" value="<?php echo esc_attr( $slug ); ?>" <?php checked( in_array( $slug, $selected, true ) ); ?> />
+						<?php echo esc_html( $label ); ?>
+						<code style="opacity:0.65;"><?php echo esc_html( $slug ); ?></code>
+					</label>
+				<?php endforeach; ?>
+			</fieldset>
+			<p class="description"><?php esc_html_e( 'Leave all unchecked to allow every logged-in user. Checked roles restrict this category to those roles only.', 'manual-docs' ); ?></p>
 		</td>
 	</tr>
 	<?php
+}
+
+/**
+ * Editable role slug => label map for category access UI.
+ *
+ * @return array<string,string>
+ */
+function manual_docs_get_editable_roles_list() {
+	$out = array();
+	if ( ! function_exists( 'wp_roles' ) ) {
+		return $out;
+	}
+	foreach ( wp_roles()->roles as $slug => $role ) {
+		$out[ sanitize_key( $slug ) ] = isset( $role['name'] ) ? translate_user_role( $role['name'] ) : $slug;
+	}
+	/**
+	 * Filter roles shown in category Allowed Roles checkboxes.
+	 *
+	 * @param array<string,string> $out Role slug => label.
+	 */
+	return apply_filters( 'manual_docs_editable_roles_list', $out );
 }
 
 /**
@@ -459,11 +502,19 @@ function manual_docs_save_category_meta( $term_id ) {
 	if ( ! current_user_can( 'manage_categories' ) ) {
 		return;
 	}
-	if ( isset( $_POST['manual_docs_allowed_roles'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-		$raw   = sanitize_text_field( wp_unslash( $_POST['manual_docs_allowed_roles'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$roles = array_filter( array_map( 'sanitize_key', array_map( 'trim', explode( ',', $raw ) ) ) );
-		update_term_meta( $term_id, 'manual_docs_allowed_roles', implode( ',', $roles ) );
+	if ( empty( $_POST['manual_docs_allowed_roles_present'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		return;
 	}
+
+	$roles = array();
+	if ( isset( $_POST['manual_docs_allowed_roles'] ) && is_array( $_POST['manual_docs_allowed_roles'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		$raw   = wp_unslash( $_POST['manual_docs_allowed_roles'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput,WordPress.Security.NonceVerification
+		$roles = array_values( array_unique( array_filter( array_map( 'sanitize_key', $raw ) ) ) );
+		$valid = array_keys( manual_docs_get_editable_roles_list() );
+		$roles = array_values( array_intersect( $roles, $valid ) );
+	}
+
+	update_term_meta( $term_id, 'manual_docs_allowed_roles', implode( ',', $roles ) );
 }
 
 /**

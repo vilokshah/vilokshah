@@ -309,20 +309,46 @@ function manual_docs_render_docs_sidebar( $args = array() ) {
 }
 
 /**
- * Get documentation tree under a parent (version-scoped).
+ * Get documentation tree under a parent (full recursion — small libraries).
  *
  * @param int $parent Parent ID.
  * @param int $depth  Depth.
  * @return array
  */
 function manual_docs_get_doc_tree( $parent = 0, $depth = 0 ) {
+	$posts = manual_docs_get_direct_child_posts( $parent );
+	$tree  = array();
+
+	foreach ( $posts as $post ) {
+		$tree[] = array(
+			'post'         => $post,
+			'children'     => manual_docs_get_doc_tree( $post->ID, $depth + 1 ),
+			'depth'        => $depth,
+			'lazy'         => false,
+			'has_children' => false,
+		);
+	}
+
+	return $tree;
+}
+
+/**
+ * Direct child documentation posts for a parent (access-filtered).
+ *
+ * @param int $parent Parent ID.
+ * @return WP_Post[]
+ */
+function manual_docs_get_direct_child_posts( $parent = 0 ) {
 	$args = array(
-		'post_type'      => 'manual_documentation',
-		'post_parent'    => $parent,
-		'posts_per_page' => -1,
-		'orderby'        => 'menu_order title',
-		'order'          => 'ASC',
-		'post_status'    => 'publish',
+		'post_type'              => 'manual_documentation',
+		'post_parent'            => (int) $parent,
+		'posts_per_page'         => -1,
+		'orderby'                => 'menu_order title',
+		'order'                  => 'ASC',
+		'post_status'            => 'publish',
+		'no_found_rows'          => true,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
 	);
 
 	$tax        = manual_docs_category_taxonomy();
@@ -339,42 +365,94 @@ function manual_docs_get_doc_tree( $parent = 0, $depth = 0 ) {
 	}
 
 	$posts = get_posts( $args );
-	$tree  = array();
-
+	$out   = array();
 	foreach ( $posts as $post ) {
-		if ( ! manual_docs_user_can_view_doc( $post ) ) {
-			continue;
+		if ( manual_docs_user_can_view_doc( $post ) ) {
+			$out[] = $post;
 		}
-		$tree[] = array(
-			'post'     => $post,
-			'children' => manual_docs_get_doc_tree( $post->ID, $depth + 1 ),
-			'depth'    => $depth,
-		);
 	}
-
-	return $tree;
+	return $out;
 }
 
 /**
- * Tree for sidebar: all version roots (so goat/flamingo/hummingbird are visible),
- * each with its children. Falls back to full tree when no roots.
+ * Whether a documentation post has published children.
+ *
+ * @param int $post_id Post ID.
+ * @return bool
+ */
+function manual_docs_doc_has_children( $post_id ) {
+	global $wpdb;
+	$post_id = (int) $post_id;
+	$found   = $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_type = %s AND post_status = 'publish' LIMIT 1",
+			$post_id,
+			'manual_documentation'
+		)
+	);
+	return ! empty( $found );
+}
+
+/**
+ * Build one nav node; optionally defer grandchildren (lazy) for large libraries.
+ *
+ * @param WP_Post $post           Post.
+ * @param int     $depth          Depth.
+ * @param int[]   $expand_path_ids Ancestor IDs that must have children loaded.
+ * @param bool    $lazy_mode      Whether lazy loading is enabled.
+ * @return array
+ */
+function manual_docs_build_nav_node( $post, $depth, $expand_path_ids, $lazy_mode ) {
+	$post_id    = (int) $post->ID;
+	$has_kids   = manual_docs_doc_has_children( $post_id );
+	$must_load  = ! $lazy_mode || in_array( $post_id, $expand_path_ids, true );
+	$children   = array();
+	$lazy       = false;
+
+	if ( $has_kids ) {
+		if ( $must_load ) {
+			foreach ( manual_docs_get_direct_child_posts( $post_id ) as $child ) {
+				$children[] = manual_docs_build_nav_node( $child, $depth + 1, $expand_path_ids, $lazy_mode );
+			}
+		} else {
+			$lazy = true;
+		}
+	}
+
+	return array(
+		'post'         => $post,
+		'children'     => $children,
+		'depth'        => $depth,
+		'lazy'         => $lazy,
+		'has_children' => $has_kids,
+	);
+}
+
+/**
+ * Tree for sidebar: active version by default (scale), optional all roots.
  *
  * @param int|null $post_id Current doc.
  * @return array
  */
 function manual_docs_get_version_scoped_tree( $post_id = null ) {
-	$post_id = $post_id ? $post_id : get_queried_object_id();
-	$roots   = function_exists( 'manual_docs_get_version_roots' ) ? manual_docs_get_version_roots() : array();
+	$post_id   = $post_id ? (int) $post_id : (int) get_queried_object_id();
+	$roots     = function_exists( 'manual_docs_get_version_roots' ) ? manual_docs_get_version_roots() : array();
+	$scope     = (string) manual_docs_get_option( 'tree_scope', 'active_version' );
+	$lazy_mode = (bool) manual_docs_get_option( 'tree_lazy', true );
 
-	// Show every release root in the left nav so other versions are discoverable.
-	if ( count( $roots ) >= 2 ) {
+	$expand_path = array();
+	if ( $post_id ) {
+		$expand_path = array_map( 'intval', get_post_ancestors( $post_id ) );
+		$expand_path[] = $post_id;
+	}
+
+	// All version roots visible — only use on smaller libraries.
+	if ( 'all_versions' === $scope && count( $roots ) >= 2 ) {
 		$tree = array();
 		foreach ( $roots as $root ) {
-			$tree[] = array(
-				'post'     => $root,
-				'children' => manual_docs_get_doc_tree( (int) $root->ID ),
-				'depth'    => 0,
-			);
+			$root_path = $expand_path;
+			$root_path[] = (int) $root->ID;
+			$tree[] = manual_docs_build_nav_node( $root, 0, array_values( array_unique( $root_path ) ), $lazy_mode );
 		}
 		return $tree;
 	}
@@ -399,10 +477,22 @@ function manual_docs_get_version_scoped_tree( $post_id = null ) {
 	}
 
 	if ( ! $root ) {
-		return manual_docs_get_doc_tree( 0 );
+		if ( ! $lazy_mode ) {
+			return manual_docs_get_doc_tree( 0 );
+		}
+		$top = manual_docs_get_direct_child_posts( 0 );
+		$tree = array();
+		foreach ( $top as $post ) {
+			$tree[] = manual_docs_build_nav_node( $post, 0, $expand_path, $lazy_mode );
+		}
+		return $tree;
 	}
 
-	return manual_docs_get_doc_tree( (int) $root->ID );
+	// Active version: show the root + its descendants (lazy below the open path).
+	$expand_path[] = (int) $root->ID;
+	$expand_path   = array_values( array_unique( array_map( 'intval', $expand_path ) ) );
+
+	return array( manual_docs_build_nav_node( $root, 0, $expand_path, $lazy_mode ) );
 }
 
 /**
@@ -443,9 +533,16 @@ function manual_docs_render_doc_nav_nodes( $tree, $current, $ancestors, $expand 
 	foreach ( $tree as $node ) {
 		$post      = $node['post'];
 		$is_active = ( (int) $post->ID === (int) $current );
-		$has_kids  = ! empty( $node['children'] );
+		$has_kids  = ! empty( $node['children'] ) || ! empty( $node['lazy'] ) || ! empty( $node['has_children'] );
 		$is_open   = $expand && ( $is_active || in_array( (int) $post->ID, array_map( 'intval', $ancestors ), true ) );
-		$classes   = 'md-doc-nav__item';
+		// Keep open when children were eagerly loaded for the active path.
+		if ( ! empty( $node['children'] ) && $expand && in_array( (int) $post->ID, array_map( 'intval', $ancestors ), true ) ) {
+			$is_open = true;
+		}
+		if ( $is_active && ! empty( $node['children'] ) ) {
+			$is_open = true;
+		}
+		$classes = 'md-doc-nav__item';
 		if ( $is_active ) {
 			$classes .= ' is-active';
 		}
@@ -461,20 +558,48 @@ function manual_docs_render_doc_nav_nodes( $tree, $current, $ancestors, $expand 
 			echo '<button type="button" class="md-doc-nav__twist" aria-expanded="' . ( $is_open ? 'true' : 'false' ) . '" data-md-tree-toggle><span class="screen-reader-text">' . esc_html__( 'Toggle section', 'manual-docs' ) . '</span></button>';
 		}
 		printf(
-			'<a href="%s" data-md-ajax-doc data-md-doc-id="%d" title="%s"%s>%s</a>',
+			'<a href="%s" data-md-ajax-doc data-md-doc-id="%d"%s>%s</a>',
 			esc_url( get_permalink( $post ) ),
 			(int) $post->ID,
-			esc_attr( get_the_title( $post ) ),
 			$is_active ? ' aria-current="page"' : '',
 			esc_html( get_the_title( $post ) )
 		);
 		if ( $has_kids ) {
-			echo '<ul class="md-doc-nav__children"' . ( $is_open ? '' : ' hidden' ) . '>';
-			manual_docs_render_doc_nav_nodes( $node['children'], $current, $ancestors, $expand );
+			$lazy_attr = ! empty( $node['lazy'] ) ? ' data-md-lazy-parent="' . esc_attr( (string) (int) $post->ID ) . '"' : '';
+			echo '<ul class="md-doc-nav__children"' . $lazy_attr . ( $is_open ? '' : ' hidden' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			if ( ! empty( $node['children'] ) ) {
+				manual_docs_render_doc_nav_nodes( $node['children'], $current, $ancestors, $expand );
+			}
 			echo '</ul>';
 		}
 		echo '</li>';
 	}
+}
+
+/**
+ * Render only the child <li> nodes for a parent (lazy AJAX).
+ *
+ * @param int $parent_id Parent post ID.
+ * @param int $current   Current doc ID.
+ */
+function manual_docs_render_nav_children_html( $parent_id, $current = 0 ) {
+	$lazy_mode   = (bool) manual_docs_get_option( 'tree_lazy', true );
+	$expand_path = $current ? array_map( 'intval', get_post_ancestors( $current ) ) : array();
+	if ( $current ) {
+		$expand_path[] = (int) $current;
+	}
+	$expand_path[] = (int) $parent_id;
+	$expand_path   = array_values( array_unique( $expand_path ) );
+
+	$nodes = array();
+	foreach ( manual_docs_get_direct_child_posts( $parent_id ) as $child ) {
+		// Children of this parent: do not recurse further when lazy (mark grandchildren lazy).
+		$nodes[] = manual_docs_build_nav_node( $child, 0, $expand_path, $lazy_mode );
+	}
+
+	$ancestors = $current ? get_post_ancestors( $current ) : array();
+	$expand    = (bool) manual_docs_get_option( 'tree_expand_active', true );
+	manual_docs_render_doc_nav_nodes( $nodes, $current, $ancestors, $expand );
 }
 
 /**
@@ -577,11 +702,40 @@ function manual_docs_get_version_reading_order( $root_id ) {
 		return $cache[ $root_id ];
 	}
 
-	$order = array();
-	manual_docs_collect_doc_ids_dfs( $root_id, $order );
+	$transient_key = 'manual_docs_read_order_' . $root_id;
+	$order         = get_transient( $transient_key );
+	if ( ! is_array( $order ) ) {
+		$order = array();
+		manual_docs_collect_doc_ids_dfs( $root_id, $order );
+		set_transient( $transient_key, $order, 12 * HOUR_IN_SECONDS );
+	}
+
 	$cache[ $root_id ] = $order;
 	return $order;
 }
+
+/**
+ * Bust cached reading-order / tree helpers when docs change.
+ *
+ * @param int $post_id Post ID.
+ */
+function manual_docs_bust_doc_caches( $post_id ) {
+	$post = get_post( $post_id );
+	if ( ! $post || 'manual_documentation' !== $post->post_type ) {
+		return;
+	}
+	$root = function_exists( 'manual_docs_get_version_root_for_doc' ) ? manual_docs_get_version_root_for_doc( $post_id ) : null;
+	if ( $root ) {
+		delete_transient( 'manual_docs_read_order_' . (int) $root->ID );
+	}
+	if ( function_exists( 'manual_docs_get_version_roots' ) ) {
+		foreach ( manual_docs_get_version_roots() as $r ) {
+			delete_transient( 'manual_docs_read_order_' . (int) $r->ID );
+		}
+	}
+}
+add_action( 'save_post_manual_documentation', 'manual_docs_bust_doc_caches' );
+add_action( 'before_delete_post', 'manual_docs_bust_doc_caches' );
 
 /**
  * Collect descendant IDs in DFS pre-order.

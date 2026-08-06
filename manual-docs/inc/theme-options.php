@@ -43,6 +43,8 @@ function manual_docs_default_options() {
 		'show_updated'         => 1,
 		'show_edit_link'       => 1,
 		'tree_expand_active'   => 1,
+		'tree_scope'           => 'active_version',
+		'tree_lazy'            => 1,
 		'header_tagline'       => '',
 		'login_message'        => __( 'Please log in to view documentation.', 'manual-docs' ),
 		'footer_text'          => '',
@@ -188,8 +190,8 @@ function manual_docs_save_options() {
 
 	$clean = array();
 	$color_keys = array( 'primary_color', 'accent_color', 'header_bg', 'sidebar_bg', 'content_bg', 'page_bg', 'text_color', 'link_color', 'pdf_color', 'active_bar_color' );
-	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'footer_text', 'font_display', 'font_body' );
-	$bool_keys  = array( 'require_login', 'show_community_cta', 'show_toc', 'show_pdf', 'show_updated', 'show_edit_link', 'tree_expand_active' );
+	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'footer_text', 'font_display', 'font_body', 'tree_scope' );
+	$bool_keys  = array( 'require_login', 'show_community_cta', 'show_toc', 'show_pdf', 'show_updated', 'show_edit_link', 'tree_expand_active', 'tree_lazy' );
 	$int_keys   = array( 'logo_dark_id', 'logo_light_id' );
 
 	foreach ( $color_keys as $key ) {
@@ -217,6 +219,9 @@ function manual_docs_save_options() {
 	if ( ! in_array( $clean['font_body'], $font_catalog, true ) ) {
 		$clean['font_body'] = $defaults['font_body'];
 	}
+	$clean['tree_scope'] = in_array( $clean['tree_scope'], array( 'active_version', 'all_versions' ), true )
+		? $clean['tree_scope']
+		: 'active_version';
 
 	foreach ( $bool_keys as $key ) {
 		$clean[ $key ] = ! empty( $incoming[ $key ] ) ? 1 : 0;
@@ -526,7 +531,23 @@ function manual_docs_render_options_page() {
 						<label><input type="checkbox" name="manual_docs_options[show_updated]" value="1" <?php checked( $o['show_updated'], 1 ); ?> /> <?php esc_html_e( 'Show last updated date', 'manual-docs' ); ?></label><br />
 						<label><input type="checkbox" name="manual_docs_options[show_edit_link]" value="1" <?php checked( $o['show_edit_link'], 1 ); ?> /> <?php esc_html_e( 'Show edit link (for editors)', 'manual-docs' ); ?></label><br />
 						<label><input type="checkbox" name="manual_docs_options[tree_expand_active]" value="1" <?php checked( $o['tree_expand_active'], 1 ); ?> /> <?php esc_html_e( 'Auto-expand active tree branch', 'manual-docs' ); ?></label><br />
+						<label><input type="checkbox" name="manual_docs_options[tree_lazy]" value="1" <?php checked( ! empty( $o['tree_lazy'] ), 1 ); ?> /> <?php esc_html_e( 'Lazy-load tree children (recommended for large libraries)', 'manual-docs' ); ?></label><br />
 						<label><input type="checkbox" name="manual_docs_options[show_community_cta]" value="1" <?php checked( $o['show_community_cta'], 1 ); ?> /> <?php esc_html_e( 'Show community CTA', 'manual-docs' ); ?></label>
+					</td>
+				</tr>
+				<tr>
+					<th><?php esc_html_e( 'Tree scope', 'manual-docs' ); ?></th>
+					<td>
+						<?php $tree_scope = isset( $o['tree_scope'] ) ? $o['tree_scope'] : 'active_version'; ?>
+						<label style="display:block;margin-bottom:6px;">
+							<input type="radio" name="manual_docs_options[tree_scope]" value="active_version" <?php checked( $tree_scope, 'active_version' ); ?> />
+							<strong><?php esc_html_e( 'Active release only (recommended for 1,000–20,000+ docs)', 'manual-docs' ); ?></strong>
+							— <?php esc_html_e( 'left tree shows the current version; switch versions with the release dropdown.', 'manual-docs' ); ?>
+						</label>
+						<label style="display:block;">
+							<input type="radio" name="manual_docs_options[tree_scope]" value="all_versions" <?php checked( $tree_scope, 'all_versions' ); ?> />
+							<?php esc_html_e( 'All version roots in the left tree (fine for smaller libraries)', 'manual-docs' ); ?>
+						</label>
 					</td>
 				</tr>
 			</table>
@@ -544,13 +565,28 @@ function manual_docs_options_css() {
 	$o            = manual_docs_get_options();
 	$font_display = function_exists( 'manual_docs_font_stack' ) ? manual_docs_font_stack( isset( $o['font_display'] ) ? $o['font_display'] : 'sora', 'sora' ) : '"Sora", "Segoe UI", sans-serif';
 	$font_body    = function_exists( 'manual_docs_font_stack' ) ? manual_docs_font_stack( isset( $o['font_body'] ) ? $o['font_body'] : 'ibm-plex-sans', 'ibm-plex-sans' ) : '"IBM Plex Sans", "Segoe UI", sans-serif';
+	// Keep quotes intact for CSS (avoid esc_html turning " into &quot;).
+	$font_display = preg_replace( '/[^a-zA-Z0-9\s,\-"\']/', '', $font_display );
+	$font_body    = preg_replace( '/[^a-zA-Z0-9\s,\-"\']/', '', $font_body );
 	?>
 	<style id="manual-docs-options-css">
-		:root,
+		:root {
+			--md-font-display: <?php echo $font_display; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sanitized above ?>;
+			--md-font-body: <?php echo $font_body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
+		}
 		html[data-md-theme="dark"],
 		html[data-md-theme="light"] {
-			--md-font-display: <?php echo esc_html( $font_display ); ?>;
-			--md-font-body: <?php echo esc_html( $font_body ); ?>;
+			--md-font-display: <?php echo $font_display; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
+			--md-font-body: <?php echo $font_body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
+		}
+		body {
+			font-family: var(--md-font-body);
+		}
+		h1, h2, h3, h4, h5, h6,
+		.md-doc-title,
+		.md-brand__text,
+		.md-hero__title {
+			font-family: var(--md-font-display);
 		}
 		/* Admin color overrides apply to dark mode; light mode keeps its own palette. */
 		html[data-md-theme="dark"] {
