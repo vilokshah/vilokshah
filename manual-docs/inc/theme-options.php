@@ -143,7 +143,7 @@ function manual_docs_save_options() {
 		return;
 	}
 	// Dedicated buttons handle their own actions — don't overwrite options mid-fix.
-	if ( isset( $_POST['manual_docs_flush_permalinks'] ) || isset( $_POST['manual_docs_fix_local_404'] ) ) {
+	if ( isset( $_POST['manual_docs_flush_permalinks'] ) || isset( $_POST['manual_docs_fix_local_404'] ) || isset( $_POST['manual_docs_restore_pretty'] ) ) {
 		return;
 	}
 	if ( ! current_user_can( 'edit_theme_options' ) ) {
@@ -346,6 +346,10 @@ function manual_docs_render_options_page() {
 				<a class="button" href="<?php echo esc_url( admin_url( 'options-permalink.php' ) ); ?>"><?php esc_html_e( 'Open Permalinks settings', 'manual-docs' ); ?></a>
 				<?php submit_button( __( 'Flush + write .htaccess', 'manual-docs' ), 'secondary', 'manual_docs_flush_permalinks', false ); ?>
 				<?php submit_button( __( 'Fix Local 404s now', 'manual-docs' ), 'primary', 'manual_docs_fix_local_404', false ); ?>
+				<?php submit_button( __( 'Restore pretty URLs', 'manual-docs' ), 'secondary', 'manual_docs_restore_pretty', false ); ?>
+			</p>
+			<p class="description">
+				<?php esc_html_e( 'Why not /documentation/… directly? That URL only works if Apache/Nginx rewrites unknown paths to index.php. On Local + /digidocs/, missing or ignored .htaccess produces the plain server “Not Found” page before WordPress runs. index.php URLs skip that requirement. After you copy the recommended .htaccess into the digidocs folder, use “Restore pretty URLs”.', 'manual-docs' ); ?>
 			</p>
 			<?php
 			$structure = get_option( 'permalink_structure' );

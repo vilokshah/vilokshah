@@ -367,6 +367,41 @@ function manual_docs_handle_fix_local_404() {
 add_action( 'admin_init', 'manual_docs_handle_fix_local_404', 0 );
 
 /**
+ * Restore pretty documentation URLs after .htaccess is in place.
+ */
+function manual_docs_handle_restore_pretty() {
+	if ( ! isset( $_POST['manual_docs_restore_pretty'] ) ) {
+		return;
+	}
+	if ( ! isset( $_POST['manual_docs_options_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['manual_docs_options_nonce'] ) ), 'manual_docs_save_options' ) ) {
+		return;
+	}
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	$opts = get_option( 'manual_docs_options', array() );
+	if ( ! is_array( $opts ) ) {
+		$opts = array();
+	}
+	$opts['permalink_mode'] = 'pretty';
+	update_option( 'manual_docs_options', $opts );
+	update_option( 'permalink_structure', '/%postname%/' );
+
+	$result = function_exists( 'manual_docs_hard_flush_rewrites' ) ? manual_docs_hard_flush_rewrites() : null;
+	$msg    = __( 'Restored pretty URLs (/%postname%/) and flushed rewrites.', 'manual-docs' );
+	if ( is_array( $result ) && is_wp_error( $result['htaccess'] ) ) {
+		$msg .= ' ' . $result['htaccess']->get_error_message();
+		$msg .= ' ' . __( 'Copy sample-data/htaccess-digidocs.txt into your digidocs/.htaccess manually, then try again. If Local still shows Apache Not Found, stay on index.php mode.', 'manual-docs' );
+	} elseif ( is_array( $result ) && true === $result['htaccess'] ) {
+		$msg .= ' ' . __( '.htaccess updated. Test a /documentation/… URL without index.php.', 'manual-docs' );
+	}
+
+	add_settings_error( 'manual_docs_options', 'manual_docs_pretty_restored', $msg, 'updated' );
+}
+add_action( 'admin_init', 'manual_docs_handle_restore_pretty', 0 );
+
+/**
  * Admin notice when pretty permalinks are disabled.
  */
 function manual_docs_permalink_structure_notice() {
