@@ -46,7 +46,9 @@
 
     container.innerHTML = currentResults.map(function (item, i) {
       return (
-        '<a class="md-live-search__item" role="option" data-index="' + i + '" href="' + escapeHtml(item.url) + '">' +
+        '<a class="md-live-search__item" role="option" data-index="' + i + '"' +
+          (item.id ? ' data-md-doc-id="' + item.id + '" data-md-ajax-doc' : '') +
+          ' href="' + escapeHtml(item.url) + '">' +
           '<span class="md-live-search__item-title">' + escapeHtml(item.title) + '</span>' +
           '<span class="md-live-search__item-meta">' +
             escapeHtml(item.category || '') +
@@ -145,7 +147,14 @@
         setActive(resultsEl, activeIndex);
       } else if (e.key === 'Enter' && activeIndex >= 0 && items[activeIndex]) {
         e.preventDefault();
-        window.location.href = items[activeIndex].href;
+        var active = items[activeIndex];
+        var docId = parseInt(active.getAttribute('data-md-doc-id') || '0', 10);
+        if (docId && window.ManualDocsAjax && typeof window.ManualDocsAjax.navigateToDoc === 'function' && document.querySelector('[data-md-ajax-shell]')) {
+          window.ManualDocsAjax.navigateToDoc(docId, { href: active.href, pushState: true });
+          resultsEl.hidden = true;
+        } else {
+          window.location.href = active.href;
+        }
       } else if (e.key === 'Escape') {
         resultsEl.hidden = true;
       }

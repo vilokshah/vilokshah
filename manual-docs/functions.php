@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MANUAL_DOCS_VERSION', '1.0.0' );
+define( 'MANUAL_DOCS_VERSION', '1.1.0' );
 define( 'MANUAL_DOCS_DIR', get_template_directory() );
 define( 'MANUAL_DOCS_URI', get_template_directory_uri() );
 
@@ -130,19 +130,36 @@ function manual_docs_scripts() {
 		'restNonce' => wp_create_nonce( 'wp_rest' ),
 		'homeUrl'   => home_url( '/' ),
 		'loginUrl'  => wp_login_url( get_permalink() ),
+		'ajaxDocs'  => true,
 		'i18n'      => array(
 			'searchPlaceholder' => __( 'Search documentation…', 'manual-docs' ),
 			'noResults'         => __( 'No documents found.', 'manual-docs' ),
 			'searching'         => __( 'Searching…', 'manual-docs' ),
 			'loginRequired'     => __( 'Please log in to view documentation.', 'manual-docs' ),
+			'loadingDoc'        => __( 'Loading document…', 'manual-docs' ),
 		),
 	) );
 
-	if ( is_singular( 'manual_documentation' ) ) {
+	$is_docs_view = is_singular( 'manual_documentation' )
+		|| is_post_type_archive( 'manual_documentation' )
+		|| is_tax( 'doc_category' )
+		|| is_tax( 'doc_version' );
+
+	if ( $is_docs_view ) {
 		wp_enqueue_script(
 			'manual-docs-toc',
 			MANUAL_DOCS_URI . '/assets/js/toc.js',
 			array(),
+			MANUAL_DOCS_VERSION,
+			true
+		);
+	}
+
+	if ( is_singular( 'manual_documentation' ) ) {
+		wp_enqueue_script(
+			'manual-docs-ajax-docs',
+			MANUAL_DOCS_URI . '/assets/js/ajax-docs.js',
+			array( 'manual-docs-toc', 'manual-docs-live-search' ),
 			MANUAL_DOCS_VERSION,
 			true
 		);
@@ -159,6 +176,7 @@ $manual_docs_includes = array(
 	'access-control.php',
 	'versioning.php',
 	'live-search.php',
+	'ajax-docs.php',
 	'pdf-download.php',
 	'bbpress.php',
 	'customizer.php',
@@ -194,6 +212,28 @@ function manual_docs_body_classes( $classes ) {
 	return $classes;
 }
 add_filter( 'body_class', 'manual_docs_body_classes' );
+
+/**
+ * Add AJAX data attributes to Documentation Sidebar menu links.
+ *
+ * @param array    $atts  Link attributes.
+ * @param WP_Post  $item  Menu item.
+ * @param stdClass $args  Menu args.
+ * @return array
+ */
+function manual_docs_nav_menu_link_attributes( $atts, $item, $args ) {
+	if ( empty( $args->theme_location ) || 'docs' !== $args->theme_location ) {
+		return $atts;
+	}
+
+	if ( ! empty( $item->object ) && 'manual_documentation' === $item->object && ! empty( $item->object_id ) ) {
+		$atts['data-md-ajax-doc'] = '1';
+		$atts['data-md-doc-id']   = (string) (int) $item->object_id;
+	}
+
+	return $atts;
+}
+add_filter( 'nav_menu_link_attributes', 'manual_docs_nav_menu_link_attributes', 10, 3 );
 
 /**
  * Excerpt length for documentation cards.

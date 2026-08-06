@@ -8,6 +8,7 @@ A secure, lightweight documentation theme inspired by Manual. Built for knowledg
 - **Categories** — `doc_category` taxonomy with optional per-category role access
 - **Versions** — `doc_version` taxonomy + version group keys for cross-version switching
 - **Live search** — REST + AJAX search with keyboard navigation (`/` to focus)
+- **AJAX document loading** — tree menu, TOC, pager, and version switcher update without full page reloads (History API)
 - **PDF download** — print-optimized view per document (`/docs/{slug}/pdf/`)
 - **Login gate** — guests redirected to WordPress login before viewing docs (Customizer toggle)
 - **Role-based access** — restrict categories to specific roles
@@ -97,7 +98,13 @@ manual-docs/
 
 `GET /wp-json/manual-docs/v1/search?q=keyword&version=1-0`
 
+`GET /wp-json/manual-docs/v1/doc/{id}` — full document payload for AJAX browsing (content, TOC, breadcrumbs, pager, version HTML)
+
 Respects login and category role restrictions.
+
+## AJAX docs browsing
+
+On single documentation pages the left tree, prev/next pager, live search hits, and version switcher load the next document via REST without a full reload. The on-this-page TOC rebuilds from the new headings, the URL updates with the History API, and browser back/forward works.
 
 ## License
 

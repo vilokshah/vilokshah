@@ -134,9 +134,11 @@ function manual_docs_render_version_switcher( $post_id = null ) {
 					continue;
 				}
 				$disabled = ( ! $sibling && $current_slug !== $version->slug );
+				$sib_id   = $sibling ? (int) $sibling->ID : 0;
 				?>
 				<option
 					value="<?php echo esc_url( $url ); ?>"
+					data-md-doc-id="<?php echo esc_attr( (string) $sib_id ); ?>"
 					<?php selected( $current_slug, $version->slug ); ?>
 					<?php disabled( $disabled ); ?>
 				>

@@ -106,9 +106,10 @@ function manual_docs_render_doc_nav( $tree = null, $current = 0 ) {
 		$is_active = ( (int) $post->ID === (int) $current );
 		$has_kids  = ! empty( $node['children'] );
 		printf(
-			'<li class="%s"><a href="%s"%s>%s</a>',
+			'<li class="%s"><a href="%s" data-md-ajax-doc data-md-doc-id="%d"%s>%s</a>',
 			esc_attr( 'md-doc-nav__item' . ( $is_active ? ' is-active' : '' ) . ( $has_kids ? ' has-children' : '' ) ),
 			esc_url( get_permalink( $post ) ),
+			(int) $post->ID,
 			$is_active ? ' aria-current="page"' : '',
 			esc_html( get_the_title( $post ) )
 		);

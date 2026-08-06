@@ -57,15 +57,17 @@
     });
   });
 
-  // Version switcher
-  qsa('.md-version-select').forEach(function (select) {
-    select.addEventListener('change', function () {
-      var url = select.value;
-      if (url) {
-        window.location.href = url;
-      }
+  // Version switcher is handled by ajax-docs.js when the AJAX shell is present.
+  if (!document.querySelector('[data-md-ajax-shell]')) {
+    qsa('.md-version-select').forEach(function (select) {
+      select.addEventListener('change', function () {
+        var url = select.value;
+        if (url) {
+          window.location.href = url;
+        }
+      });
     });
-  });
+  }
 
   // Keyboard shortcut: "/" focuses search when not typing
   document.addEventListener('keydown', function (e) {
