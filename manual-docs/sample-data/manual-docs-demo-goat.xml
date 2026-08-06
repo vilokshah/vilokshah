@@ -91,7 +91,7 @@
 		<link>https://example.com/documentation/goat/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110001</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110001&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -138,7 +138,7 @@
 		<link>https://example.com/documentation/goat/getting-started/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110002</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110002&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -185,7 +185,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-overview/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110003</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110003&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -232,7 +232,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-overview/getting-started-overview-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110004</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110004&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -279,7 +279,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-overview/getting-started-overview-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110005</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110005&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -326,7 +326,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-overview/getting-started-overview-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110006</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110006&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -373,7 +373,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-overview/getting-started-overview-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110007</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110007&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -420,7 +420,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-overview/getting-started-overview-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110008</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110008&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -467,7 +467,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-overview/getting-started-overview-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110009</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110009&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -514,7 +514,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-overview/getting-started-overview-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110010</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110010&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -561,7 +561,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-overview/getting-started-overview-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110011</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110011&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -608,7 +608,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-setup/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110012</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110012&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -655,7 +655,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-setup/getting-started-setup-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110013</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110013&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -702,7 +702,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-setup/getting-started-setup-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110014</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110014&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -749,7 +749,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-setup/getting-started-setup-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110015</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110015&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -796,7 +796,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-setup/getting-started-setup-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110016</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110016&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -843,7 +843,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-setup/getting-started-setup-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110017</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110017&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -890,7 +890,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-setup/getting-started-setup-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110018</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110018&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -937,7 +937,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-setup/getting-started-setup-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110019</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110019&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -984,7 +984,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-setup/getting-started-setup-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110020</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110020&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1031,7 +1031,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-operations/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110021</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110021&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1078,7 +1078,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-operations/getting-started-operations-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110022</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110022&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1125,7 +1125,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-operations/getting-started-operations-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110023</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110023&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1172,7 +1172,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-operations/getting-started-operations-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110024</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110024&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1219,7 +1219,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-operations/getting-started-operations-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110025</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110025&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1266,7 +1266,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-operations/getting-started-operations-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110026</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110026&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1313,7 +1313,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-operations/getting-started-operations-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110027</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110027&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1360,7 +1360,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-operations/getting-started-operations-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110028</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110028&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1407,7 +1407,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-operations/getting-started-operations-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110029</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110029&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1454,7 +1454,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-troubleshooting/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110030</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110030&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1501,7 +1501,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-troubleshooting/getting-started-troubleshooting-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110031</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110031&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1548,7 +1548,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-troubleshooting/getting-started-troubleshooting-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110032</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110032&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1595,7 +1595,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-troubleshooting/getting-started-troubleshooting-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110033</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110033&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1642,7 +1642,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-troubleshooting/getting-started-troubleshooting-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110034</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110034&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1689,7 +1689,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-troubleshooting/getting-started-troubleshooting-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110035</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110035&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1736,7 +1736,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-troubleshooting/getting-started-troubleshooting-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110036</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110036&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1783,7 +1783,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-troubleshooting/getting-started-troubleshooting-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110037</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110037&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1830,7 +1830,7 @@
 		<link>https://example.com/documentation/goat/getting-started/getting-started-troubleshooting/getting-started-troubleshooting-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110038</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110038&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1877,7 +1877,7 @@
 		<link>https://example.com/documentation/goat/platform/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110039</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110039&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1924,7 +1924,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-overview/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110040</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110040&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -1971,7 +1971,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-overview/platform-overview-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110041</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110041&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2018,7 +2018,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-overview/platform-overview-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110042</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110042&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2065,7 +2065,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-overview/platform-overview-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110043</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110043&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2112,7 +2112,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-overview/platform-overview-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110044</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110044&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2159,7 +2159,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-overview/platform-overview-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110045</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110045&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2206,7 +2206,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-overview/platform-overview-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110046</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110046&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2253,7 +2253,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-overview/platform-overview-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110047</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110047&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2300,7 +2300,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-overview/platform-overview-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110048</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110048&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2347,7 +2347,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-setup/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110049</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110049&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2394,7 +2394,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-setup/platform-setup-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110050</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110050&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2441,7 +2441,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-setup/platform-setup-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110051</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110051&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2488,7 +2488,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-setup/platform-setup-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110052</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110052&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2535,7 +2535,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-setup/platform-setup-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110053</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110053&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2582,7 +2582,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-setup/platform-setup-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110054</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110054&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2629,7 +2629,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-setup/platform-setup-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110055</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110055&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2676,7 +2676,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-setup/platform-setup-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110056</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110056&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2723,7 +2723,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-setup/platform-setup-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110057</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110057&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2770,7 +2770,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-operations/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110058</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110058&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2817,7 +2817,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-operations/platform-operations-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110059</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110059&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2864,7 +2864,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-operations/platform-operations-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110060</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110060&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2911,7 +2911,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-operations/platform-operations-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110061</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110061&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -2958,7 +2958,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-operations/platform-operations-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110062</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110062&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3005,7 +3005,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-operations/platform-operations-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110063</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110063&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3052,7 +3052,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-operations/platform-operations-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110064</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110064&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3099,7 +3099,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-operations/platform-operations-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110065</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110065&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3146,7 +3146,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-operations/platform-operations-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110066</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110066&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3193,7 +3193,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-troubleshooting/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110067</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110067&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3240,7 +3240,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-troubleshooting/platform-troubleshooting-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110068</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110068&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3287,7 +3287,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-troubleshooting/platform-troubleshooting-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110069</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110069&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3334,7 +3334,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-troubleshooting/platform-troubleshooting-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110070</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110070&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3381,7 +3381,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-troubleshooting/platform-troubleshooting-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110071</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110071&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3428,7 +3428,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-troubleshooting/platform-troubleshooting-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110072</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110072&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3475,7 +3475,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-troubleshooting/platform-troubleshooting-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110073</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110073&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3522,7 +3522,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-troubleshooting/platform-troubleshooting-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110074</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110074&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3569,7 +3569,7 @@
 		<link>https://example.com/documentation/goat/platform/platform-troubleshooting/platform-troubleshooting-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110075</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110075&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3616,7 +3616,7 @@
 		<link>https://example.com/documentation/goat/adapters/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110076</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110076&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3663,7 +3663,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-overview/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110077</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110077&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3710,7 +3710,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-overview/adapters-overview-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110078</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110078&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3757,7 +3757,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-overview/adapters-overview-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110079</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110079&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3804,7 +3804,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-overview/adapters-overview-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110080</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110080&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3851,7 +3851,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-overview/adapters-overview-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110081</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110081&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3898,7 +3898,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-overview/adapters-overview-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110082</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110082&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3945,7 +3945,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-overview/adapters-overview-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110083</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110083&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -3992,7 +3992,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-overview/adapters-overview-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110084</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110084&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4039,7 +4039,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-overview/adapters-overview-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110085</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110085&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4086,7 +4086,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-setup/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110086</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110086&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4133,7 +4133,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-setup/adapters-setup-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110087</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110087&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4180,7 +4180,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-setup/adapters-setup-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110088</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110088&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4227,7 +4227,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-setup/adapters-setup-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110089</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110089&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4274,7 +4274,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-setup/adapters-setup-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110090</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110090&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4321,7 +4321,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-setup/adapters-setup-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110091</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110091&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4368,7 +4368,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-setup/adapters-setup-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110092</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110092&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4415,7 +4415,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-setup/adapters-setup-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110093</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110093&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4462,7 +4462,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-setup/adapters-setup-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110094</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110094&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4509,7 +4509,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-operations/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110095</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110095&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4556,7 +4556,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-operations/adapters-operations-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110096</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110096&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4603,7 +4603,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-operations/adapters-operations-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110097</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110097&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4650,7 +4650,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-operations/adapters-operations-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110098</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110098&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4697,7 +4697,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-operations/adapters-operations-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110099</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110099&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4744,7 +4744,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-operations/adapters-operations-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110100</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110100&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4791,7 +4791,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-operations/adapters-operations-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110101</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110101&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4838,7 +4838,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-operations/adapters-operations-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110102</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110102&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4885,7 +4885,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-operations/adapters-operations-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110103</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110103&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4932,7 +4932,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-troubleshooting/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110104</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110104&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -4979,7 +4979,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-troubleshooting/adapters-troubleshooting-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110105</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110105&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5026,7 +5026,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-troubleshooting/adapters-troubleshooting-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110106</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110106&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5073,7 +5073,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-troubleshooting/adapters-troubleshooting-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110107</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110107&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5120,7 +5120,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-troubleshooting/adapters-troubleshooting-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110108</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110108&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5167,7 +5167,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-troubleshooting/adapters-troubleshooting-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110109</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110109&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5214,7 +5214,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-troubleshooting/adapters-troubleshooting-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110110</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110110&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5261,7 +5261,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-troubleshooting/adapters-troubleshooting-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110111</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110111&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5308,7 +5308,7 @@
 		<link>https://example.com/documentation/goat/adapters/adapters-troubleshooting/adapters-troubleshooting-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110112</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110112&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5355,7 +5355,7 @@
 		<link>https://example.com/documentation/goat/aiops/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110113</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110113&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5402,7 +5402,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-overview/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110114</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110114&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5449,7 +5449,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-overview/aiops-overview-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110115</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110115&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5496,7 +5496,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-overview/aiops-overview-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110116</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110116&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5543,7 +5543,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-overview/aiops-overview-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110117</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110117&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5590,7 +5590,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-overview/aiops-overview-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110118</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110118&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5637,7 +5637,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-overview/aiops-overview-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110119</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110119&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5684,7 +5684,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-overview/aiops-overview-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110120</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110120&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5731,7 +5731,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-overview/aiops-overview-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110121</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110121&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5778,7 +5778,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-overview/aiops-overview-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110122</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110122&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5825,7 +5825,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-setup/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110123</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110123&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5872,7 +5872,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-setup/aiops-setup-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110124</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110124&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5919,7 +5919,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-setup/aiops-setup-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110125</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110125&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -5966,7 +5966,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-setup/aiops-setup-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110126</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110126&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6013,7 +6013,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-setup/aiops-setup-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110127</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110127&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6060,7 +6060,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-setup/aiops-setup-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110128</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110128&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6107,7 +6107,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-setup/aiops-setup-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110129</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110129&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6154,7 +6154,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-setup/aiops-setup-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110130</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110130&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6201,7 +6201,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-setup/aiops-setup-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110131</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110131&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6248,7 +6248,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-operations/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110132</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110132&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6295,7 +6295,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-operations/aiops-operations-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110133</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110133&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6342,7 +6342,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-operations/aiops-operations-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110134</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110134&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6389,7 +6389,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-operations/aiops-operations-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110135</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110135&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6436,7 +6436,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-operations/aiops-operations-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110136</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110136&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6483,7 +6483,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-operations/aiops-operations-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110137</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110137&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6530,7 +6530,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-operations/aiops-operations-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110138</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110138&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6577,7 +6577,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-operations/aiops-operations-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110139</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110139&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6624,7 +6624,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-operations/aiops-operations-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110140</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110140&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6671,7 +6671,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-troubleshooting/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110141</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110141&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6718,7 +6718,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-troubleshooting/aiops-troubleshooting-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110142</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110142&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6765,7 +6765,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-troubleshooting/aiops-troubleshooting-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110143</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110143&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6812,7 +6812,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-troubleshooting/aiops-troubleshooting-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110144</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110144&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6859,7 +6859,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-troubleshooting/aiops-troubleshooting-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110145</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110145&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6906,7 +6906,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-troubleshooting/aiops-troubleshooting-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110146</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110146&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -6953,7 +6953,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-troubleshooting/aiops-troubleshooting-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110147</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110147&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7000,7 +7000,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-troubleshooting/aiops-troubleshooting-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110148</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110148&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7047,7 +7047,7 @@
 		<link>https://example.com/documentation/goat/aiops/aiops-troubleshooting/aiops-troubleshooting-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110149</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110149&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7094,7 +7094,7 @@
 		<link>https://example.com/documentation/goat/observability/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110150</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110150&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7141,7 +7141,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-overview/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110151</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110151&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7188,7 +7188,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-overview/observability-overview-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110152</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110152&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7235,7 +7235,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-overview/observability-overview-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110153</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110153&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7282,7 +7282,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-overview/observability-overview-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110154</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110154&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7329,7 +7329,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-overview/observability-overview-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110155</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110155&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7376,7 +7376,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-overview/observability-overview-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110156</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110156&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7423,7 +7423,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-overview/observability-overview-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110157</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110157&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7470,7 +7470,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-overview/observability-overview-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110158</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110158&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7517,7 +7517,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-overview/observability-overview-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110159</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110159&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7564,7 +7564,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-setup/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110160</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110160&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7611,7 +7611,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-setup/observability-setup-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110161</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110161&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7658,7 +7658,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-setup/observability-setup-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110162</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110162&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7705,7 +7705,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-setup/observability-setup-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110163</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110163&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7752,7 +7752,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-setup/observability-setup-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110164</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110164&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7799,7 +7799,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-setup/observability-setup-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110165</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110165&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7846,7 +7846,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-setup/observability-setup-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110166</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110166&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7893,7 +7893,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-setup/observability-setup-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110167</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110167&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7940,7 +7940,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-setup/observability-setup-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110168</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110168&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -7987,7 +7987,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-operations/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110169</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110169&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8034,7 +8034,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-operations/observability-operations-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110170</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110170&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8081,7 +8081,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-operations/observability-operations-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110171</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110171&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8128,7 +8128,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-operations/observability-operations-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110172</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110172&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8175,7 +8175,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-operations/observability-operations-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110173</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110173&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8222,7 +8222,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-operations/observability-operations-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110174</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110174&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8269,7 +8269,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-operations/observability-operations-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110175</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110175&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8316,7 +8316,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-operations/observability-operations-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110176</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110176&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8363,7 +8363,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-operations/observability-operations-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110177</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110177&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8410,7 +8410,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-troubleshooting/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110178</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110178&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8457,7 +8457,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-troubleshooting/observability-troubleshooting-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110179</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110179&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8504,7 +8504,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-troubleshooting/observability-troubleshooting-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110180</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110180&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8551,7 +8551,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-troubleshooting/observability-troubleshooting-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110181</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110181&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8598,7 +8598,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-troubleshooting/observability-troubleshooting-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110182</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110182&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8645,7 +8645,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-troubleshooting/observability-troubleshooting-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110183</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110183&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8692,7 +8692,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-troubleshooting/observability-troubleshooting-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110184</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110184&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8739,7 +8739,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-troubleshooting/observability-troubleshooting-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110185</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110185&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8786,7 +8786,7 @@
 		<link>https://example.com/documentation/goat/observability/observability-troubleshooting/observability-troubleshooting-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110186</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110186&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8833,7 +8833,7 @@
 		<link>https://example.com/documentation/goat/security/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110187</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110187&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8880,7 +8880,7 @@
 		<link>https://example.com/documentation/goat/security/security-overview/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110188</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110188&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8927,7 +8927,7 @@
 		<link>https://example.com/documentation/goat/security/security-overview/security-overview-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110189</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110189&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -8974,7 +8974,7 @@
 		<link>https://example.com/documentation/goat/security/security-overview/security-overview-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110190</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110190&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9021,7 +9021,7 @@
 		<link>https://example.com/documentation/goat/security/security-overview/security-overview-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110191</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110191&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9068,7 +9068,7 @@
 		<link>https://example.com/documentation/goat/security/security-overview/security-overview-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110192</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110192&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9115,7 +9115,7 @@
 		<link>https://example.com/documentation/goat/security/security-overview/security-overview-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110193</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110193&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9162,7 +9162,7 @@
 		<link>https://example.com/documentation/goat/security/security-overview/security-overview-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110194</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110194&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9209,7 +9209,7 @@
 		<link>https://example.com/documentation/goat/security/security-overview/security-overview-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110195</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110195&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9256,7 +9256,7 @@
 		<link>https://example.com/documentation/goat/security/security-overview/security-overview-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110196</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110196&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9303,7 +9303,7 @@
 		<link>https://example.com/documentation/goat/security/security-setup/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110197</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110197&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9350,7 +9350,7 @@
 		<link>https://example.com/documentation/goat/security/security-setup/security-setup-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110198</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110198&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9397,7 +9397,7 @@
 		<link>https://example.com/documentation/goat/security/security-setup/security-setup-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110199</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110199&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9444,7 +9444,7 @@
 		<link>https://example.com/documentation/goat/security/security-setup/security-setup-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110200</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110200&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9491,7 +9491,7 @@
 		<link>https://example.com/documentation/goat/security/security-setup/security-setup-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110201</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110201&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9538,7 +9538,7 @@
 		<link>https://example.com/documentation/goat/security/security-setup/security-setup-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110202</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110202&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9585,7 +9585,7 @@
 		<link>https://example.com/documentation/goat/security/security-setup/security-setup-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110203</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110203&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9632,7 +9632,7 @@
 		<link>https://example.com/documentation/goat/security/security-setup/security-setup-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110204</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110204&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9679,7 +9679,7 @@
 		<link>https://example.com/documentation/goat/security/security-setup/security-setup-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110205</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110205&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9726,7 +9726,7 @@
 		<link>https://example.com/documentation/goat/security/security-operations/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110206</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110206&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9773,7 +9773,7 @@
 		<link>https://example.com/documentation/goat/security/security-operations/security-operations-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110207</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110207&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9820,7 +9820,7 @@
 		<link>https://example.com/documentation/goat/security/security-operations/security-operations-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110208</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110208&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9867,7 +9867,7 @@
 		<link>https://example.com/documentation/goat/security/security-operations/security-operations-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110209</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110209&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9914,7 +9914,7 @@
 		<link>https://example.com/documentation/goat/security/security-operations/security-operations-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110210</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110210&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -9961,7 +9961,7 @@
 		<link>https://example.com/documentation/goat/security/security-operations/security-operations-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110211</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110211&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10008,7 +10008,7 @@
 		<link>https://example.com/documentation/goat/security/security-operations/security-operations-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110212</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110212&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10055,7 +10055,7 @@
 		<link>https://example.com/documentation/goat/security/security-operations/security-operations-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110213</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110213&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10102,7 +10102,7 @@
 		<link>https://example.com/documentation/goat/security/security-operations/security-operations-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110214</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110214&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10149,7 +10149,7 @@
 		<link>https://example.com/documentation/goat/security/security-troubleshooting/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110215</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110215&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10196,7 +10196,7 @@
 		<link>https://example.com/documentation/goat/security/security-troubleshooting/security-troubleshooting-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110216</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110216&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10243,7 +10243,7 @@
 		<link>https://example.com/documentation/goat/security/security-troubleshooting/security-troubleshooting-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110217</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110217&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10290,7 +10290,7 @@
 		<link>https://example.com/documentation/goat/security/security-troubleshooting/security-troubleshooting-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110218</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110218&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10337,7 +10337,7 @@
 		<link>https://example.com/documentation/goat/security/security-troubleshooting/security-troubleshooting-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110219</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110219&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10384,7 +10384,7 @@
 		<link>https://example.com/documentation/goat/security/security-troubleshooting/security-troubleshooting-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110220</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110220&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10431,7 +10431,7 @@
 		<link>https://example.com/documentation/goat/security/security-troubleshooting/security-troubleshooting-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110221</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110221&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10478,7 +10478,7 @@
 		<link>https://example.com/documentation/goat/security/security-troubleshooting/security-troubleshooting-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110222</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110222&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10525,7 +10525,7 @@
 		<link>https://example.com/documentation/goat/security/security-troubleshooting/security-troubleshooting-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110223</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110223&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10572,7 +10572,7 @@
 		<link>https://example.com/documentation/goat/automation/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110224</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110224&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10619,7 +10619,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-overview/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110225</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110225&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10666,7 +10666,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-overview/automation-overview-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110226</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110226&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10713,7 +10713,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-overview/automation-overview-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110227</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110227&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10760,7 +10760,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-overview/automation-overview-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110228</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110228&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10807,7 +10807,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-overview/automation-overview-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110229</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110229&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10854,7 +10854,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-overview/automation-overview-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110230</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110230&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10901,7 +10901,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-overview/automation-overview-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110231</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110231&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10948,7 +10948,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-overview/automation-overview-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110232</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110232&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -10995,7 +10995,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-overview/automation-overview-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110233</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110233&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11042,7 +11042,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-setup/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110234</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110234&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11089,7 +11089,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-setup/automation-setup-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110235</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110235&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11136,7 +11136,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-setup/automation-setup-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110236</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110236&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11183,7 +11183,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-setup/automation-setup-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110237</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110237&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11230,7 +11230,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-setup/automation-setup-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110238</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110238&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11277,7 +11277,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-setup/automation-setup-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110239</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110239&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11324,7 +11324,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-setup/automation-setup-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110240</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110240&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11371,7 +11371,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-setup/automation-setup-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110241</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110241&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11418,7 +11418,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-setup/automation-setup-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110242</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110242&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11465,7 +11465,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-operations/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110243</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110243&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11512,7 +11512,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-operations/automation-operations-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110244</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110244&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11559,7 +11559,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-operations/automation-operations-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110245</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110245&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11606,7 +11606,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-operations/automation-operations-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110246</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110246&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11653,7 +11653,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-operations/automation-operations-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110247</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110247&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11700,7 +11700,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-operations/automation-operations-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110248</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110248&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11747,7 +11747,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-operations/automation-operations-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110249</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110249&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11794,7 +11794,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-operations/automation-operations-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110250</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110250&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11841,7 +11841,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-operations/automation-operations-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110251</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110251&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11888,7 +11888,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-troubleshooting/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110252</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110252&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11935,7 +11935,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-troubleshooting/automation-troubleshooting-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110253</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110253&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -11982,7 +11982,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-troubleshooting/automation-troubleshooting-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110254</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110254&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12029,7 +12029,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-troubleshooting/automation-troubleshooting-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110255</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110255&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12076,7 +12076,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-troubleshooting/automation-troubleshooting-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110256</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110256&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12123,7 +12123,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-troubleshooting/automation-troubleshooting-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110257</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110257&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12170,7 +12170,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-troubleshooting/automation-troubleshooting-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110258</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110258&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12217,7 +12217,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-troubleshooting/automation-troubleshooting-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110259</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110259&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12264,7 +12264,7 @@
 		<link>https://example.com/documentation/goat/automation/automation-troubleshooting/automation-troubleshooting-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110260</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110260&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12311,7 +12311,7 @@
 		<link>https://example.com/documentation/goat/integrations/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110261</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110261&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12358,7 +12358,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-overview/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110262</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110262&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12405,7 +12405,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-overview/integrations-overview-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110263</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110263&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12452,7 +12452,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-overview/integrations-overview-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110264</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110264&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12499,7 +12499,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-overview/integrations-overview-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110265</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110265&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12546,7 +12546,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-overview/integrations-overview-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110266</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110266&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12593,7 +12593,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-overview/integrations-overview-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110267</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110267&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12640,7 +12640,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-overview/integrations-overview-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110268</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110268&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12687,7 +12687,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-overview/integrations-overview-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110269</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110269&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12734,7 +12734,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-overview/integrations-overview-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110270</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110270&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12781,7 +12781,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-setup/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110271</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110271&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12828,7 +12828,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-setup/integrations-setup-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110272</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110272&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12875,7 +12875,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-setup/integrations-setup-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110273</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110273&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12922,7 +12922,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-setup/integrations-setup-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110274</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110274&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -12969,7 +12969,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-setup/integrations-setup-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110275</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110275&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13016,7 +13016,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-setup/integrations-setup-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110276</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110276&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13063,7 +13063,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-setup/integrations-setup-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110277</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110277&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13110,7 +13110,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-setup/integrations-setup-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110278</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110278&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13157,7 +13157,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-setup/integrations-setup-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110279</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110279&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13204,7 +13204,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-operations/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110280</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110280&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13251,7 +13251,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-operations/integrations-operations-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110281</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110281&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13298,7 +13298,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-operations/integrations-operations-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110282</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110282&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13345,7 +13345,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-operations/integrations-operations-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110283</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110283&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13392,7 +13392,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-operations/integrations-operations-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110284</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110284&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13439,7 +13439,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-operations/integrations-operations-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110285</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110285&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13486,7 +13486,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-operations/integrations-operations-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110286</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110286&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13533,7 +13533,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-operations/integrations-operations-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110287</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110287&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13580,7 +13580,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-operations/integrations-operations-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110288</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110288&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13627,7 +13627,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-troubleshooting/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110289</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110289&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13674,7 +13674,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-troubleshooting/integrations-troubleshooting-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110290</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110290&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13721,7 +13721,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-troubleshooting/integrations-troubleshooting-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110291</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110291&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13768,7 +13768,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-troubleshooting/integrations-troubleshooting-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110292</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110292&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13815,7 +13815,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-troubleshooting/integrations-troubleshooting-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110293</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110293&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13862,7 +13862,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-troubleshooting/integrations-troubleshooting-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110294</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110294&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13909,7 +13909,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-troubleshooting/integrations-troubleshooting-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110295</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110295&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -13956,7 +13956,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-troubleshooting/integrations-troubleshooting-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110296</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110296&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14003,7 +14003,7 @@
 		<link>https://example.com/documentation/goat/integrations/integrations-troubleshooting/integrations-troubleshooting-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110297</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110297&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14050,7 +14050,7 @@
 		<link>https://example.com/documentation/goat/releases/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110298</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110298&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14097,7 +14097,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-overview/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110299</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110299&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14144,7 +14144,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-overview/releases-overview-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110300</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110300&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14191,7 +14191,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-overview/releases-overview-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110301</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110301&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14238,7 +14238,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-overview/releases-overview-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110302</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110302&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14285,7 +14285,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-overview/releases-overview-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110303</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110303&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14332,7 +14332,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-overview/releases-overview-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110304</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110304&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14379,7 +14379,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-overview/releases-overview-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110305</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110305&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14426,7 +14426,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-overview/releases-overview-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110306</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110306&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14473,7 +14473,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-overview/releases-overview-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110307</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110307&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14520,7 +14520,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-setup/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110308</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110308&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14567,7 +14567,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-setup/releases-setup-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110309</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110309&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14614,7 +14614,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-setup/releases-setup-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110310</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110310&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14661,7 +14661,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-setup/releases-setup-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110311</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110311&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14708,7 +14708,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-setup/releases-setup-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110312</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110312&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14755,7 +14755,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-setup/releases-setup-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110313</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110313&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14802,7 +14802,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-setup/releases-setup-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110314</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110314&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14849,7 +14849,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-setup/releases-setup-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110315</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110315&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14896,7 +14896,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-setup/releases-setup-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110316</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110316&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14943,7 +14943,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-operations/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110317</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110317&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -14990,7 +14990,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-operations/releases-operations-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110318</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110318&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15037,7 +15037,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-operations/releases-operations-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110319</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110319&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15084,7 +15084,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-operations/releases-operations-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110320</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110320&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15131,7 +15131,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-operations/releases-operations-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110321</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110321&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15178,7 +15178,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-operations/releases-operations-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110322</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110322&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15225,7 +15225,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-operations/releases-operations-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110323</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110323&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15272,7 +15272,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-operations/releases-operations-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110324</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110324&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15319,7 +15319,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-operations/releases-operations-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110325</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110325&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15366,7 +15366,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-troubleshooting/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110326</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110326&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15413,7 +15413,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-troubleshooting/releases-troubleshooting-introduction/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110327</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110327&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15460,7 +15460,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-troubleshooting/releases-troubleshooting-prerequisites/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110328</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110328&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15507,7 +15507,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-troubleshooting/releases-troubleshooting-configuration/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110329</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110329&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15554,7 +15554,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-troubleshooting/releases-troubleshooting-workflows/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110330</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110330&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15601,7 +15601,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-troubleshooting/releases-troubleshooting-best-practices/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110331</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110331&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15648,7 +15648,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-troubleshooting/releases-troubleshooting-reference/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110332</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110332&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15695,7 +15695,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-troubleshooting/releases-troubleshooting-faq/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110333</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110333&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>
@@ -15742,7 +15742,7 @@
 		<link>https://example.com/documentation/goat/releases/releases-troubleshooting/releases-troubleshooting-examples/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110334</guid>
+		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p=110334&amp;v=goat</guid>
 		<description></description>
 		<content:encoded><![CDATA[<!-- wp:heading -->
 <h2 class="wp-block-heading">Overview</h2>

@@ -9,7 +9,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MANUAL_DOCS_VERSION', '2.6.0' );
+define( 'MANUAL_DOCS_VERSION', '2.6.1' );
+
+/**
+ * Version roots for JS (search filters).
+ *
+ * @return array<int,array{id:int,name:string,slug:string}>
+ */
+function manual_docs_localize_versions() {
+	if ( ! function_exists( 'manual_docs_get_version_roots' ) ) {
+		return array();
+	}
+	$out = array();
+	foreach ( manual_docs_get_version_roots() as $root ) {
+		$out[] = array(
+			'id'   => (int) $root->ID,
+			'name' => get_the_title( $root ),
+			'slug' => $root->post_name,
+		);
+	}
+	return $out;
+}
 define( 'MANUAL_DOCS_DIR', get_template_directory() );
 define( 'MANUAL_DOCS_URI', get_template_directory_uri() );
 
@@ -131,6 +151,7 @@ function manual_docs_scripts() {
 		'homeUrl'   => home_url( '/' ),
 		'loginUrl'  => wp_login_url( get_permalink() ),
 		'ajaxDocs'  => true,
+		'versions'  => manual_docs_localize_versions(),
 		'i18n'      => array(
 			'searchPlaceholder' => __( 'Search documentation…', 'manual-docs' ),
 			'noResults'         => __( 'No documents found.', 'manual-docs' ),
@@ -175,6 +196,7 @@ $manual_docs_includes = array(
 	'security.php',
 	'cpt.php',
 	'permalinks.php',
+	'import-compat.php',
 	'access-control.php',
 	'versioning.php',
 	'live-search.php',

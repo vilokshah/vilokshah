@@ -9,6 +9,7 @@
   var debounceTimer = null;
   var activeIndex = -1;
   var currentResults = [];
+  var activeVersion = '';
 
   function debounce(fn, wait) {
     return function () {
@@ -29,34 +30,68 @@
       .replace(/"/g, '&quot;');
   }
 
-  function getVersionSlug() {
+  function getVersions() {
+    return (manualDocs.versions && manualDocs.versions.length) ? manualDocs.versions : [];
+  }
+
+  function defaultVersionSlug() {
     var switcher = document.querySelector('.md-version-switcher');
-    return switcher ? switcher.getAttribute('data-current') || '' : '';
+    if (switcher && switcher.getAttribute('data-current')) {
+      return switcher.getAttribute('data-current') || '';
+    }
+    return '';
+  }
+
+  function setOpenState(wrap, open) {
+    wrap.classList.toggle('is-open', !!open);
+    var hero = wrap.closest('.md-hero');
+    if (hero) hero.classList.toggle('is-search-open', !!open);
+  }
+
+  function renderFilters(container) {
+    var versions = getVersions();
+    if (!versions.length) return '';
+
+    var html = '<div class="md-live-search__filters" role="group" aria-label="Filter by release">';
+    html += '<button type="button" class="md-live-search__filter' + (!activeVersion ? ' is-active' : '') + '" data-version="">' +
+      escapeHtml('All') + '</button>';
+    versions.forEach(function (v) {
+      var slug = v.slug || '';
+      var name = v.name || slug;
+      html += '<button type="button" class="md-live-search__filter' + (activeVersion === slug ? ' is-active' : '') +
+        '" data-version="' + escapeHtml(slug) + '">' + escapeHtml(name) + '</button>';
+    });
+    html += '</div>';
+    return html;
   }
 
   function renderResults(container, results) {
     currentResults = results || [];
     activeIndex = -1;
 
+    var filters = renderFilters(container);
     if (!currentResults.length) {
-      container.innerHTML = '<div class="md-live-search__empty">' + escapeHtml(manualDocs.i18n.noResults) + '</div>';
+      container.innerHTML = filters + '<div class="md-live-search__empty">' + escapeHtml(manualDocs.i18n.noResults) + '</div>';
       container.hidden = false;
       return;
     }
 
-    container.innerHTML = currentResults.map(function (item, i) {
+    var list = currentResults.map(function (item, i) {
+      var metaParts = [];
+      if (item.version) metaParts.push(item.version);
+      if (item.category) metaParts.push(item.category);
+      if (item.excerpt) metaParts.push(item.excerpt);
       return (
         '<a class="md-live-search__item" role="option" data-index="' + i + '"' +
           (item.id ? ' data-md-doc-id="' + item.id + '" data-md-ajax-doc' : '') +
           ' href="' + escapeHtml(item.url) + '">' +
           '<span class="md-live-search__item-title">' + escapeHtml(item.title) + '</span>' +
-          '<span class="md-live-search__item-meta">' +
-            escapeHtml(item.category || '') +
-            (item.excerpt ? ' — ' + escapeHtml(item.excerpt) : '') +
-          '</span>' +
+          '<span class="md-live-search__item-meta">' + escapeHtml(metaParts.join(' — ')) + '</span>' +
         '</a>'
       );
     }).join('');
+
+    container.innerHTML = filters + '<div class="md-live-search__list">' + list + '</div>';
     container.hidden = false;
   }
 
@@ -77,14 +112,16 @@
     if (!query || query.length < 2) {
       resultsEl.hidden = true;
       resultsEl.innerHTML = '';
+      setOpenState(wrap, false);
       if (spinner) spinner.hidden = true;
       return;
     }
 
     if (spinner) spinner.hidden = false;
+    setOpenState(wrap, true);
 
     var url = manualDocs.restUrl + 'search?q=' + encodeURIComponent(query);
-    var version = getVersionSlug();
+    var version = activeVersion || '';
     if (version) url += '&version=' + encodeURIComponent(version);
 
     fetch(url, {
@@ -96,6 +133,7 @@
           resultsEl.innerHTML = '<div class="md-live-search__empty">' + escapeHtml(manualDocs.i18n.loginRequired) +
             ' <a href="' + escapeHtml(manualDocs.loginUrl) + '">Log in</a></div>';
           resultsEl.hidden = false;
+          setOpenState(wrap, true);
           throw new Error('auth');
         }
         if (!res.ok) throw new Error('search failed');
@@ -103,10 +141,10 @@
       })
       .then(function (data) {
         renderResults(resultsEl, (data && data.results) || []);
+        setOpenState(wrap, true);
       })
       .catch(function (err) {
         if (err && err.message === 'auth') return;
-        // AJAX fallback
         var ajaxUrl = manualDocs.ajaxUrl + '?action=manual_docs_search&nonce=' + encodeURIComponent(manualDocs.nonce) +
           '&q=' + encodeURIComponent(query);
         if (version) ajaxUrl += '&version=' + encodeURIComponent(version);
@@ -115,6 +153,7 @@
           .then(function (payload) {
             var results = (payload && payload.data && payload.data.results) || [];
             renderResults(resultsEl, results);
+            setOpenState(wrap, true);
           });
       })
       .finally(function () {
@@ -131,8 +170,28 @@
     var resultsEl = wrap.querySelector('.md-live-search__results');
     if (!input || !resultsEl) return;
 
+    if (!activeVersion) {
+      activeVersion = defaultVersionSlug();
+    }
+
     input.addEventListener('input', function () {
       runSearch(input, wrap);
+    });
+
+    input.addEventListener('focus', function () {
+      if (input.value.trim().length >= 2 && resultsEl.innerHTML) {
+        resultsEl.hidden = false;
+        setOpenState(wrap, true);
+      }
+    });
+
+    resultsEl.addEventListener('click', function (e) {
+      var btn = e.target.closest('.md-live-search__filter');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      activeVersion = btn.getAttribute('data-version') || '';
+      search(input.value.trim(), wrap);
     });
 
     input.addEventListener('keydown', function (e) {
@@ -152,17 +211,20 @@
         if (docId && window.ManualDocsAjax && typeof window.ManualDocsAjax.navigateToDoc === 'function' && document.querySelector('[data-md-ajax-shell]')) {
           window.ManualDocsAjax.navigateToDoc(docId, { href: active.href, pushState: true });
           resultsEl.hidden = true;
+          setOpenState(wrap, false);
         } else {
           window.location.href = active.href;
         }
       } else if (e.key === 'Escape') {
         resultsEl.hidden = true;
+        setOpenState(wrap, false);
       }
     });
 
     document.addEventListener('click', function (e) {
       if (!wrap.contains(e.target)) {
         resultsEl.hidden = true;
+        setOpenState(wrap, false);
       }
     });
   });

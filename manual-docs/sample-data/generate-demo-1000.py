@@ -62,6 +62,19 @@ CATEGORIES = [
 
 CAT_NAME = {c[1]: c[2] for c in CATEGORIES}
 DATE = '2026-08-06 14:30:00'
+# Offset each version by a day so WP Importer title+date checks do not collide.
+DATE_OFFSETS = {
+	'goat': 0,
+	'flamingo': 1,
+	'hummingbird': 2,
+}
+
+
+def version_date(v_slug):
+	from datetime import datetime, timedelta
+	base = datetime(2026, 8, 6, 14, 30, 0)
+	d = base + timedelta(days=DATE_OFFSETS.get(v_slug, 0))
+	return d.strftime('%Y-%m-%d %H:%M:%S')
 
 
 def content_html(title, version_slug, version_label, path, depth):
@@ -137,21 +150,24 @@ def channel_header(title, description):
 def emit_item(lines, post_id, title, slug, parent_id, menu_order, cat_slug, depth, rel_path, v_slug, v_label):
 	body = content_html(title, v_slug, v_label, rel_path, depth)
 	cat_name = CAT_NAME.get(cat_slug, 'Platform')
+	date = version_date(v_slug)
+	# Unique GUID per version tree so importer never collapses twins.
+	guid = f'https://example.com/?post_type=manual_documentation&amp;p={post_id}&amp;v={v_slug}'
 	lines.append(
 		f'''	<item>
 		<title><![CDATA[{title}]]></title>
 		<link>https://example.com/documentation/{rel_path}/</link>
 		<pubDate>Thu, 06 Aug 2026 14:00:00 +0000</pubDate>
 		<dc:creator><![CDATA[admin]]></dc:creator>
-		<guid isPermaLink="false">https://example.com/?post_type=manual_documentation&amp;p={post_id}</guid>
+		<guid isPermaLink="false">{guid}</guid>
 		<description></description>
 		<content:encoded><![CDATA[{body}]]></content:encoded>
 		<excerpt:encoded><![CDATA[Demo page for {title} ({v_slug}).]]></excerpt:encoded>
 		<wp:post_id>{post_id}</wp:post_id>
-		<wp:post_date><![CDATA[{DATE}]]></wp:post_date>
-		<wp:post_date_gmt><![CDATA[{DATE}]]></wp:post_date_gmt>
-		<wp:post_modified><![CDATA[{DATE}]]></wp:post_modified>
-		<wp:post_modified_gmt><![CDATA[{DATE}]]></wp:post_modified_gmt>
+		<wp:post_date><![CDATA[{date}]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[{date}]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[{date}]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[{date}]]></wp:post_modified_gmt>
 		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
 		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
 		<wp:post_name><![CDATA[{slug}]]></wp:post_name>

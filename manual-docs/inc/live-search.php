@@ -93,13 +93,19 @@ function manual_docs_rest_search( WP_REST_Request $request ) {
 
 		if ( $version_slug ) {
 			$root = manual_docs_get_version_root_for_doc( $post->ID );
-			if ( ! $root || $root->post_name !== $version_slug ) {
+			if ( ! $root ) {
+				continue;
+			}
+			$root_slug = $root->post_name;
+			// Allow goat-2 style import suffixes.
+			if ( $root_slug !== $version_slug && 0 !== strpos( $root_slug, $version_slug . '-' ) ) {
 				continue;
 			}
 		}
 
 		$cats = taxonomy_exists( $tax ) ? get_the_terms( $post->ID, $tax ) : false;
 		$cat  = ( ! empty( $cats ) && ! is_wp_error( $cats ) ) ? $cats[0]->name : '';
+		$root = function_exists( 'manual_docs_get_version_root_for_doc' ) ? manual_docs_get_version_root_for_doc( $post->ID ) : null;
 
 		$results[] = array(
 			'id'       => $post->ID,
@@ -107,6 +113,8 @@ function manual_docs_rest_search( WP_REST_Request $request ) {
 			'url'      => get_permalink( $post ),
 			'excerpt'  => wp_trim_words( wp_strip_all_tags( $post->post_excerpt ? $post->post_excerpt : $post->post_content ), 18 ),
 			'category' => $cat,
+			'version'  => $root ? get_the_title( $root ) : '',
+			'versionSlug' => $root ? $root->post_name : '',
 		);
 
 		if ( count( $results ) >= 12 ) {
