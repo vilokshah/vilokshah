@@ -407,6 +407,8 @@ function manual_docs_render_options_page() {
 			</p>
 			<pre style="background:#1e1e1e;color:#eee;padding:12px;overflow:auto;">[manual_docs_search]
 [manual_docs_search placeholder="Search docs…" class="md-live-search--shortcode"]</pre>
+
+			<h2 class="title"><?php esc_html_e( 'Access & UI', 'manual-docs' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
 					<th><?php esc_html_e( 'Access', 'manual-docs' ); ?></th>
