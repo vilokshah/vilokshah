@@ -62,10 +62,10 @@ Switcher finds the matching doc under another root by relative slug path, then t
 - Brand name, home hero copy, footer text
 - **Dark + light logos** — separate uploads that swap with the theme toggle (fallback: Site Identity logo)
 - **Heading / body font families** — curated Google Fonts + System UI
-- Colors: primary, accent, links, PDF, active tree bar, header/sidebar/content backgrounds
+- Colors: accents/links apply to both themes; backgrounds + body text customize Dark only (Light keeps a fixed readable palette)
 - Version roots (slugs or IDs), switcher label, default version
 - Require login, TOC/PDF/updated/edit toggles, community CTA
-- Light/dark toggle on the front-end header
+- Light/dark toggle on the front-end header (both themes are fully styled)
 - Collapsible documentation tree (‹ arrow) to widen the content column
 - TOC Hide/Show on the right “On this page” panel
 - Docs tree chrome: favicon left, panel toggle + search icons right; search opens a centered modal so long titles stay readable
@@ -130,8 +130,19 @@ Theme controls (complement your magic-link login plugin; do not replace WP harde
 - AJAX document loading with History API
 - PDF print/download view
 - Role-based category access (Allowed Roles checkboxes on category edit)
-- bbPress community templates + CTA
+- bbPress community templates + CTA (native `forum` / `topic` / `reply` CPTs)
 - Security hardening
+
+## bbPress / community (`forum`, `topic`, `reply`)
+
+Yes — this is bbPress-friendly. Unlike `manual_documentation`, the theme does **not** re-register community post types.
+
+1. Install and activate **bbPress** (plus any companion plugins you already use).
+2. Your existing `post_type=forum|topic|reply` data is used as-is by bbPress.
+3. Save **Settings → Permalinks** once after activating.
+4. The theme provides `bbpress.php` chrome + `assets/css/bbpress.css` styling for light and dark; optional Community menu + Community sidebar widgets.
+
+You do **not** need a Manual-style CPT migration for forums. If a page looks unstyled, flush permalinks and confirm bbPress is active.
 
 ## REST
 

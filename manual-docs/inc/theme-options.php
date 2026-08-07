@@ -399,20 +399,21 @@ function manual_docs_render_options_page() {
 			</table>
 
 			<h2 class="title"><?php esc_html_e( 'Colors', 'manual-docs' ); ?></h2>
+			<p class="description"><?php esc_html_e( 'Accent, link, PDF, active bar, and Subscribe colors apply to both Dark and Light. Header / sidebar / content / page backgrounds and body text apply to Dark only — Light keeps its own readable palette so contrast stays clean.', 'manual-docs' ); ?></p>
 			<table class="form-table" role="presentation">
 				<?php
 				$colors = array(
-					'primary_color'    => __( 'Primary / header text', 'manual-docs' ),
-					'accent_color'     => __( 'Accent', 'manual-docs' ),
-					'link_color'       => __( 'Link color', 'manual-docs' ),
-					'active_bar_color' => __( 'Active tree bar', 'manual-docs' ),
-					'pdf_color'        => __( 'PDF button', 'manual-docs' ),
-					'footer_cta_color' => __( 'Footer Subscribe button', 'manual-docs' ),
-					'header_bg'        => __( 'Header background', 'manual-docs' ),
-					'sidebar_bg'       => __( 'Sidebar background', 'manual-docs' ),
-					'content_bg'       => __( 'Content panel background', 'manual-docs' ),
-					'page_bg'          => __( 'Page background', 'manual-docs' ),
-					'text_color'       => __( 'Body text', 'manual-docs' ),
+					'primary_color'    => __( 'Primary / header text (Dark)', 'manual-docs' ),
+					'accent_color'     => __( 'Accent (both themes)', 'manual-docs' ),
+					'link_color'       => __( 'Link color (both themes)', 'manual-docs' ),
+					'active_bar_color' => __( 'Active tree bar (both themes)', 'manual-docs' ),
+					'pdf_color'        => __( 'PDF button (both themes)', 'manual-docs' ),
+					'footer_cta_color' => __( 'Footer Subscribe button (both themes)', 'manual-docs' ),
+					'header_bg'        => __( 'Header background (Dark)', 'manual-docs' ),
+					'sidebar_bg'       => __( 'Sidebar background (Dark)', 'manual-docs' ),
+					'content_bg'       => __( 'Content panel background (Dark)', 'manual-docs' ),
+					'page_bg'          => __( 'Page background (Dark)', 'manual-docs' ),
+					'text_color'       => __( 'Body text (Dark)', 'manual-docs' ),
 				);
 				foreach ( $colors as $key => $label ) :
 					?>
@@ -636,6 +637,13 @@ function manual_docs_get_options_css_text() {
 	$text    = esc_html( $o['text_color'] );
 	$cta     = esc_html( ! empty( $o['footer_cta_color'] ) ? $o['footer_cta_color'] : '#e11d48' );
 
+	/*
+	 * Brand accents apply to both themes.
+	 * Structural surfaces/text apply to dark only — light keeps its own readable palette
+	 * so admin dark colors cannot wash out light-mode content.
+	 * Component rules that consume structural vars are also dark-scoped so a late
+	 * inline stylesheet cannot force light-gray text onto light surfaces.
+	 */
 	return "
 :root {
 	--md-font-display: {$font_display};
@@ -646,28 +654,53 @@ html[data-md-theme=\"dark\"],
 html[data-md-theme=\"light\"] {
 	--md-font-display: {$font_display};
 	--md-font-body: {$font_body};
-	--md-primary: {$primary};
 	--md-accent: {$accent};
 	--md-accent-soft: color-mix(in srgb, {$accent} 16%, transparent);
 	--md-link: {$link};
 	--md-pdf: {$pdf};
 	--md-active-bar: {$bar};
+	--md-footer-cta: {$cta};
+}
+html[data-md-theme=\"dark\"] {
+	--md-primary: {$primary};
 	--md-header-bg: {$header};
 	--md-sidebar-bg: {$sidebar};
 	--md-content-bg: {$content};
 	--md-page-bg: {$page};
 	--md-text: {$text};
 	--md-ink: {$primary};
-	--md-footer-cta: {$cta};
+	--md-surface: {$content};
+	--md-muted: color-mix(in srgb, {$text} 72%, #64748b);
+	--md-line: color-mix(in srgb, {$content} 70%, #94a3b8);
 }
-body { font-family: var(--md-font-body); background: var(--md-page-bg); color: var(--md-text); }
+body { font-family: var(--md-font-body); }
 h1, h2, h3, h4, h5, h6,
 .md-doc-title,
 .md-brand__text,
 .md-hero__title { font-family: var(--md-font-display); }
-.md-header { background: var(--md-header-bg); }
-.md-docs-sidebar { background: var(--md-sidebar-bg); }
-.md-doc-article, .md-archive, .md-docs-shell { background: var(--md-content-bg); }
+html[data-md-theme=\"dark\"] body { background: var(--md-page-bg); color: var(--md-text); }
+html[data-md-theme=\"dark\"] h1,
+html[data-md-theme=\"dark\"] h2,
+html[data-md-theme=\"dark\"] h3,
+html[data-md-theme=\"dark\"] h4,
+html[data-md-theme=\"dark\"] h5,
+html[data-md-theme=\"dark\"] h6,
+html[data-md-theme=\"dark\"] .md-doc-title,
+html[data-md-theme=\"dark\"] .md-brand__text,
+html[data-md-theme=\"dark\"] .md-hero__title { color: var(--md-ink); }
+html[data-md-theme=\"dark\"] .md-header { background: var(--md-header-bg); }
+html[data-md-theme=\"dark\"] .md-docs-sidebar { background: var(--md-sidebar-bg); }
+html[data-md-theme=\"dark\"] .md-doc-article,
+html[data-md-theme=\"dark\"] .md-archive,
+html[data-md-theme=\"dark\"] .md-docs-shell { background: var(--md-content-bg); }
+html[data-md-theme=\"dark\"] .md-doc-content,
+html[data-md-theme=\"dark\"] .md-doc-toc__card,
+html[data-md-theme=\"dark\"] .md-version-switcher { background: var(--md-surface); color: var(--md-text); }
+html[data-md-theme=\"dark\"] .md-doc-content h1,
+html[data-md-theme=\"dark\"] .md-doc-content h2,
+html[data-md-theme=\"dark\"] .md-doc-content h3,
+html[data-md-theme=\"dark\"] .md-doc-content h4,
+html[data-md-theme=\"dark\"] .md-doc-title { color: var(--md-ink); }
 .md-meta-pdf, .md-meta-pdf:hover { color: var(--md-pdf); }
 .md-doc-nav__item.is-active > a { border-left-color: var(--md-active-bar); color: var(--md-link); }
 .md-footer-newsletter__submit { background: var(--md-footer-cta); }

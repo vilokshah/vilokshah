@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MANUAL_DOCS_VERSION', '2.9.3' );
+define( 'MANUAL_DOCS_VERSION', '2.9.4' );
 
 /**
  * Version roots for JS (search filters).
@@ -62,6 +62,9 @@ function manual_docs_setup() {
 	add_theme_support( 'align-wide' );
 	add_theme_support( 'editor-styles' );
 	add_editor_style( 'assets/css/editor.css' );
+
+	// bbPress uses native CPTs: forum, topic, reply — theme wrappers style them.
+	add_theme_support( 'bbpress' );
 
 	register_nav_menus( array(
 		'primary'         => __( 'Primary Menu', 'manual-docs' ),
