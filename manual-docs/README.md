@@ -71,6 +71,7 @@ Switcher finds the matching doc under another root by relative slug path, then t
 - Docs tree chrome: favicon left, panel toggle + search icons right; search opens a centered modal so long titles stay readable
 - **Docs Stats** (Appearance → Docs Stats) — top visited documents + frequent searches
 - Homepage Docs Portal — brand + search only (no category/version grids)
+- **Version diff** (optional) — Compare versions summary-first across goat/flamingo/hummingbird; one admin toggle
 - **Large libraries** — tree defaults to active version only + lazy-load children; reading-order cache for prev/next
 - **Customizable footer** — 4 widget columns (Contacts / Company / Support / Stay Connected) + copyright bar
 

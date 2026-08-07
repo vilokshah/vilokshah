@@ -3,6 +3,7 @@
  * Single manual_documentation — digitate-style docs chrome.
  *
  * Left: search + tree. Main: title, meta, version, content. Right: TOC.
+ * When ?md_compare= is set and version diff is enabled, shows summary-first compare.
  *
  * @package ManualDocs
  */
@@ -14,9 +15,11 @@ $show_pdf     = (bool) manual_docs_get_option( 'show_pdf', true );
 $show_updated = (bool) manual_docs_get_option( 'show_updated', true );
 $show_edit    = (bool) manual_docs_get_option( 'show_edit_link', true );
 $version      = manual_docs_get_doc_version();
+$compare_to   = function_exists( 'manual_docs_get_compare_request' ) ? manual_docs_get_compare_request() : '';
+$is_compare   = $compare_to && function_exists( 'manual_docs_version_diff_enabled' ) && manual_docs_version_diff_enabled();
 ?>
 
-<main id="main-content" class="md-main md-main--docs">
+<main id="main-content" class="md-main md-main--docs<?php echo $is_compare ? ' md-main--compare' : ''; ?>">
 	<div class="md-docs-shell" data-md-ajax-shell>
 		<?php manual_docs_render_docs_sidebar( array( 'search_placeholder' => __( 'Search docs…', 'manual-docs' ) ) ); ?>
 
@@ -41,6 +44,7 @@ $version      = manual_docs_get_doc_version();
 						</div>
 					</div>
 
+					<?php if ( ! $is_compare ) : ?>
 					<div class="md-doc-meta-bar" data-md-doc-meta>
 						<?php if ( $show_updated ) : ?>
 							<span class="md-meta-item md-meta-updated" data-md-modified>
@@ -67,8 +71,16 @@ $version      = manual_docs_get_doc_version();
 							<?php echo $version ? esc_html( $version['name'] ) : ''; ?>
 						</span>
 					</div>
+					<?php endif; ?>
 				</header>
 
+				<?php if ( $is_compare ) : ?>
+					<div class="md-doc-layout md-doc-layout--no-toc">
+						<div class="md-doc-content" id="md-doc-content" data-md-doc-content>
+							<?php manual_docs_render_version_diff_view( get_the_ID(), $compare_to ); ?>
+						</div>
+					</div>
+				<?php else : ?>
 				<div class="md-doc-layout <?php echo $show_toc ? '' : 'md-doc-layout--no-toc'; ?>">
 					<div class="md-doc-content entry-content" id="md-doc-content" data-md-doc-content>
 						<?php the_content(); ?>
@@ -95,6 +107,7 @@ $version      = manual_docs_get_doc_version();
 				<div data-md-community-slot>
 					<?php if ( manual_docs_get_option( 'show_community_cta', true ) ) { manual_docs_render_community_cta(); } ?>
 				</div>
+				<?php endif; ?>
 			</article>
 		<?php endwhile; ?>
 	</div>

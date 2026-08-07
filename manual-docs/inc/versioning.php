@@ -383,27 +383,34 @@ function manual_docs_render_version_switcher( $post_id = null ) {
 	$current_id = $current ? (int) $current['id'] : 0;
 	$label = manual_docs_get_option( 'version_label', __( 'Release version', 'manual-docs' ) );
 	?>
-	<div class="md-version-switcher" data-current="<?php echo esc_attr( $current ? $current['slug'] : '' ); ?>">
-		<label for="md-version-select" class="md-version-label"><?php echo esc_html( $label ); ?></label>
-		<select id="md-version-select" class="md-version-select" data-post-id="<?php echo esc_attr( (string) $post_id ); ?>">
-			<?php foreach ( $roots as $root ) : ?>
-				<?php
-				$sibling = manual_docs_find_version_sibling( $post_id, $root->ID );
-				// Always allow switching — fall back to the version root when no twin page.
-				$target  = $sibling ? $sibling : $root;
-				$url     = get_permalink( $target );
-				$sib_id  = (int) $target->ID;
-				?>
-				<option
-					value="<?php echo esc_url( $url ); ?>"
-					data-md-doc-id="<?php echo esc_attr( (string) $sib_id ); ?>"
-					data-version-root="<?php echo esc_attr( (string) $root->ID ); ?>"
-					<?php selected( $current_id, (int) $root->ID ); ?>
-				>
-					<?php echo esc_html( get_the_title( $root ) ); ?>
-				</option>
-			<?php endforeach; ?>
-		</select>
+	<div class="md-version-tools">
+		<div class="md-version-switcher" data-current="<?php echo esc_attr( $current ? $current['slug'] : '' ); ?>">
+			<label for="md-version-select" class="md-version-label"><?php echo esc_html( $label ); ?></label>
+			<select id="md-version-select" class="md-version-select" data-post-id="<?php echo esc_attr( (string) $post_id ); ?>">
+				<?php foreach ( $roots as $root ) : ?>
+					<?php
+					$sibling = manual_docs_find_version_sibling( $post_id, $root->ID );
+					// Always allow switching — fall back to the version root when no twin page.
+					$target  = $sibling ? $sibling : $root;
+					$url     = get_permalink( $target );
+					$sib_id  = (int) $target->ID;
+					?>
+					<option
+						value="<?php echo esc_url( $url ); ?>"
+						data-md-doc-id="<?php echo esc_attr( (string) $sib_id ); ?>"
+						data-version-root="<?php echo esc_attr( (string) $root->ID ); ?>"
+						<?php selected( $current_id, (int) $root->ID ); ?>
+					>
+						<?php echo esc_html( get_the_title( $root ) ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<?php
+		if ( function_exists( 'manual_docs_render_compare_control' ) ) {
+			manual_docs_render_compare_control( $post_id );
+		}
+		?>
 	</div>
 	<?php
 }
