@@ -57,10 +57,13 @@ if ( function_exists( 'bbp_is_single_user' ) && bbp_is_single_user() ) {
 
 			<div class="md-bbpress entry-content">
 				<?php
-				if ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() && function_exists( 'manual_docs_academy_fields_badge_html' ) ) {
-					$badge = manual_docs_academy_fields_badge_html( bbp_get_topic_id() );
-					if ( $badge ) {
-						echo '<div class="md-academy-badge-wrap">' . $badge . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				if ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() ) {
+					echo '<h2 class="md-community-topic-title">' . esc_html( get_the_title() ) . '</h2>';
+					if ( function_exists( 'manual_docs_academy_fields_badge_html' ) ) {
+						$badge = manual_docs_academy_fields_badge_html( bbp_get_topic_id() );
+						if ( $badge ) {
+							echo '<div class="md-academy-badge-wrap">' . $badge . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						}
 					}
 				}
 

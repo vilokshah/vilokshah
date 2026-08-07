@@ -20,27 +20,35 @@ define( 'MANUAL_DOCS_TOPIC_VIEWS_KEY', '_md_topic_views' );
  * @return string
  */
 function manual_docs_community_page_title() {
-	$title = __( 'Community', 'manual-docs' );
-
-	if ( function_exists( 'bbp_is_single_forum' ) && bbp_is_single_forum() ) {
-		$title = get_the_title();
-	} elseif ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() ) {
-		$title = get_the_title();
-	} elseif ( function_exists( 'bbp_is_single_reply' ) && bbp_is_single_reply() ) {
-		$title = get_the_title();
-	} elseif ( function_exists( 'bbp_is_topic_tag' ) && bbp_is_topic_tag() ) {
-		$title = __( 'Topic Tag', 'manual-docs' );
-	} elseif ( function_exists( 'bbp_is_single_user' ) && bbp_is_single_user() ) {
-		$title = __( 'Member Profile', 'manual-docs' );
-	} elseif ( function_exists( 'bbp_is_search' ) && bbp_is_search() ) {
-		$title = __( 'Forum Search', 'manual-docs' );
-	} elseif ( function_exists( 'bbp_is_forum_archive' ) && bbp_is_forum_archive() ) {
-		$title = __( 'Forums', 'manual-docs' );
-	} elseif ( function_exists( 'bbp_is_topic_archive' ) && bbp_is_topic_archive() ) {
-		$title = __( 'Topics', 'manual-docs' );
+	// Prefer forum context over long topic titles in the hero.
+	if ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() && function_exists( 'bbp_get_topic_forum_id' ) ) {
+		$forum_id = (int) bbp_get_topic_forum_id();
+		if ( $forum_id && function_exists( 'bbp_get_forum_title' ) ) {
+			return bbp_get_forum_title( $forum_id );
+		}
 	}
-
-	return $title;
+	if ( function_exists( 'bbp_is_single_forum' ) && bbp_is_single_forum() ) {
+		return get_the_title();
+	}
+	if ( function_exists( 'bbp_is_single_reply' ) && bbp_is_single_reply() ) {
+		return get_the_title();
+	}
+	if ( function_exists( 'bbp_is_topic_tag' ) && bbp_is_topic_tag() ) {
+		return __( 'Topic Tag', 'manual-docs' );
+	}
+	if ( function_exists( 'bbp_is_single_user' ) && bbp_is_single_user() ) {
+		return __( 'Member Profile', 'manual-docs' );
+	}
+	if ( function_exists( 'bbp_is_search' ) && bbp_is_search() ) {
+		return __( 'Forum Search', 'manual-docs' );
+	}
+	if ( function_exists( 'bbp_is_topic_archive' ) && bbp_is_topic_archive() ) {
+		return __( 'Topics', 'manual-docs' );
+	}
+	if ( function_exists( 'bbp_is_forum_archive' ) && bbp_is_forum_archive() ) {
+		return __( 'Forums', 'manual-docs' );
+	}
+	return __( 'Community', 'manual-docs' );
 }
 
 /**
@@ -98,17 +106,19 @@ function manual_docs_render_community_hero( $title ) {
 	}
 	?>
 	<header class="md-community-hero">
+		<p class="md-community-hero__eyebrow"><?php esc_html_e( 'Community', 'manual-docs' ); ?></p>
 		<h1 class="md-community-hero__title"><?php echo esc_html( $title ); ?></h1>
-		<form class="md-community-search" role="search" method="get" action="<?php echo esc_url( manual_docs_community_search_url() ); ?>">
-			<label class="screen-reader-text" for="md-community-search-input"><?php esc_html_e( 'Search forums', 'manual-docs' ); ?></label>
+		<form class="md-community-search" role="search" method="get" action="<?php echo esc_url( manual_docs_community_search_url() ); ?>" data-md-community-live-search>
+			<label class="screen-reader-text" for="md-community-search-input"><?php esc_html_e( 'Search forums, topics and replies', 'manual-docs' ); ?></label>
 			<input
 				id="md-community-search-input"
 				class="md-community-search__input"
 				type="search"
 				name="bbp_search"
 				value="<?php echo esc_attr( $q ); ?>"
-				placeholder="<?php echo esc_attr__( 'Have a question? Ask or enter a search term.', 'manual-docs' ); ?>"
+				placeholder="<?php echo esc_attr__( 'Have a question? Search forums, topics & replies…', 'manual-docs' ); ?>"
 				autocomplete="off"
+				aria-autocomplete="list"
 			/>
 			<button type="submit" class="md-community-search__submit" aria-label="<?php esc_attr_e( 'Search', 'manual-docs' ); ?>">
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -119,7 +129,7 @@ function manual_docs_render_community_hero( $title ) {
 }
 
 /**
- * Render stats bar + subscribe.
+ * Render stats bar + single Subscribe control.
  */
 function manual_docs_render_community_toolbar() {
 	$stats = manual_docs_community_stats();
@@ -131,6 +141,7 @@ function manual_docs_render_community_toolbar() {
 		</p>
 		<div class="md-community-toolbar__actions">
 			<?php
+			$GLOBALS['md_rendering_subscribe_toolbar'] = true;
 			if ( function_exists( 'bbp_is_single_forum' ) && bbp_is_single_forum() && function_exists( 'bbp_get_forum_subscription_link' ) ) {
 				echo bbp_get_forum_subscription_link( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					array(
@@ -141,6 +152,16 @@ function manual_docs_render_community_toolbar() {
 					)
 				);
 			} elseif ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() && function_exists( 'bbp_get_topic_subscription_link' ) ) {
+				if ( function_exists( 'bbp_get_topic_favorite_link' ) ) {
+					echo bbp_get_topic_favorite_link( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						array(
+							'before' => '',
+							'after'  => '',
+						)
+					);
+				} elseif ( function_exists( 'bbp_get_user_favorites_link' ) ) {
+					echo bbp_get_user_favorites_link(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				}
 				echo bbp_get_topic_subscription_link( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					array(
 						'before'      => '',
@@ -150,11 +171,40 @@ function manual_docs_render_community_toolbar() {
 					)
 				);
 			}
+			$GLOBALS['md_rendering_subscribe_toolbar'] = false;
 			?>
 		</div>
 	</div>
 	<?php
 }
+
+/**
+ * Hide default bbPress subscribe/favorite in topic header (we render one set in toolbar).
+ *
+ * @param string $html Link HTML.
+ * @return string
+ */
+function manual_docs_suppress_duplicate_topic_actions( $html ) {
+	if ( ! empty( $GLOBALS['md_rendering_subscribe_toolbar'] ) ) {
+		return $html;
+	}
+	if ( is_admin() ) {
+		return $html;
+	}
+	// Keep favorites/subscribe on profiles and directories.
+	if ( function_exists( 'bbp_is_single_user' ) && bbp_is_single_user() ) {
+		return $html;
+	}
+	if ( ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() )
+		|| ( function_exists( 'bbp_is_single_forum' ) && bbp_is_single_forum() ) ) {
+		return '';
+	}
+	return $html;
+}
+add_filter( 'bbp_get_topic_subscribe_link', 'manual_docs_suppress_duplicate_topic_actions', 5 );
+add_filter( 'bbp_get_forum_subscribe_link', 'manual_docs_suppress_duplicate_topic_actions', 5 );
+add_filter( 'bbp_get_topic_favorite_link', 'manual_docs_suppress_duplicate_topic_actions', 5 );
+add_filter( 'bbp_get_user_favorites_link', 'manual_docs_suppress_duplicate_topic_actions', 5 );
 
 /**
  * Initials from a display name.
@@ -257,20 +307,23 @@ function manual_docs_render_recent_topics_panel() {
 					$forum_id = function_exists( 'bbp_get_topic_forum_id' ) ? (int) bbp_get_topic_forum_id( $topic->ID ) : 0;
 					if ( $forum_id && function_exists( 'manual_docs_is_academy_forum' ) && manual_docs_is_academy_forum( $forum_id ) && function_exists( 'manual_docs_get_academy_fields' ) ) {
 						$af = manual_docs_get_academy_fields( $topic->ID );
-						if ( ! empty( $af['course_name'] ) || ! empty( $af['course_id'] ) ) {
-							$extra = array_filter(
-								array(
-									$af['course_name'],
-									$af['course_id'] ? sprintf(
-										/* translators: %s: course id */
-										__( 'Course ID: %s', 'manual-docs' ),
-										$af['course_id']
-									) : '',
-								)
-							);
-							if ( $extra ) {
-								$label .= ' — ' . implode( ' · ', $extra );
-							}
+						$extra = array_filter(
+							array(
+								$af['course_name'],
+								! empty( $af['course_id'] ) ? sprintf(
+									/* translators: %s: course id */
+									__( 'Course ID: %s', 'manual-docs' ),
+									$af['course_id']
+								) : '',
+								! empty( $af['lab_id'] ) ? sprintf(
+									/* translators: %s: lab id */
+									__( 'Lab: %s', 'manual-docs' ),
+									$af['lab_id']
+								) : '',
+							)
+						);
+						if ( $extra ) {
+							$label .= ' — ' . implode( ' · ', $extra );
 						}
 					}
 					?>
@@ -317,10 +370,37 @@ function manual_docs_community_avatar_html( $user_id, $size = 44 ) {
  * @return string
  */
 function manual_docs_style_subscription_link( $html ) {
-	if ( ! $html ) {
+	if ( ! $html || empty( $GLOBALS['md_rendering_subscribe_toolbar'] ) ) {
+		return $html;
+	}
+	if ( false !== strpos( $html, 'md-btn--subscribe' ) ) {
 		return $html;
 	}
 	return preg_replace( '/class="([^"]*)"/', 'class="$1 md-btn md-btn--primary md-btn--subscribe"', $html, 1 );
 }
-add_filter( 'bbp_get_forum_subscribe_link', 'manual_docs_style_subscription_link' );
-add_filter( 'bbp_get_topic_subscribe_link', 'manual_docs_style_subscription_link' );
+add_filter( 'bbp_get_forum_subscribe_link', 'manual_docs_style_subscription_link', 20 );
+add_filter( 'bbp_get_topic_subscribe_link', 'manual_docs_style_subscription_link', 20 );
+
+/**
+ * Hide Archives / Categories widgets on the community sidebar.
+ *
+ * @param array|false $instance Widget settings.
+ * @param WP_Widget   $widget   Widget instance.
+ * @param array       $args     Sidebar args.
+ * @return array|false
+ */
+function manual_docs_filter_community_sidebar_widgets( $instance, $widget, $args ) {
+	if ( empty( $args['id'] ) || 'community-sidebar' !== $args['id'] ) {
+		return $instance;
+	}
+	if ( $widget instanceof WP_Widget_Archives || $widget instanceof WP_Widget_Categories ) {
+		return false;
+	}
+	// Also match by id_base for block/legacy variants.
+	$id_base = isset( $widget->id_base ) ? $widget->id_base : '';
+	if ( in_array( $id_base, array( 'archives', 'categories', 'block-archives', 'block-categories' ), true ) ) {
+		return false;
+	}
+	return $instance;
+}
+add_filter( 'widget_display_callback', 'manual_docs_filter_community_sidebar_widgets', 10, 3 );

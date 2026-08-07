@@ -36,6 +36,42 @@ function manual_docs_bbpress_assets() {
 add_action( 'wp_enqueue_scripts', 'manual_docs_bbpress_assets', 20 );
 
 /**
+ * Resolve a reliable bbPress directory URL (avoids bare /forums|/topics 404s).
+ *
+ * @param string $which 'forums' or 'topics'.
+ * @return string
+ */
+function manual_docs_bbpress_directory_url( $which = 'forums' ) {
+	$which = ( 'topics' === $which ) ? 'topics' : 'forums';
+
+	if ( 'forums' === $which ) {
+		if ( function_exists( 'bbp_get_forums_url' ) ) {
+			$url = bbp_get_forums_url();
+			if ( $url ) {
+				return $url;
+			}
+		}
+		if ( function_exists( 'bbp_get_root_url' ) ) {
+			$url = bbp_get_root_url();
+			if ( $url ) {
+				return $url;
+			}
+		}
+		$archive = get_post_type_archive_link( 'forum' );
+		return $archive ? $archive : home_url( '/?post_type=forum' );
+	}
+
+	if ( function_exists( 'bbp_get_topics_url' ) ) {
+		$url = bbp_get_topics_url();
+		if ( $url ) {
+			return $url;
+		}
+	}
+	$archive = get_post_type_archive_link( 'topic' );
+	return $archive ? $archive : home_url( '/?post_type=topic' );
+}
+
+/**
  * Community nav fallback links.
  */
 function manual_docs_community_links() {
@@ -43,21 +79,15 @@ function manual_docs_community_links() {
 		return array();
 	}
 
-	$links = array();
-
-	if ( function_exists( 'bbp_get_forums_url' ) ) {
-		$links[] = array(
-			'label' => __( 'Forums', 'manual-docs' ),
-			'url'   => bbp_get_forums_url(),
-		);
-	}
-
-	if ( function_exists( 'bbp_get_topics_url' ) ) {
-		$links[] = array(
-			'label' => __( 'Topics', 'manual-docs' ),
-			'url'   => bbp_get_topics_url(),
-		);
-	}
+	$links   = array();
+	$links[] = array(
+		'label' => __( 'Forums', 'manual-docs' ),
+		'url'   => manual_docs_bbpress_directory_url( 'forums' ),
+	);
+	$links[] = array(
+		'label' => __( 'Topics', 'manual-docs' ),
+		'url'   => manual_docs_bbpress_directory_url( 'topics' ),
+	);
 
 	if ( is_user_logged_in() && function_exists( 'bbp_get_user_profile_url' ) ) {
 		$links[] = array(
@@ -68,6 +98,22 @@ function manual_docs_community_links() {
 
 	return apply_filters( 'manual_docs_community_links', $links );
 }
+
+/**
+ * One-time rewrite flush so /forums and /topics resolve after theme update.
+ */
+function manual_docs_maybe_flush_bbpress_rewrites() {
+	if ( ! manual_docs_bbpress_active() ) {
+		return;
+	}
+	$flag = 'manual_docs_bbp_rewrites_' . MANUAL_DOCS_VERSION;
+	if ( get_option( $flag ) ) {
+		return;
+	}
+	flush_rewrite_rules( false );
+	update_option( $flag, 1, false );
+}
+add_action( 'init', 'manual_docs_maybe_flush_bbpress_rewrites', 99 );
 
 /**
  * Soften bbPress breadcrumbs into theme style via CSS class wrapper.
@@ -165,6 +211,9 @@ function manual_docs_bbpress_sample_blueprint() {
 				'Automation Practitioner',
 				'Academy Orientation',
 			),
+			'lab_ids'      => array( 'LAB-2201', 'LAB-2201', 'LAB-1104', 'LAB-1104', 'LAB-3309', '' ),
+			'issue_types'  => array( 'user-activation', 'lab-access', 'enrollment', 'environment', 'certificate', 'other' ),
+			'urgencies'    => array( 'normal', 'high', 'normal', 'normal', 'high', 'normal' ),
 		),
 	);
 }
@@ -273,13 +322,25 @@ function manual_docs_install_bbpress_sample() {
 
 			update_post_meta( (int) $topic_id, '_manual_docs_bbpress_sample', 1 );
 			if ( ! empty( $forum_def['academy'] ) ) {
-				$cid = isset( $forum_def['course_ids'][ $ti ] ) ? $forum_def['course_ids'][ $ti ] : '';
+				$cid   = isset( $forum_def['course_ids'][ $ti ] ) ? $forum_def['course_ids'][ $ti ] : '';
 				$cname = isset( $forum_def['course_names'][ $ti ] ) ? $forum_def['course_names'][ $ti ] : '';
+				$lab   = isset( $forum_def['lab_ids'][ $ti ] ) ? $forum_def['lab_ids'][ $ti ] : '';
+				$issue = isset( $forum_def['issue_types'][ $ti ] ) ? $forum_def['issue_types'][ $ti ] : '';
+				$urg   = isset( $forum_def['urgencies'][ $ti ] ) ? $forum_def['urgencies'][ $ti ] : 'normal';
 				if ( $cid && defined( 'MANUAL_DOCS_ACADEMY_COURSE_ID_KEY' ) ) {
 					update_post_meta( (int) $topic_id, MANUAL_DOCS_ACADEMY_COURSE_ID_KEY, sanitize_text_field( $cid ) );
 				}
 				if ( $cname && defined( 'MANUAL_DOCS_ACADEMY_COURSE_NAME_KEY' ) ) {
 					update_post_meta( (int) $topic_id, MANUAL_DOCS_ACADEMY_COURSE_NAME_KEY, sanitize_text_field( $cname ) );
+				}
+				if ( $lab && defined( 'MANUAL_DOCS_ACADEMY_LAB_ID_KEY' ) ) {
+					update_post_meta( (int) $topic_id, MANUAL_DOCS_ACADEMY_LAB_ID_KEY, sanitize_text_field( $lab ) );
+				}
+				if ( $issue && defined( 'MANUAL_DOCS_ACADEMY_ISSUE_TYPE_KEY' ) ) {
+					update_post_meta( (int) $topic_id, MANUAL_DOCS_ACADEMY_ISSUE_TYPE_KEY, sanitize_key( $issue ) );
+				}
+				if ( defined( 'MANUAL_DOCS_ACADEMY_URGENCY_KEY' ) ) {
+					update_post_meta( (int) $topic_id, MANUAL_DOCS_ACADEMY_URGENCY_KEY, sanitize_key( $urg ) );
 				}
 			}
 			++$created['topics'];

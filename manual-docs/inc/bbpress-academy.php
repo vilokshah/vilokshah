@@ -16,8 +16,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** Meta keys (underscore-prefixed = private). */
 define( 'MANUAL_DOCS_ACADEMY_COURSE_ID_KEY', '_md_academy_course_id' );
 define( 'MANUAL_DOCS_ACADEMY_COURSE_NAME_KEY', '_md_academy_course_name' );
+define( 'MANUAL_DOCS_ACADEMY_LAB_ID_KEY', '_md_academy_lab_id' );
+define( 'MANUAL_DOCS_ACADEMY_ISSUE_TYPE_KEY', '_md_academy_issue_type' );
+define( 'MANUAL_DOCS_ACADEMY_URGENCY_KEY', '_md_academy_urgency' );
 define( 'MANUAL_DOCS_ACADEMY_NONCE_ACTION', 'manual_docs_academy_topic_fields' );
 define( 'MANUAL_DOCS_ACADEMY_NONCE_NAME', 'manual_docs_academy_nonce' );
+
+/**
+ * Allowed issue types for Academy Support.
+ *
+ * @return array<string,string> slug => label
+ */
+function manual_docs_academy_issue_types() {
+	return array(
+		'user-activation' => __( 'User activation', 'manual-docs' ),
+		'lab-access'      => __( 'Lab access / extension', 'manual-docs' ),
+		'enrollment'      => __( 'Enrollment', 'manual-docs' ),
+		'certificate'     => __( 'Certificate', 'manual-docs' ),
+		'environment'     => __( 'Environment / reset', 'manual-docs' ),
+		'other'           => __( 'Other', 'manual-docs' ),
+	);
+}
+
+/**
+ * Allowed urgency values.
+ *
+ * @return array<string,string>
+ */
+function manual_docs_academy_urgency_levels() {
+	return array(
+		'normal' => __( 'Normal', 'manual-docs' ),
+		'high'   => __( 'High', 'manual-docs' ),
+	);
+}
 
 /**
  * Configured Academy Support forum slug.
@@ -111,16 +142,70 @@ function manual_docs_sanitize_academy_course_name( $value ) {
 }
 
 /**
+ * Sanitize lab / session ID.
+ *
+ * @param mixed $value Raw.
+ * @return string
+ */
+function manual_docs_sanitize_academy_lab_id( $value ) {
+	$value = sanitize_text_field( (string) $value );
+	$value = preg_replace( '/[^A-Za-z0-9\-_.]/', '', $value );
+	return substr( (string) $value, 0, 40 );
+}
+
+/**
+ * Sanitize issue type against allow-list.
+ *
+ * @param mixed $value Raw.
+ * @return string
+ */
+function manual_docs_sanitize_academy_issue_type( $value ) {
+	$value = sanitize_key( (string) $value );
+	$allowed = array_keys( manual_docs_academy_issue_types() );
+	return in_array( $value, $allowed, true ) ? $value : '';
+}
+
+/**
+ * Sanitize urgency against allow-list.
+ *
+ * @param mixed $value Raw.
+ * @return string
+ */
+function manual_docs_sanitize_academy_urgency( $value ) {
+	$value = sanitize_key( (string) $value );
+	$allowed = array_keys( manual_docs_academy_urgency_levels() );
+	return in_array( $value, $allowed, true ) ? $value : 'normal';
+}
+
+/**
+ * Read academy fields from POST (sanitized).
+ *
+ * @return array
+ */
+function manual_docs_academy_fields_from_request() {
+	return array(
+		'course_id'   => isset( $_POST['md_academy_course_id'] ) ? manual_docs_sanitize_academy_course_id( wp_unslash( $_POST['md_academy_course_id'] ) ) : '', // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		'course_name' => isset( $_POST['md_academy_course_name'] ) ? manual_docs_sanitize_academy_course_name( wp_unslash( $_POST['md_academy_course_name'] ) ) : '', // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		'lab_id'      => isset( $_POST['md_academy_lab_id'] ) ? manual_docs_sanitize_academy_lab_id( wp_unslash( $_POST['md_academy_lab_id'] ) ) : '', // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		'issue_type'  => isset( $_POST['md_academy_issue_type'] ) ? manual_docs_sanitize_academy_issue_type( wp_unslash( $_POST['md_academy_issue_type'] ) ) : '', // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		'urgency'     => isset( $_POST['md_academy_urgency'] ) ? manual_docs_sanitize_academy_urgency( wp_unslash( $_POST['md_academy_urgency'] ) ) : 'normal', // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	);
+}
+
+/**
  * Get academy fields for a topic.
  *
  * @param int $topic_id Topic ID.
- * @return array{course_id:string,course_name:string}
+ * @return array
  */
 function manual_docs_get_academy_fields( $topic_id ) {
 	$topic_id = absint( $topic_id );
 	return array(
 		'course_id'   => (string) get_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_COURSE_ID_KEY, true ),
 		'course_name' => (string) get_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_COURSE_NAME_KEY, true ),
+		'lab_id'      => (string) get_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_LAB_ID_KEY, true ),
+		'issue_type'  => (string) get_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_ISSUE_TYPE_KEY, true ),
+		'urgency'     => (string) get_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_URGENCY_KEY, true ),
 	);
 }
 
@@ -161,55 +246,65 @@ function manual_docs_render_academy_topic_form_fields() {
 	$fields = $topic_id ? manual_docs_get_academy_fields( $topic_id ) : array(
 		'course_id'   => '',
 		'course_name' => '',
+		'lab_id'      => '',
+		'issue_type'  => '',
+		'urgency'     => 'normal',
 	);
 
-	// Prefill from POST on validation error (still sanitized).
 	if ( isset( $_POST[ MANUAL_DOCS_ACADEMY_NONCE_NAME ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( isset( $_POST['md_academy_course_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$fields['course_id'] = manual_docs_sanitize_academy_course_id( wp_unslash( $_POST['md_academy_course_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		}
-		if ( isset( $_POST['md_academy_course_name'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$fields['course_name'] = manual_docs_sanitize_academy_course_name( wp_unslash( $_POST['md_academy_course_name'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		}
+		$fields = array_merge( $fields, manual_docs_academy_fields_from_request() );
 	}
+
+	$issue_types = manual_docs_academy_issue_types();
+	$urgencies   = manual_docs_academy_urgency_levels();
 	?>
 	<div class="md-academy-fields" data-md-academy-fields>
 		<?php wp_nonce_field( MANUAL_DOCS_ACADEMY_NONCE_ACTION, MANUAL_DOCS_ACADEMY_NONCE_NAME ); ?>
 		<p class="md-academy-fields__intro">
 			<?php esc_html_e( 'Academy Support details (required for course-related questions).', 'manual-docs' ); ?>
 		</p>
-		<p>
-			<label for="md_academy_course_id">
-				<?php esc_html_e( 'Course ID', 'manual-docs' ); ?>
-				<span class="md-academy-fields__req" aria-hidden="true">*</span>
-			</label>
-			<input
-				type="text"
-				id="md_academy_course_id"
-				name="md_academy_course_id"
-				value="<?php echo esc_attr( $fields['course_id'] ); ?>"
-				maxlength="32"
-				pattern="[A-Za-z0-9\-_.]+"
-				autocomplete="off"
-				required
-			/>
-			<span class="description"><?php esc_html_e( 'Letters, numbers, hyphens, underscores, or dots only.', 'manual-docs' ); ?></span>
-		</p>
-		<p>
-			<label for="md_academy_course_name">
-				<?php esc_html_e( 'Course / environment name', 'manual-docs' ); ?>
-				<span class="md-academy-fields__req" aria-hidden="true">*</span>
-			</label>
-			<input
-				type="text"
-				id="md_academy_course_name"
-				name="md_academy_course_name"
-				value="<?php echo esc_attr( $fields['course_name'] ); ?>"
-				maxlength="120"
-				autocomplete="off"
-				required
-			/>
-		</p>
+		<div class="md-academy-fields__grid">
+			<p class="md-academy-fields__field">
+				<label for="md_academy_course_id">
+					<?php esc_html_e( 'Course ID', 'manual-docs' ); ?>
+					<span class="md-academy-fields__req" aria-hidden="true">*</span>
+				</label>
+				<input type="text" id="md_academy_course_id" name="md_academy_course_id" value="<?php echo esc_attr( $fields['course_id'] ); ?>" maxlength="32" pattern="[A-Za-z0-9\-_.]+" autocomplete="off" required />
+				<span class="description"><?php esc_html_e( 'Letters, numbers, hyphens, underscores, or dots only.', 'manual-docs' ); ?></span>
+			</p>
+			<p class="md-academy-fields__field">
+				<label for="md_academy_course_name">
+					<?php esc_html_e( 'Course / environment name', 'manual-docs' ); ?>
+					<span class="md-academy-fields__req" aria-hidden="true">*</span>
+				</label>
+				<input type="text" id="md_academy_course_name" name="md_academy_course_name" value="<?php echo esc_attr( $fields['course_name'] ); ?>" maxlength="120" autocomplete="off" required />
+			</p>
+			<p class="md-academy-fields__field">
+				<label for="md_academy_lab_id"><?php esc_html_e( 'Lab / session ID', 'manual-docs' ); ?></label>
+				<input type="text" id="md_academy_lab_id" name="md_academy_lab_id" value="<?php echo esc_attr( $fields['lab_id'] ); ?>" maxlength="40" pattern="[A-Za-z0-9\-_.]*" autocomplete="off" />
+				<span class="description"><?php esc_html_e( 'Optional — from your lab console or enrollment email.', 'manual-docs' ); ?></span>
+			</p>
+			<p class="md-academy-fields__field">
+				<label for="md_academy_issue_type">
+					<?php esc_html_e( 'Issue type', 'manual-docs' ); ?>
+					<span class="md-academy-fields__req" aria-hidden="true">*</span>
+				</label>
+				<select id="md_academy_issue_type" name="md_academy_issue_type" required>
+					<option value=""><?php esc_html_e( 'Select…', 'manual-docs' ); ?></option>
+					<?php foreach ( $issue_types as $slug => $label ) : ?>
+						<option value="<?php echo esc_attr( $slug ); ?>" <?php selected( $fields['issue_type'], $slug ); ?>><?php echo esc_html( $label ); ?></option>
+					<?php endforeach; ?>
+				</select>
+			</p>
+			<p class="md-academy-fields__field">
+				<label for="md_academy_urgency"><?php esc_html_e( 'Urgency', 'manual-docs' ); ?></label>
+				<select id="md_academy_urgency" name="md_academy_urgency">
+					<?php foreach ( $urgencies as $slug => $label ) : ?>
+						<option value="<?php echo esc_attr( $slug ); ?>" <?php selected( $fields['urgency'] ? $fields['urgency'] : 'normal', $slug ); ?>><?php echo esc_html( $label ); ?></option>
+					<?php endforeach; ?>
+				</select>
+			</p>
+		</div>
 	</div>
 	<?php
 }
@@ -262,14 +357,16 @@ function manual_docs_validate_academy_topic_fields( $forum_id = 0 ) {
 		return;
 	}
 
-	$course_id   = isset( $_POST['md_academy_course_id'] ) ? manual_docs_sanitize_academy_course_id( wp_unslash( $_POST['md_academy_course_id'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$course_name = isset( $_POST['md_academy_course_name'] ) ? manual_docs_sanitize_academy_course_name( wp_unslash( $_POST['md_academy_course_name'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$fields = manual_docs_academy_fields_from_request();
 
-	if ( '' === $course_id ) {
+	if ( '' === $fields['course_id'] ) {
 		bbp_add_error( 'md_academy_course_id', __( 'Course ID is required for Academy Support topics.', 'manual-docs' ) );
 	}
-	if ( '' === $course_name ) {
+	if ( '' === $fields['course_name'] ) {
 		bbp_add_error( 'md_academy_course_name', __( 'Course / environment name is required for Academy Support topics.', 'manual-docs' ) );
+	}
+	if ( '' === $fields['issue_type'] ) {
+		bbp_add_error( 'md_academy_issue_type', __( 'Please select an issue type.', 'manual-docs' ) );
 	}
 }
 
@@ -286,9 +383,11 @@ function manual_docs_save_academy_topic_fields( $topic_id ) {
 
 	$forum_id = (int) bbp_get_topic_forum_id( $topic_id );
 	if ( ! manual_docs_is_academy_forum( $forum_id ) ) {
-		// Strip leftover meta if topic was moved out of Academy.
 		delete_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_COURSE_ID_KEY );
 		delete_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_COURSE_NAME_KEY );
+		delete_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_LAB_ID_KEY );
+		delete_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_ISSUE_TYPE_KEY );
+		delete_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_URGENCY_KEY );
 		return;
 	}
 
@@ -300,15 +399,21 @@ function manual_docs_save_academy_topic_fields( $topic_id ) {
 		return;
 	}
 
-	$course_id   = isset( $_POST['md_academy_course_id'] ) ? manual_docs_sanitize_academy_course_id( wp_unslash( $_POST['md_academy_course_id'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$course_name = isset( $_POST['md_academy_course_name'] ) ? manual_docs_sanitize_academy_course_name( wp_unslash( $_POST['md_academy_course_name'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-
-	if ( '' === $course_id || '' === $course_name ) {
+	$fields = manual_docs_academy_fields_from_request();
+	if ( '' === $fields['course_id'] || '' === $fields['course_name'] || '' === $fields['issue_type'] ) {
 		return;
 	}
 
-	update_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_COURSE_ID_KEY, $course_id );
-	update_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_COURSE_NAME_KEY, $course_name );
+	update_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_COURSE_ID_KEY, $fields['course_id'] );
+	update_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_COURSE_NAME_KEY, $fields['course_name'] );
+	update_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_ISSUE_TYPE_KEY, $fields['issue_type'] );
+	update_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_URGENCY_KEY, $fields['urgency'] ? $fields['urgency'] : 'normal' );
+
+	if ( '' !== $fields['lab_id'] ) {
+		update_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_LAB_ID_KEY, $fields['lab_id'] );
+	} else {
+		delete_post_meta( $topic_id, MANUAL_DOCS_ACADEMY_LAB_ID_KEY );
+	}
 }
 add_action( 'bbp_new_topic', 'manual_docs_save_academy_topic_fields', 10, 1 );
 add_action( 'bbp_edit_topic', 'manual_docs_save_academy_topic_fields', 10, 1 );
@@ -340,6 +445,8 @@ function manual_docs_academy_metabox_render( $post ) {
 	$forum_id = function_exists( 'bbp_get_topic_forum_id' ) ? (int) bbp_get_topic_forum_id( $post->ID ) : 0;
 	$is_acad  = manual_docs_is_academy_forum( $forum_id );
 	$fields   = manual_docs_get_academy_fields( $post->ID );
+	$types    = manual_docs_academy_issue_types();
+	$urgencies = manual_docs_academy_urgency_levels();
 
 	wp_nonce_field( MANUAL_DOCS_ACADEMY_NONCE_ACTION, MANUAL_DOCS_ACADEMY_NONCE_NAME );
 
@@ -354,6 +461,27 @@ function manual_docs_academy_metabox_render( $post ) {
 	<p>
 		<label for="md_academy_course_name_admin"><strong><?php esc_html_e( 'Course / environment', 'manual-docs' ); ?></strong></label><br />
 		<input type="text" class="widefat" id="md_academy_course_name_admin" name="md_academy_course_name" value="<?php echo esc_attr( $fields['course_name'] ); ?>" maxlength="120" autocomplete="off" <?php disabled( ! $is_acad ); ?> />
+	</p>
+	<p>
+		<label for="md_academy_lab_id_admin"><strong><?php esc_html_e( 'Lab / session ID', 'manual-docs' ); ?></strong></label><br />
+		<input type="text" class="widefat" id="md_academy_lab_id_admin" name="md_academy_lab_id" value="<?php echo esc_attr( $fields['lab_id'] ); ?>" maxlength="40" autocomplete="off" <?php disabled( ! $is_acad ); ?> />
+	</p>
+	<p>
+		<label for="md_academy_issue_type_admin"><strong><?php esc_html_e( 'Issue type', 'manual-docs' ); ?></strong></label><br />
+		<select class="widefat" id="md_academy_issue_type_admin" name="md_academy_issue_type" <?php disabled( ! $is_acad ); ?>>
+			<option value=""><?php esc_html_e( 'Select…', 'manual-docs' ); ?></option>
+			<?php foreach ( $types as $slug => $label ) : ?>
+				<option value="<?php echo esc_attr( $slug ); ?>" <?php selected( $fields['issue_type'], $slug ); ?>><?php echo esc_html( $label ); ?></option>
+			<?php endforeach; ?>
+		</select>
+	</p>
+	<p>
+		<label for="md_academy_urgency_admin"><strong><?php esc_html_e( 'Urgency', 'manual-docs' ); ?></strong></label><br />
+		<select class="widefat" id="md_academy_urgency_admin" name="md_academy_urgency" <?php disabled( ! $is_acad ); ?>>
+			<?php foreach ( $urgencies as $slug => $label ) : ?>
+				<option value="<?php echo esc_attr( $slug ); ?>" <?php selected( $fields['urgency'] ? $fields['urgency'] : 'normal', $slug ); ?>><?php echo esc_html( $label ); ?></option>
+			<?php endforeach; ?>
+		</select>
 	</p>
 	<?php
 }
@@ -388,19 +516,29 @@ function manual_docs_academy_metabox_save( $post_id ) {
 		return;
 	}
 
-	$course_id   = isset( $_POST['md_academy_course_id'] ) ? manual_docs_sanitize_academy_course_id( wp_unslash( $_POST['md_academy_course_id'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	$course_name = isset( $_POST['md_academy_course_name'] ) ? manual_docs_sanitize_academy_course_name( wp_unslash( $_POST['md_academy_course_name'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$fields = manual_docs_academy_fields_from_request();
 
-	if ( '' !== $course_id ) {
-		update_post_meta( $post_id, MANUAL_DOCS_ACADEMY_COURSE_ID_KEY, $course_id );
+	if ( '' !== $fields['course_id'] ) {
+		update_post_meta( $post_id, MANUAL_DOCS_ACADEMY_COURSE_ID_KEY, $fields['course_id'] );
 	} else {
 		delete_post_meta( $post_id, MANUAL_DOCS_ACADEMY_COURSE_ID_KEY );
 	}
-	if ( '' !== $course_name ) {
-		update_post_meta( $post_id, MANUAL_DOCS_ACADEMY_COURSE_NAME_KEY, $course_name );
+	if ( '' !== $fields['course_name'] ) {
+		update_post_meta( $post_id, MANUAL_DOCS_ACADEMY_COURSE_NAME_KEY, $fields['course_name'] );
 	} else {
 		delete_post_meta( $post_id, MANUAL_DOCS_ACADEMY_COURSE_NAME_KEY );
 	}
+	if ( '' !== $fields['lab_id'] ) {
+		update_post_meta( $post_id, MANUAL_DOCS_ACADEMY_LAB_ID_KEY, $fields['lab_id'] );
+	} else {
+		delete_post_meta( $post_id, MANUAL_DOCS_ACADEMY_LAB_ID_KEY );
+	}
+	if ( '' !== $fields['issue_type'] ) {
+		update_post_meta( $post_id, MANUAL_DOCS_ACADEMY_ISSUE_TYPE_KEY, $fields['issue_type'] );
+	} else {
+		delete_post_meta( $post_id, MANUAL_DOCS_ACADEMY_ISSUE_TYPE_KEY );
+	}
+	update_post_meta( $post_id, MANUAL_DOCS_ACADEMY_URGENCY_KEY, $fields['urgency'] ? $fields['urgency'] : 'normal' );
 }
 add_action( 'save_post_topic', 'manual_docs_academy_metabox_save' );
 
@@ -420,23 +558,43 @@ function manual_docs_academy_fields_badge_html( $topic_id ) {
 	}
 
 	$fields = manual_docs_get_academy_fields( $topic_id );
-	if ( '' === $fields['course_id'] && '' === $fields['course_name'] ) {
+	if ( '' === $fields['course_id'] && '' === $fields['course_name'] && '' === $fields['issue_type'] ) {
 		return '';
 	}
 
-	$parts = array();
+	$types     = manual_docs_academy_issue_types();
+	$urgencies = manual_docs_academy_urgency_levels();
+	$chips     = array();
+
+	if ( ! empty( $fields['issue_type'] ) && isset( $types[ $fields['issue_type'] ] ) ) {
+		$chips[] = '<span class="md-academy-chip">' . esc_html( $types[ $fields['issue_type'] ] ) . '</span>';
+	}
 	if ( '' !== $fields['course_name'] ) {
-		$parts[] = esc_html( $fields['course_name'] );
+		$chips[] = '<span class="md-academy-chip">' . esc_html( $fields['course_name'] ) . '</span>';
 	}
 	if ( '' !== $fields['course_id'] ) {
-		$parts[] = sprintf(
+		$chips[] = '<span class="md-academy-chip">' . sprintf(
 			/* translators: %s: course id */
 			esc_html__( 'Course ID: %s', 'manual-docs' ),
 			esc_html( $fields['course_id'] )
-		);
+		) . '</span>';
+	}
+	if ( '' !== $fields['lab_id'] ) {
+		$chips[] = '<span class="md-academy-chip">' . sprintf(
+			/* translators: %s: lab id */
+			esc_html__( 'Lab: %s', 'manual-docs' ),
+			esc_html( $fields['lab_id'] )
+		) . '</span>';
+	}
+	if ( ! empty( $fields['urgency'] ) && 'normal' !== $fields['urgency'] && isset( $urgencies[ $fields['urgency'] ] ) ) {
+		$chips[] = '<span class="md-academy-chip md-academy-chip--urgent">' . esc_html( $urgencies[ $fields['urgency'] ] ) . '</span>';
 	}
 
-	return '<p class="md-academy-badge">' . implode( ' · ', $parts ) . '</p>';
+	if ( ! $chips ) {
+		return '';
+	}
+
+	return '<div class="md-academy-badge">' . implode( '', $chips ) . '</div>';
 }
 
 /**

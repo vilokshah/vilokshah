@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MANUAL_DOCS_VERSION', '2.9.13' );
+define( 'MANUAL_DOCS_VERSION', '2.9.14' );
 
 /**
  * Version roots for JS (search filters).
@@ -255,6 +255,7 @@ $manual_docs_includes = array(
 	'bbpress.php',
 	'bbpress-ui.php',
 	'bbpress-academy.php',
+	'community-search.php',
 	'customizer.php',
 	'helpers.php',
 	'widgets.php',

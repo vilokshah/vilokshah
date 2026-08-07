@@ -1604,12 +1604,12 @@ html[data-md-theme="dark"] .md-themed-logo .md-logo--light { display: none; }
 
 .md-community-shell {
   /* layout owned by assets/css/bbpress.css on community pages */
-  width: min(1120px, calc(100% - 2rem));
+  width: min(1380px, calc(100% - 1.5rem));
   margin: 0 auto;
   padding: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
-  gap: 1.75rem;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+  gap: 1.35rem;
   align-items: start;
 }
 .md-community-content,
