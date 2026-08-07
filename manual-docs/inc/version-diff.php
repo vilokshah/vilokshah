@@ -191,6 +191,162 @@ function manual_docs_diff_get_rendered_content( WP_Post $post ) {
 }
 
 /**
+ * Tokenize text for word-level diff (keeps whitespace tokens).
+ *
+ * @param string $text Text.
+ * @return string[]
+ */
+function manual_docs_diff_tokens( $text ) {
+	$text = (string) $text;
+	if ( '' === $text ) {
+		return array();
+	}
+	$parts = preg_split( '/(\s+)/u', $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY );
+	return is_array( $parts ) ? $parts : array( $text );
+}
+
+/**
+ * Build LCS-based opcodes for two token arrays.
+ *
+ * @param string[] $a From tokens.
+ * @param string[] $b To tokens.
+ * @return array<int,array{0:string,1:int,2:int,3:int,4:int}> tag, i1, i2, j1, j2
+ */
+function manual_docs_diff_opcodes( $a, $b ) {
+	$n = count( $a );
+	$m = count( $b );
+
+	if ( 0 === $n && 0 === $m ) {
+		return array();
+	}
+	if ( $n * $m > 220000 ) {
+		$ops = array();
+		if ( $n ) {
+			$ops[] = array( 'delete', 0, $n, 0, 0 );
+		}
+		if ( $m ) {
+			$ops[] = array( 'insert', $n, $n, 0, $m );
+		}
+		return $ops;
+	}
+
+	$dp = array_fill( 0, $n + 1, array_fill( 0, $m + 1, 0 ) );
+	for ( $i = $n - 1; $i >= 0; $i-- ) {
+		for ( $j = $m - 1; $j >= 0; $j-- ) {
+			if ( $a[ $i ] === $b[ $j ] ) {
+				$dp[ $i ][ $j ] = $dp[ $i + 1 ][ $j + 1 ] + 1;
+			} else {
+				$dp[ $i ][ $j ] = max( $dp[ $i + 1 ][ $j ], $dp[ $i ][ $j + 1 ] );
+			}
+		}
+	}
+
+	$raw = array();
+	$i   = 0;
+	$j   = 0;
+	while ( $i < $n && $j < $m ) {
+		if ( $a[ $i ] === $b[ $j ] ) {
+			$raw[] = array( 'equal', $i, $i + 1, $j, $j + 1 );
+			$i++;
+			$j++;
+		} elseif ( $dp[ $i + 1 ][ $j ] >= $dp[ $i ][ $j + 1 ] ) {
+			$raw[] = array( 'delete', $i, $i + 1, $j, $j );
+			$i++;
+		} else {
+			$raw[] = array( 'insert', $i, $i, $j, $j + 1 );
+			$j++;
+		}
+	}
+	while ( $i < $n ) {
+		$raw[] = array( 'delete', $i, $i + 1, $j, $j );
+		$i++;
+	}
+	while ( $j < $m ) {
+		$raw[] = array( 'insert', $i, $i, $j, $j + 1 );
+		$j++;
+	}
+
+	// Merge adjacent same-tag ops.
+	$merged = array();
+	foreach ( $raw as $op ) {
+		if ( ! empty( $merged ) ) {
+			$idx  = count( $merged ) - 1;
+			$last = $merged[ $idx ];
+			if ( $last[0] === $op[0] && $last[2] === $op[1] && $last[4] === $op[3] ) {
+				$merged[ $idx ][2] = $op[2];
+				$merged[ $idx ][4] = $op[4];
+				continue;
+			}
+		}
+		$merged[] = $op;
+	}
+
+	return $merged;
+}
+
+/**
+ * Build highlighted HTML pair for from/to text.
+ *
+ * @param string $from_text Old text.
+ * @param string $to_text   New text.
+ * @return array{from:string,to:string}
+ */
+function manual_docs_diff_highlight_pair( $from_text, $to_text ) {
+	$from_text = (string) $from_text;
+	$to_text   = (string) $to_text;
+
+	if ( '' === $from_text && '' === $to_text ) {
+		return array( 'from' => '', 'to' => '' );
+	}
+	if ( '' === $from_text ) {
+		return array(
+			'from' => '',
+			'to'   => '<mark class="md-diff-hl md-diff-hl--add">' . esc_html( $to_text ) . '</mark>',
+		);
+	}
+	if ( '' === $to_text ) {
+		return array(
+			'from' => '<mark class="md-diff-hl md-diff-hl--del">' . esc_html( $from_text ) . '</mark>',
+			'to'   => '',
+		);
+	}
+	if ( $from_text === $to_text ) {
+		$safe = esc_html( $from_text );
+		return array( 'from' => $safe, 'to' => $safe );
+	}
+
+	$a   = manual_docs_diff_tokens( $from_text );
+	$b   = manual_docs_diff_tokens( $to_text );
+	$ops = manual_docs_diff_opcodes( $a, $b );
+
+	$from_html = '';
+	$to_html   = '';
+	foreach ( $ops as $op ) {
+		list( $tag, $i1, $i2, $j1, $j2 ) = $op;
+		if ( 'equal' === $tag ) {
+			$chunk      = esc_html( implode( '', array_slice( $a, $i1, $i2 - $i1 ) ) );
+			$from_html .= $chunk;
+			$to_html   .= $chunk;
+		} elseif ( 'delete' === $tag ) {
+			$chunk      = esc_html( implode( '', array_slice( $a, $i1, $i2 - $i1 ) ) );
+			if ( '' !== $chunk ) {
+				$from_html .= '<mark class="md-diff-hl md-diff-hl--del">' . $chunk . '</mark>';
+			}
+		} elseif ( 'insert' === $tag ) {
+			$chunk    = esc_html( implode( '', array_slice( $b, $j1, $j2 - $j1 ) ) );
+			if ( '' !== $chunk ) {
+				$to_html .= '<mark class="md-diff-hl md-diff-hl--add">' . $chunk . '</mark>';
+			}
+		}
+	}
+
+	return array(
+		'from' => $from_html,
+		'to'   => $to_html,
+	);
+}
+
+/**
  * Compare two docs; return summary + section details.
  *
  * @param WP_Post $from From doc (e.g. Goat).
@@ -222,30 +378,32 @@ function manual_docs_diff_compare_posts( WP_Post $from, WP_Post $to ) {
 			if ( $sec['text'] === $peer['text'] ) {
 				continue; // unchanged — omit from summary.
 			}
+			$hl = manual_docs_diff_highlight_pair( $sec['text'], $peer['text'] );
 			$changes[] = array(
-				'status'     => 'modified',
-				'title'      => $sec['title'],
-				'id'         => $sec['id'],
-				'summary'    => __( 'Section content differs between releases.', 'manual-docs' ),
-				'from_text'  => $sec['text'],
-				'to_text'    => $peer['text'],
-				'from_html'  => $sec['html'],
-				'to_html'    => $peer['html'],
+				'status'      => 'modified',
+				'title'       => $sec['title'],
+				'id'          => $sec['id'],
+				'summary'     => __( 'Wording changed — expand to see highlighted differences.', 'manual-docs' ),
+				'from_text'   => $sec['text'],
+				'to_text'     => $peer['text'],
+				'from_mark'   => $hl['from'],
+				'to_mark'     => $hl['to'],
 			);
 		} else {
+			$hl = manual_docs_diff_highlight_pair( $sec['text'], '' );
 			$changes[] = array(
-				'status'     => 'removed',
-				'title'      => $sec['title'],
-				'id'         => $sec['id'],
-				'summary'    => sprintf(
+				'status'      => 'removed',
+				'title'       => $sec['title'],
+				'id'          => $sec['id'],
+				'summary'     => sprintf(
 					/* translators: %s: version name */
-					__( 'Present in %s only.', 'manual-docs' ),
+					__( 'Removed in the newer release — only in %s.', 'manual-docs' ),
 					$from_root ? get_the_title( $from_root ) : __( 'source', 'manual-docs' )
 				),
-				'from_text'  => $sec['text'],
-				'to_text'    => '',
-				'from_html'  => $sec['html'],
-				'to_html'    => '',
+				'from_text'   => $sec['text'],
+				'to_text'     => '',
+				'from_mark'   => $hl['from'],
+				'to_mark'     => '',
 			);
 		}
 	}
@@ -255,19 +413,20 @@ function manual_docs_diff_compare_posts( WP_Post $from, WP_Post $to ) {
 		if ( isset( $used[ $key ] ) ) {
 			continue;
 		}
+		$hl = manual_docs_diff_highlight_pair( '', $sec['text'] );
 		$changes[] = array(
-			'status'     => 'added',
-			'title'      => $sec['title'],
-			'id'         => $sec['id'],
-			'summary'    => sprintf(
+			'status'      => 'added',
+			'title'       => $sec['title'],
+			'id'          => $sec['id'],
+			'summary'     => sprintf(
 				/* translators: %s: version name */
-				__( 'New section in %s.', 'manual-docs' ),
+				__( 'New section — only in %s.', 'manual-docs' ),
 				$to_root ? get_the_title( $to_root ) : __( 'target', 'manual-docs' )
 			),
-			'from_text'  => '',
-			'to_text'    => $sec['text'],
-			'from_html'  => '',
-			'to_html'    => $sec['html'],
+			'from_text'   => '',
+			'to_text'     => $sec['text'],
+			'from_mark'   => '',
+			'to_mark'     => $hl['to'],
 		);
 	}
 
@@ -442,6 +601,27 @@ function manual_docs_render_version_diff_view( $post_id, $compare_token ) {
 				<span class="md-diff__stat md-diff__stat--added"><?php echo esc_html( (string) (int) $diff['stats']['added'] ); ?> <?php esc_html_e( 'added', 'manual-docs' ); ?></span>
 				<span class="md-diff__stat md-diff__stat--removed"><?php echo esc_html( (string) (int) $diff['stats']['removed'] ); ?> <?php esc_html_e( 'removed', 'manual-docs' ); ?></span>
 			</div>
+			<div class="md-diff__legend" aria-label="<?php esc_attr_e( 'How to read this compare', 'manual-docs' ); ?>">
+				<p class="md-diff__legend-title"><?php esc_html_e( 'How to read this', 'manual-docs' ); ?></p>
+				<ul class="md-diff__legend-list">
+					<li><mark class="md-diff-hl md-diff-hl--del"><?php esc_html_e( 'Pink / red', 'manual-docs' ); ?></mark> — <?php
+						printf(
+							/* translators: %s: source version name */
+							esc_html__( 'text in %s that was removed or replaced', 'manual-docs' ),
+							esc_html( $diff['from']['version'] )
+						);
+					?></li>
+					<li><mark class="md-diff-hl md-diff-hl--add"><?php esc_html_e( 'Green', 'manual-docs' ); ?></mark> — <?php
+						printf(
+							/* translators: %s: target version name */
+							esc_html__( 'text new in %s', 'manual-docs' ),
+							esc_html( $diff['to']['version'] )
+						);
+					?></li>
+					<li><?php esc_html_e( 'Unhighlighted text is unchanged in both releases.', 'manual-docs' ); ?></li>
+					<li><?php esc_html_e( 'Click a row to expand and compare that section side by side.', 'manual-docs' ); ?></li>
+				</ul>
+			</div>
 		</header>
 
 		<?php if ( 0 === $total ) : ?>
@@ -457,6 +637,8 @@ function manual_docs_render_version_diff_view( $post_id, $compare_token ) {
 					);
 					$label = isset( $status_label[ $change['status'] ] ) ? $status_label[ $change['status'] ] : $change['status'];
 					$panel_id = 'md-diff-panel-' . $i;
+					$from_mark = isset( $change['from_mark'] ) ? $change['from_mark'] : esc_html( $change['from_text'] );
+					$to_mark   = isset( $change['to_mark'] ) ? $change['to_mark'] : esc_html( $change['to_text'] );
 					?>
 					<li class="md-diff__item md-diff__item--<?php echo esc_attr( $change['status'] ); ?>">
 						<button type="button" class="md-diff__summary" data-md-diff-toggle aria-expanded="false" aria-controls="<?php echo esc_attr( $panel_id ); ?>">
@@ -466,22 +648,32 @@ function manual_docs_render_version_diff_view( $post_id, $compare_token ) {
 							<span class="md-diff__chevron" aria-hidden="true"></span>
 						</button>
 						<div class="md-diff__detail" id="<?php echo esc_attr( $panel_id ); ?>" hidden>
+							<p class="md-diff__hint">
+								<?php
+								printf(
+									/* translators: 1: from version, 2: to version */
+									esc_html__( 'Left = %1$s (older wording). Right = %2$s (newer wording). Highlighted words are what changed.', 'manual-docs' ),
+									esc_html( $diff['from']['version'] ),
+									esc_html( $diff['to']['version'] )
+								);
+								?>
+							</p>
 							<div class="md-diff__cols">
-								<div class="md-diff__col">
+								<div class="md-diff__col md-diff__col--from">
 									<p class="md-diff__col-label"><?php echo esc_html( $diff['from']['version'] ); ?></p>
 									<div class="md-diff__col-body">
 										<?php if ( $change['from_text'] ) : ?>
-											<pre class="md-diff__text"><?php echo esc_html( $change['from_text'] ); ?></pre>
+											<div class="md-diff__prose"><?php echo $from_mark; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built via esc_html + safe marks ?></div>
 										<?php else : ?>
 											<p class="md-muted"><?php esc_html_e( 'Not present in this release.', 'manual-docs' ); ?></p>
 										<?php endif; ?>
 									</div>
 								</div>
-								<div class="md-diff__col">
+								<div class="md-diff__col md-diff__col--to">
 									<p class="md-diff__col-label"><?php echo esc_html( $diff['to']['version'] ); ?></p>
 									<div class="md-diff__col-body">
 										<?php if ( $change['to_text'] ) : ?>
-											<pre class="md-diff__text"><?php echo esc_html( $change['to_text'] ); ?></pre>
+											<div class="md-diff__prose"><?php echo $to_mark; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built via esc_html + safe marks ?></div>
 										<?php else : ?>
 											<p class="md-muted"><?php esc_html_e( 'Not present in this release.', 'manual-docs' ); ?></p>
 										<?php endif; ?>

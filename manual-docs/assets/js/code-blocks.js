@@ -15,6 +15,9 @@
 
   function enhancePre(pre) {
     if (!pre || pre.getAttribute('data-md-code-ready')) return;
+    // Never treat version-diff prose as a code block.
+    if (pre.closest && (pre.closest('.md-diff') || pre.closest('[data-md-diff]'))) return;
+    if (pre.classList && pre.classList.contains('md-diff__text')) return;
     pre.setAttribute('data-md-code-ready', '1');
 
     var code = pre.querySelector('code') || pre;
