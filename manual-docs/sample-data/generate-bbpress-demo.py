@@ -19,7 +19,7 @@ FORUMS = [
 	("getting-started", "Getting Started", "Onboarding questions, first installs, and setup tips."),
 	("platform-features", "Platform & Features", "How the product works day to day."),
 	("releases-upgrades", "Releases & Upgrades", "Release notes discussion and upgrade help."),
-	("tips-best-practices", "Tips & Best Practices", "Patterns, checklists, and shared experience."),
+	("academy-support", "Academy Support", "Course labs, access, and Academy learning questions."),
 ]
 
 # 6 topic titles per forum (30 total)
@@ -57,13 +57,22 @@ TOPIC_TITLES = [
 		"Deprecation notices — how loud?",
 	],
 	[
-		"Writing clearer troubleshooting steps",
-		"Screenshot conventions",
-		"How we structure nested docs",
-		"Keeping forums and docs in sync",
-		"Tagging topics effectively",
-		"Onboarding buddies for new members",
+		"User Activation",
+		"Request for Lab Access Extension",
+		"Course enrollment not showing",
+		"Lab environment reset help",
+		"Certificate download issue",
+		"Where to find Course ID",
 	],
+]
+
+ACADEMY_META = [
+	("77534", "ignio AIOps Intermediate E2"),
+	("77534", "ignio AIOps Intermediate E2"),
+	("88102", "Platform Fundamentals Lab"),
+	("88102", "Platform Fundamentals Lab"),
+	("90211", "Automation Practitioner"),
+	("10001", "Academy Orientation"),
 ]
 
 # Reply counts per topic (6 per forum) — totals 40
@@ -325,6 +334,12 @@ def main() -> None:
 			meta("_bbp_last_active_time", t["last_active"]),
 			meta("_bbp_status", "open"),
 		]
+		if t.get("forum_slug") == "academy-support":
+			# menu_order aligns with ACADEMY_META index within the forum
+			ai = t.get("menu_order", 0)
+			if 0 <= ai < len(ACADEMY_META):
+				metas.append(meta("_md_academy_course_id", ACADEMY_META[ai][0]))
+				metas.append(meta("_md_academy_course_name", ACADEMY_META[ai][1]))
 		out.append(
 			item(
 				post_id=t["id"],

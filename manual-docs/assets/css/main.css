@@ -1603,11 +1603,22 @@ html[data-md-theme="dark"] .md-themed-logo .md-logo--dark { display: block; }
 html[data-md-theme="dark"] .md-themed-logo .md-logo--light { display: none; }
 
 .md-community-shell {
-  width: min(1120px, calc(100% - 2rem)); margin: 0 auto; padding: 2rem 0 3rem;
-  display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 1.5rem;
+  /* layout owned by assets/css/bbpress.css on community pages */
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
+  gap: 1.75rem;
+  align-items: start;
 }
-.md-community-content {
-  background: var(--md-surface); border: 1px solid var(--md-line); border-radius: var(--md-radius); padding: 1.5rem;
+.md-community-content,
+.md-community-main {
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
 }
 .md-community-sidebar .widget {
   background: var(--md-surface); border: 1px solid var(--md-line); border-radius: var(--md-radius);

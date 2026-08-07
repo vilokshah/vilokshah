@@ -27,6 +27,8 @@ Regenerate: `python3 generate-demo-1000.py`
 
 **5 forums · 30 topics · 40 replies** for styling Manual Docs + bbPress.
 
+Includes **Academy Support** (`academy-support`) with Course ID / course name meta on its topics.
+
 ### Recommended (one-click)
 
 1. Activate **bbPress** and the **Manual Docs** theme

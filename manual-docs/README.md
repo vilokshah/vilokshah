@@ -171,6 +171,8 @@ Yes — this is bbPress-friendly. Unlike `manual_documentation`, the theme does 
 3. Save **Settings → Permalinks** once after activating.
 4. The theme provides `bbpress.php` chrome + `assets/css/bbpress.css` styling for light and dark; optional Community menu + Community sidebar widgets.
 5. Optional sample data: Appearance → Docs Stats → **Create sample forums (5 / 30 / 40)**, or import `sample-data/bbpress-demo.xml` (see `sample-data/README.md`).
+6. Modern card layout (search, stats, topic cards, Recent Topics) works in light and dark.
+7. **Academy Support** forum (`academy-support` slug, configurable under Appearance → Manual Docs) adds Course ID + Course / environment fields with nonce, capability, and sanitization checks.
 
 You do **not** need a Manual-style CPT migration for forums. If a page looks unstyled, flush permalinks and confirm bbPress is active.
 

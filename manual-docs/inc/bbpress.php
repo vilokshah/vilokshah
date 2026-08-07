@@ -143,18 +143,28 @@ function manual_docs_bbpress_sample_blueprint() {
 			'reply_counts' => array( 2, 2, 1, 1, 1, 0 ),
 		),
 		array(
-			'slug'        => 'tips-best-practices',
-			'title'       => __( 'Tips & Best Practices', 'manual-docs' ),
-			'content'     => __( 'Patterns, checklists, and shared experience.', 'manual-docs' ),
-			'topics'      => array(
-				__( 'Writing clearer troubleshooting steps', 'manual-docs' ),
-				__( 'Screenshot conventions', 'manual-docs' ),
-				__( 'How we structure nested docs', 'manual-docs' ),
-				__( 'Keeping forums and docs in sync', 'manual-docs' ),
-				__( 'Tagging topics effectively', 'manual-docs' ),
-				__( 'Onboarding buddies for new members', 'manual-docs' ),
+			'slug'         => 'academy-support',
+			'title'        => __( 'Academy Support', 'manual-docs' ),
+			'content'      => __( 'Course labs, access, and Academy learning questions. Topics require Course ID and course name.', 'manual-docs' ),
+			'topics'       => array(
+				__( 'User Activation', 'manual-docs' ),
+				__( 'Request for Lab Access Extension', 'manual-docs' ),
+				__( 'Course enrollment not showing', 'manual-docs' ),
+				__( 'Lab environment reset help', 'manual-docs' ),
+				__( 'Certificate download issue', 'manual-docs' ),
+				__( 'Where to find Course ID', 'manual-docs' ),
 			),
 			'reply_counts' => array( 2, 2, 1, 1, 1, 0 ),
+			'academy'      => true,
+			'course_ids'   => array( '77534', '77534', '88102', '88102', '90211', '10001' ),
+			'course_names' => array(
+				'ignio AIOps Intermediate E2',
+				'ignio AIOps Intermediate E2',
+				'Platform Fundamentals Lab',
+				'Platform Fundamentals Lab',
+				'Automation Practitioner',
+				'Academy Orientation',
+			),
 		),
 	);
 }
@@ -262,6 +272,16 @@ function manual_docs_install_bbpress_sample() {
 			}
 
 			update_post_meta( (int) $topic_id, '_manual_docs_bbpress_sample', 1 );
+			if ( ! empty( $forum_def['academy'] ) ) {
+				$cid = isset( $forum_def['course_ids'][ $ti ] ) ? $forum_def['course_ids'][ $ti ] : '';
+				$cname = isset( $forum_def['course_names'][ $ti ] ) ? $forum_def['course_names'][ $ti ] : '';
+				if ( $cid && defined( 'MANUAL_DOCS_ACADEMY_COURSE_ID_KEY' ) ) {
+					update_post_meta( (int) $topic_id, MANUAL_DOCS_ACADEMY_COURSE_ID_KEY, sanitize_text_field( $cid ) );
+				}
+				if ( $cname && defined( 'MANUAL_DOCS_ACADEMY_COURSE_NAME_KEY' ) ) {
+					update_post_meta( (int) $topic_id, MANUAL_DOCS_ACADEMY_COURSE_NAME_KEY, sanitize_text_field( $cname ) );
+				}
+			}
 			++$created['topics'];
 
 			$reply_n = isset( $forum_def['reply_counts'][ $ti ] ) ? (int) $forum_def['reply_counts'][ $ti ] : 0;

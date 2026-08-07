@@ -46,6 +46,7 @@ function manual_docs_default_options() {
 		'hero_text'            => __( 'Search guides, explore products, and find answers fast.', 'manual-docs' ),
 		'hero_eyebrow'         => '',
 		'show_community_cta'   => 1,
+		'academy_forum_slug'   => 'academy-support',
 		'version_label'        => __( 'Release version', 'manual-docs' ),
 		'version_root_slugs'   => 'goat,flamingo,hummingbird',
 		'version_root_ids'     => '',
@@ -232,7 +233,7 @@ function manual_docs_save_options() {
 		'light_active_bar_color',
 		'light_footer_cta_color',
 	);
-	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'login_page_path', 'pdf_watermark', 'footer_text', 'footer_copyright', 'font_display', 'font_body', 'tree_scope' );
+	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'login_page_path', 'pdf_watermark', 'footer_text', 'footer_copyright', 'font_display', 'font_body', 'tree_scope', 'academy_forum_slug' );
 	$bool_keys  = array( 'require_login', 'show_community_cta', 'show_toc', 'show_pdf', 'show_updated', 'show_edit_link', 'enable_version_diff', 'tree_expand_active', 'tree_lazy', 'hide_docs_archive' );
 	$int_keys   = array( 'logo_dark_id', 'logo_light_id' );
 
@@ -264,6 +265,9 @@ function manual_docs_save_options() {
 	$clean['tree_scope'] = in_array( $clean['tree_scope'], array( 'active_version', 'all_versions' ), true )
 		? $clean['tree_scope']
 		: 'active_version';
+
+	$academy_slug = isset( $clean['academy_forum_slug'] ) ? sanitize_title( $clean['academy_forum_slug'] ) : 'academy-support';
+	$clean['academy_forum_slug'] = $academy_slug ? $academy_slug : 'academy-support';
 
 	foreach ( $bool_keys as $key ) {
 		$clean[ $key ] = ! empty( $incoming[ $key ] ) ? 1 : 0;
@@ -647,6 +651,13 @@ function manual_docs_render_options_page() {
 						<label><input type="checkbox" name="manual_docs_options[show_community_cta]" value="1" <?php checked( $o['show_community_cta'], 1 ); ?> /> <?php esc_html_e( 'Show community CTA', 'manual-docs' ); ?></label><br />
 						<label><input type="checkbox" name="manual_docs_options[enable_version_diff]" value="1" <?php checked( ! empty( $o['enable_version_diff'] ), 1 ); ?> /> <?php esc_html_e( 'Enable version diff (Compare across releases)', 'manual-docs' ); ?></label>
 						<p class="description" style="margin-top:6px;"><?php esc_html_e( 'When enabled, docs show a “Compare versions” control. Turn off to hide the feature completely with no other impact.', 'manual-docs' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th><label for="academy_forum_slug"><?php esc_html_e( 'Academy Support forum slug', 'manual-docs' ); ?></label></th>
+					<td>
+						<input class="regular-text" type="text" id="academy_forum_slug" name="manual_docs_options[academy_forum_slug]" value="<?php echo esc_attr( isset( $o['academy_forum_slug'] ) ? $o['academy_forum_slug'] : 'academy-support' ); ?>" />
+						<p class="description"><?php esc_html_e( 'Topics in this forum show Course ID and Course / environment fields (nonce-protected). Default: academy-support.', 'manual-docs' ); ?></p>
 					</td>
 				</tr>
 				<tr>
