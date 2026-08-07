@@ -222,7 +222,11 @@ var label lb618 = na
 var label lb786 = na
 var label lb1000 = na
 
-f_clear() =>
+// Pine CE10088: global drawing IDs must be modified in global scope (not inside functions)
+bool clearDrawings = (newImpulse and hasLevels) or invalidated or (activeDir == 0 and not na(gzBox))
+bool redrawLevels  = newImpulse and hasLevels
+
+if clearDrawings
     line.delete(ln000)
     line.delete(ln382)
     line.delete(ln500)
@@ -252,7 +256,7 @@ f_clear() =>
     lb786 := na
     lb1000 := na
 
-f_draw() =>
+if redrawLevels
     int x1 = impStartBar
     int x2 = bar_index + extendBars
     color zc = activeDir == 1 ? colBullZone : colBearZone
@@ -272,19 +276,12 @@ f_draw() =>
         string dirTxt = activeDir == 1 ? "▲ Bullish Impulse → wait for GZ Buy" : "▼ Bearish Impulse → wait for GZ Sell"
         color dirCol  = activeDir == 1 ? color.teal : color.red
         lbDir  := label.new(impEndBar, lvl000, dirTxt, style=label.style_label_down, color=dirCol, textcolor=color.white, size=size.normal)
-        lb000  := label.new(x2, lvl000,  "0.000 Target",        style=label.style_label_left, color=color.new(col000, 70),  textcolor=col000,  size=size.small)
-        lb382  := label.new(x2, lvl382,  "0.382",               style=label.style_label_left, color=color.new(col382, 70),  textcolor=col382,  size=size.tiny)
-        lb500  := label.new(x2, lvl500,  "0.500 GZ top",        style=label.style_label_left, color=color.new(col500, 60),  textcolor=col500,  size=size.small)
-        lb618  := label.new(x2, lvl618,  "0.618 GZ bottom",     style=label.style_label_left, color=color.new(col618, 60),  textcolor=col618,  size=size.small)
-        lb786  := label.new(x2, lvl786,  "0.786 deep",          style=label.style_label_left, color=color.new(col786, 70),  textcolor=col786,  size=size.tiny)
+        lb000  := label.new(x2, lvl000,  "0.000 Target",         style=label.style_label_left, color=color.new(col000, 70),  textcolor=col000,  size=size.small)
+        lb382  := label.new(x2, lvl382,  "0.382",                style=label.style_label_left, color=color.new(col382, 70),  textcolor=col382,  size=size.tiny)
+        lb500  := label.new(x2, lvl500,  "0.500 GZ top",         style=label.style_label_left, color=color.new(col500, 60),  textcolor=col500,  size=size.small)
+        lb618  := label.new(x2, lvl618,  "0.618 GZ bottom",      style=label.style_label_left, color=color.new(col618, 60),  textcolor=col618,  size=size.small)
+        lb786  := label.new(x2, lvl786,  "0.786 deep",           style=label.style_label_left, color=color.new(col786, 70),  textcolor=col786,  size=size.tiny)
         lb1000 := label.new(x2, lvl1000, "1.000 SL / invalidate", style=label.style_label_left, color=color.new(col1000, 60), textcolor=col1000, size=size.small)
-
-if newImpulse and hasLevels
-    f_clear()
-    f_draw()
-
-if invalidated or (activeDir == 0 and not na(gzBox))
-    f_clear()
 
 // Extend right edge of drawings as bars form
 if hasLevels and not na(ln500)
