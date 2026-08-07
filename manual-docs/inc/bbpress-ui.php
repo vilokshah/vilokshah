@@ -37,7 +37,11 @@ function manual_docs_community_page_title() {
 		return __( 'Topic Tag', 'manual-docs' );
 	}
 	if ( function_exists( 'bbp_is_single_user' ) && bbp_is_single_user() ) {
-		return __( 'Member Profile', 'manual-docs' );
+		$name = '';
+		if ( function_exists( 'bbp_get_displayed_user_field' ) ) {
+			$name = (string) bbp_get_displayed_user_field( 'display_name' );
+		}
+		return $name ? $name : __( 'Profile', 'manual-docs' );
 	}
 	if ( function_exists( 'bbp_is_search' ) && bbp_is_search() ) {
 		return __( 'Forum Search', 'manual-docs' );
@@ -130,7 +134,7 @@ function manual_docs_render_community_hero( $title ) {
 }
 
 /**
- * Render stats bar + Create Topic + Favorite/Subscribe.
+ * Render stats bar + Create Topic.
  */
 function manual_docs_render_community_toolbar() {
 	$stats = manual_docs_community_stats();
@@ -142,7 +146,6 @@ function manual_docs_render_community_toolbar() {
 		</p>
 		<div class="md-community-toolbar__actions">
 			<?php manual_docs_render_create_topic_button(); ?>
-			<?php manual_docs_render_engagement_buttons(); ?>
 		</div>
 	</div>
 	<?php
@@ -229,162 +232,22 @@ function manual_docs_render_create_topic_button() {
 }
 
 /**
- * Favorite + Subscribe with bbPress engagement wrappers (AJAX-ready).
- */
-function manual_docs_render_engagement_buttons() {
-	if ( ! is_user_logged_in() ) {
-		return;
-	}
-
-	$GLOBALS['md_rendering_subscribe_toolbar'] = true;
-
-	$args = array(
-		'before'      => '',
-		'after'       => '',
-		'subscribe'   => __( 'Subscribe', 'manual-docs' ),
-		'unsubscribe' => __( 'Unsubscribe', 'manual-docs' ),
-		'favorite'    => __( 'Favorite', 'manual-docs' ),
-		'favorited'   => __( 'Unfavorite', 'manual-docs' ),
-	);
-
-	if ( function_exists( 'bbp_is_single_forum' ) && bbp_is_single_forum() && function_exists( 'bbp_get_forum_subscription_link' ) ) {
-		$object_id = (int) bbp_get_forum_id();
-		if ( ! $object_id ) {
-			$object_id = (int) get_queried_object_id();
-		}
-		$args['object_id'] = $object_id;
-		$html              = bbp_get_forum_subscription_link( $args );
-		if ( $html ) {
-			echo '<span class="md-engagement md-engagement--subscribe">' . $html . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}
-	} elseif ( ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() )
-		|| ( function_exists( 'bbp_is_single_reply' ) && bbp_is_single_reply() ) ) {
-		$object_id = (int) bbp_get_topic_id();
-		if ( ! $object_id ) {
-			$object_id = (int) get_queried_object_id();
-		}
-		$args['object_id'] = $object_id;
-
-		if ( function_exists( 'bbp_get_topic_favorite_link' ) ) {
-			$html = bbp_get_topic_favorite_link( $args );
-			if ( $html ) {
-				echo '<span class="md-engagement md-engagement--favorite">' . $html . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			}
-		}
-		if ( function_exists( 'bbp_get_topic_subscription_link' ) ) {
-			$html = bbp_get_topic_subscription_link( $args );
-			if ( $html ) {
-				echo '<span class="md-engagement md-engagement--subscribe">' . $html . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			}
-		}
-	}
-
-	$GLOBALS['md_rendering_subscribe_toolbar'] = false;
-}
-
-/**
- * Keep Favorite/Subscribe labels clean (no pipe separators) after AJAX refresh.
- *
- * @param array $args Parse args.
- * @return array
- */
-function manual_docs_engagement_parse_args( $args ) {
-	if ( empty( $GLOBALS['md_rendering_subscribe_toolbar'] ) && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-		return $args;
-	}
-	$args['before'] = '';
-	$args['after']  = '';
-	if ( array_key_exists( 'subscribe', $args ) ) {
-		$args['subscribe']   = __( 'Subscribe', 'manual-docs' );
-		$args['unsubscribe'] = __( 'Unsubscribe', 'manual-docs' );
-	}
-	if ( array_key_exists( 'favorite', $args ) ) {
-		$args['favorite']  = __( 'Favorite', 'manual-docs' );
-		$args['favorited'] = __( 'Unfavorite', 'manual-docs' );
-	}
-	return $args;
-}
-add_filter( 'bbp_before_get_user_subscribe_link_parse_args', 'manual_docs_engagement_parse_args' );
-add_filter( 'bbp_before_get_user_favorites_link_parse_args', 'manual_docs_engagement_parse_args' );
-add_filter( 'bbp_before_get_topic_subscribe_link_parse_args', 'manual_docs_engagement_parse_args' );
-add_filter( 'bbp_before_get_topic_favorite_link_parse_args', 'manual_docs_engagement_parse_args' );
-add_filter( 'bbp_before_get_forum_subscribe_link_parse_args', 'manual_docs_engagement_parse_args' );
-
-/**
- * Hide default bbPress subscribe/favorite in topic chrome (toolbar owns the only set).
+ * Favorite / Subscribe removed from community UI.
  *
  * @param string $html Link HTML.
  * @return string
  */
-function manual_docs_suppress_duplicate_topic_actions( $html ) {
-	if ( ! empty( $GLOBALS['md_rendering_subscribe_toolbar'] ) ) {
+function manual_docs_suppress_engagement_links( $html ) {
+	if ( is_admin() && ! wp_doing_ajax() ) {
 		return $html;
 	}
-	// AJAX engagement responses must pass through or Favorite/Subscribe appear broken.
-	if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ( function_exists( 'bbp_is_ajax' ) && bbp_is_ajax() ) ) {
-		return $html;
-	}
-	if ( is_admin() ) {
-		return $html;
-	}
-	if ( function_exists( 'bbp_is_single_user' ) && bbp_is_single_user() ) {
-		return $html;
-	}
-	if ( ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() )
-		|| ( function_exists( 'bbp_is_single_forum' ) && bbp_is_single_forum() )
-		|| ( function_exists( 'bbp_is_single_reply' ) && bbp_is_single_reply() ) ) {
-		return '';
-	}
-	return $html;
+	return '';
 }
-add_filter( 'bbp_get_user_subscribe_link', 'manual_docs_suppress_duplicate_topic_actions', 5 );
-add_filter( 'bbp_get_topic_subscribe_link', 'manual_docs_suppress_duplicate_topic_actions', 5 );
-add_filter( 'bbp_get_forum_subscribe_link', 'manual_docs_suppress_duplicate_topic_actions', 5 );
-add_filter( 'bbp_get_topic_favorite_link', 'manual_docs_suppress_duplicate_topic_actions', 5 );
-add_filter( 'bbp_get_user_favorites_link', 'manual_docs_suppress_duplicate_topic_actions', 5 );
-
-/**
- * Ensure bbPress engagements (Favorite/Subscribe AJAX) scripts load on community pages.
- */
-function manual_docs_enqueue_bbpress_engagements() {
-	if ( ! function_exists( 'is_bbpress' ) || ! is_bbpress() ) {
-		return;
-	}
-	if ( ! function_exists( 'bbp_is_single_forum' ) ) {
-		return;
-	}
-	if ( ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! ( function_exists( 'bbp_is_single_reply' ) && bbp_is_single_reply() ) ) {
-		return;
-	}
-
-	$src = '';
-	if ( function_exists( 'bbp_get_theme_compat_url' ) ) {
-		$src = trailingslashit( bbp_get_theme_compat_url() ) . 'js/engagements.js';
-	} elseif ( defined( 'BBPRESS_PLUGIN_URL' ) ) {
-		$src = BBPRESS_PLUGIN_URL . 'templates/default/js/engagements.js';
-	}
-
-	if ( ! wp_script_is( 'bbpress-engagements', 'registered' ) && $src ) {
-		$ver = function_exists( 'bbp_get_version' ) ? bbp_get_version() : MANUAL_DOCS_VERSION;
-		wp_register_script( 'bbpress-engagements', $src, array( 'jquery' ), $ver, true );
-	}
-
-	if ( wp_script_is( 'bbpress-engagements', 'registered' ) || wp_script_is( 'bbpress-engagements', 'enqueued' ) ) {
-		wp_enqueue_script( 'bbpress-engagements' );
-	}
-
-	if ( function_exists( 'bbp_get_ajax_url' ) && ( wp_script_is( 'bbpress-engagements', 'enqueued' ) || wp_script_is( 'bbpress-engagements', 'registered' ) ) ) {
-		wp_localize_script(
-			'bbpress-engagements',
-			'bbpEngagementJS',
-			array(
-				'bbp_ajaxurl'        => bbp_get_ajax_url(),
-				'generic_ajax_error' => __( 'Something went wrong. Refresh your browser and try again.', 'manual-docs' ),
-			)
-		);
-	}
-}
-add_action( 'wp_enqueue_scripts', 'manual_docs_enqueue_bbpress_engagements', 40 );
+add_filter( 'bbp_get_user_subscribe_link', 'manual_docs_suppress_engagement_links', 5 );
+add_filter( 'bbp_get_topic_subscribe_link', 'manual_docs_suppress_engagement_links', 5 );
+add_filter( 'bbp_get_forum_subscribe_link', 'manual_docs_suppress_engagement_links', 5 );
+add_filter( 'bbp_get_topic_favorite_link', 'manual_docs_suppress_engagement_links', 5 );
+add_filter( 'bbp_get_user_favorites_link', 'manual_docs_suppress_engagement_links', 5 );
 
 /**
  * Remove the native bbPress search form above forum/topic cards (hero search replaces it).

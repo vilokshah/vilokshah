@@ -13,20 +13,19 @@
 get_header();
 
 $title = function_exists( 'manual_docs_community_page_title' ) ? manual_docs_community_page_title() : __( 'Forums', 'manual-docs' );
-$show_toolbar = true;
-if ( function_exists( 'bbp_is_single_user' ) && bbp_is_single_user() ) {
-	$show_toolbar = false;
-}
+$is_user_profile = function_exists( 'bbp_is_single_user' ) && bbp_is_single_user();
+$show_toolbar    = ! $is_user_profile;
+$shell_class     = $is_user_profile ? 'md-community-shell md-community-shell--profile' : 'md-community-shell';
 ?>
 
-<main id="main-content" class="md-main md-main--community">
+<main id="main-content" class="md-main md-main--community<?php echo $is_user_profile ? ' md-main--profile' : ''; ?>">
 	<?php
 	if ( function_exists( 'manual_docs_render_community_hero' ) ) {
 		manual_docs_render_community_hero( $title );
 	}
 	?>
 
-	<div class="md-community-shell">
+	<div class="<?php echo esc_attr( $shell_class ); ?>">
 		<div class="md-community-main">
 			<?php
 			if ( has_nav_menu( 'community' ) ) {
@@ -75,24 +74,24 @@ if ( function_exists( 'bbp_is_single_user' ) && bbp_is_single_user() ) {
 			</div>
 		</div>
 
-		<aside class="md-community-sidebar" aria-label="<?php esc_attr_e( 'Community sidebar', 'manual-docs' ); ?>">
-			<?php
-			if ( function_exists( 'manual_docs_render_recent_topics_panel' ) ) {
-				manual_docs_render_recent_topics_panel();
-			}
-			// Only render allowed community widgets (Archives/Categories stripped in filters).
-			if ( is_active_sidebar( 'community-sidebar' ) ) {
-				ob_start();
-				dynamic_sidebar( 'community-sidebar' );
-				$sidebar_html = ob_get_clean();
-				if ( $sidebar_html ) {
-					// Belt-and-suspenders: drop archive/category markup if a block still leaked.
-					$sidebar_html = preg_replace( '#<section\b[^>]*class="[^"]*(?:widget_archive|widget_categories|wp-block-archives|wp-block-categories)[^"]*"[^>]*>.*?</section>#is', '', $sidebar_html );
-					echo $sidebar_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		<?php if ( ! $is_user_profile ) : ?>
+			<aside class="md-community-sidebar" aria-label="<?php esc_attr_e( 'Community sidebar', 'manual-docs' ); ?>">
+				<?php
+				if ( function_exists( 'manual_docs_render_recent_topics_panel' ) ) {
+					manual_docs_render_recent_topics_panel();
 				}
-			}
-			?>
-		</aside>
+				if ( is_active_sidebar( 'community-sidebar' ) ) {
+					ob_start();
+					dynamic_sidebar( 'community-sidebar' );
+					$sidebar_html = ob_get_clean();
+					if ( $sidebar_html ) {
+						$sidebar_html = preg_replace( '#<section\b[^>]*class="[^"]*(?:widget_archive|widget_categories|wp-block-archives|wp-block-categories)[^"]*"[^>]*>.*?</section>#is', '', $sidebar_html );
+						echo $sidebar_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					}
+				}
+				?>
+			</aside>
+		<?php endif; ?>
 	</div>
 </main>
 

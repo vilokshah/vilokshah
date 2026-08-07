@@ -108,7 +108,7 @@ function manual_docs_community_links() {
 }
 
 /**
- * One-time rewrite flush so /forums and /topics resolve after theme update.
+ * One-time rewrite flush so /forums, /topics, and /users/... resolve after theme update.
  */
 function manual_docs_maybe_flush_bbpress_rewrites() {
 	if ( ! manual_docs_bbpress_active() ) {
@@ -118,10 +118,100 @@ function manual_docs_maybe_flush_bbpress_rewrites() {
 	if ( get_option( $flag ) ) {
 		return;
 	}
-	flush_rewrite_rules( false );
+	if ( function_exists( 'manual_docs_hard_flush_rewrites' ) ) {
+		manual_docs_hard_flush_rewrites();
+	} else {
+		flush_rewrite_rules( true );
+	}
 	update_option( $flag, 1, false );
 }
 add_action( 'init', 'manual_docs_maybe_flush_bbpress_rewrites', 99 );
+
+/**
+ * Resolve bbPress member profile paths when rewrite rules are stale (common Local 404s).
+ *
+ * Handles /users/{nicename}/, /users/{nicename}/topics/, /replies/, /edit/, etc.
+ *
+ * @param WP $wp WP object.
+ * @return bool
+ */
+function manual_docs_resolve_bbpress_user_request( $wp ) {
+	if ( ! manual_docs_bbpress_active() || ! function_exists( 'bbp_get_user_slug' ) || ! function_exists( 'manual_docs_request_path' ) ) {
+		return false;
+	}
+
+	// Already resolved by core rewrite rules.
+	if ( ! empty( $wp->query_vars['bbp_user'] ) || ( function_exists( 'bbp_get_user_rewrite_id' ) && ! empty( $wp->query_vars[ bbp_get_user_rewrite_id() ] ) ) ) {
+		return false;
+	}
+
+	$path = manual_docs_request_path();
+	if ( '' === $path ) {
+		return false;
+	}
+
+	$user_slug = trim( (string) bbp_get_user_slug(), '/' );
+	if ( '' === $user_slug ) {
+		$user_slug = 'users';
+	}
+
+	$pattern = '#^' . preg_quote( $user_slug, '#' ) . '/([^/]+)(?:/([^/]+))?(?:/' . preg_quote( function_exists( 'bbp_get_paged_slug' ) ? bbp_get_paged_slug() : 'page', '#' ) . '/([0-9]+))?/?$#';
+	if ( ! preg_match( $pattern, $path, $m ) ) {
+		return false;
+	}
+
+	$nicename = sanitize_title( $m[1] );
+	$section  = isset( $m[2] ) ? sanitize_title( $m[2] ) : '';
+	$page_num = isset( $m[3] ) ? absint( $m[3] ) : 0;
+
+	if ( ! $nicename || ! get_user_by( 'slug', $nicename ) ) {
+		return false;
+	}
+
+	$user_qv = function_exists( 'bbp_get_user_rewrite_id' ) ? bbp_get_user_rewrite_id() : 'bbp_user';
+	$wp->query_vars[ $user_qv ] = $nicename;
+	unset( $wp->query_vars['error'], $wp->query_vars['pagename'], $wp->query_vars['name'], $wp->query_vars['page'] );
+
+	$topics_slug = function_exists( 'bbp_get_topic_archive_slug' ) ? bbp_get_topic_archive_slug() : 'topics';
+	$replies_slug = function_exists( 'bbp_get_reply_archive_slug' ) ? bbp_get_reply_archive_slug() : 'replies';
+	$edit_slug    = function_exists( 'bbp_get_edit_slug' ) ? bbp_get_edit_slug() : 'edit';
+
+	if ( $section === $topics_slug && function_exists( 'bbp_get_user_topics_rewrite_id' ) ) {
+		$wp->query_vars[ bbp_get_user_topics_rewrite_id() ] = '1';
+	} elseif ( $section === $replies_slug && function_exists( 'bbp_get_user_replies_rewrite_id' ) ) {
+		$wp->query_vars[ bbp_get_user_replies_rewrite_id() ] = '1';
+	} elseif ( $section === $edit_slug && function_exists( 'bbp_get_edit_rewrite_id' ) ) {
+		$wp->query_vars[ bbp_get_edit_rewrite_id() ] = '1';
+	} elseif ( $section && function_exists( 'bbp_get_user_engagements_slug' ) && $section === bbp_get_user_engagements_slug() && function_exists( 'bbp_get_user_engagements_rewrite_id' ) ) {
+		$wp->query_vars[ bbp_get_user_engagements_rewrite_id() ] = '1';
+	} elseif ( $section && function_exists( 'bbp_get_user_favorites_slug' ) && $section === bbp_get_user_favorites_slug() && function_exists( 'bbp_get_user_favorites_rewrite_id' ) ) {
+		$wp->query_vars[ bbp_get_user_favorites_rewrite_id() ] = '1';
+	} elseif ( $section && function_exists( 'bbp_get_user_subscriptions_slug' ) && $section === bbp_get_user_subscriptions_slug() && function_exists( 'bbp_get_user_subscriptions_rewrite_id' ) ) {
+		$wp->query_vars[ bbp_get_user_subscriptions_rewrite_id() ] = '1';
+	} elseif ( $section ) {
+		// Unknown profile section — leave as profile root rather than hard 404.
+		return true;
+	}
+
+	if ( $page_num && function_exists( 'bbp_get_paged_rewrite_id' ) ) {
+		$wp->query_vars[ bbp_get_paged_rewrite_id() ] = $page_num;
+	}
+
+	return true;
+}
+
+/**
+ * Hook user-profile path resolver early.
+ *
+ * @param WP $wp WP object.
+ */
+function manual_docs_parse_bbpress_user_request( $wp ) {
+	if ( is_admin() ) {
+		return;
+	}
+	manual_docs_resolve_bbpress_user_request( $wp );
+}
+add_action( 'parse_request', 'manual_docs_parse_bbpress_user_request', 2 );
 
 /**
  * Soften bbPress breadcrumbs into theme style via CSS class wrapper.

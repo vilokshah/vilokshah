@@ -1172,103 +1172,207 @@ html[data-md-theme="dark"] .md-bbpress #bbpress-forums .wp-switch-editor {
   display: none !important;
 }
 
-/* —— My Profile (enhanced) —— */
+/* —— My Profile —— */
+.md-community-shell--profile {
+  grid-template-columns: 1fr;
+  max-width: 920px;
+}
+
+.md-main--profile .md-community-search {
+  display: none;
+}
+
 .md-main--community #bbp-user-wrapper,
 .md-bbpress #bbp-user-wrapper {
   display: grid;
   grid-template-columns: minmax(200px, 240px) minmax(0, 1fr);
-  gap: 1.25rem;
+  gap: 1.5rem;
   align-items: start;
 }
 
+.md-profile-aside,
 .md-bbpress #bbp-single-user-details {
   background: var(--md-surface);
   border: 1px solid var(--md-line);
   border-radius: var(--md-community-radius);
-  padding: 1.25rem 1.15rem;
-  box-shadow: 0 12px 32px color-mix(in srgb, var(--md-ink) 6%, transparent);
+  padding: 1.35rem 1.15rem 1.15rem;
   text-align: center;
 }
 
+.md-profile-aside__avatar img.avatar,
 .md-bbpress #bbp-user-avatar img.avatar {
-  width: 112px !important;
-  height: 112px !important;
+  width: 96px !important;
+  height: 96px !important;
   border-radius: 999px !important;
-  border: 3px solid color-mix(in srgb, var(--md-accent) 35%, var(--md-line));
-  box-shadow: 0 8px 24px color-mix(in srgb, var(--md-accent) 18%, transparent);
+  border: 2px solid var(--md-line);
+  margin: 0 auto;
+  display: block;
 }
 
+.md-profile-aside__name {
+  margin: 0.85rem 0 0.2rem;
+  font-family: var(--md-font-display);
+  font-size: 1.15rem;
+  font-weight: 750;
+  color: var(--md-ink);
+  letter-spacing: -0.02em;
+}
+
+.md-profile-aside__role {
+  margin: 0;
+  color: var(--md-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.md-profile-nav ul,
 .md-bbpress #bbp-user-navigation ul {
   list-style: none;
-  margin: 1rem 0 0;
+  margin: 1.15rem 0 0;
   padding: 0;
   display: grid;
-  gap: 0.35rem;
+  gap: 0.25rem;
   text-align: left;
 }
 
+.md-profile-nav li a,
 .md-bbpress #bbp-user-navigation li a {
   display: block;
-  padding: 0.65rem 0.85rem;
+  padding: 0.55rem 0.8rem;
   border-radius: 10px;
   color: var(--md-text) !important;
   text-decoration: none;
   font-weight: 650;
   font-size: 0.95rem;
-  border: 1px solid transparent;
+  white-space: nowrap;
 }
 
+.md-profile-nav li.current a,
+.md-profile-nav li a:hover,
 .md-bbpress #bbp-user-navigation li.current a,
 .md-bbpress #bbp-user-navigation li a:hover {
   background: var(--md-accent-soft);
   color: var(--md-accent) !important;
-  border-color: color-mix(in srgb, var(--md-accent) 28%, transparent);
 }
 
 .md-bbpress #bbp-user-body {
   background: var(--md-surface);
   border: 1px solid var(--md-line);
   border-radius: var(--md-community-radius);
-  padding: 1.35rem 1.45rem;
-  box-shadow: 0 12px 32px color-mix(in srgb, var(--md-ink) 6%, transparent);
+  padding: 1.5rem 1.6rem;
   min-width: 0;
 }
 
-.md-bbpress #bbp-user-body h2,
-.md-bbpress #bbp-user-body h3 {
-  color: var(--md-ink);
+.md-profile__header {
+  margin: 0 0 1.15rem;
+}
+
+.md-profile__title {
+  margin: 0;
   font-family: var(--md-font-display);
+  font-size: clamp(1.4rem, 2.2vw, 1.75rem);
   font-weight: 750;
   letter-spacing: -0.02em;
-  margin: 0 0 0.85rem;
+  color: var(--md-ink);
+  line-height: 1.2;
 }
 
-.md-bbpress #bbp-user-body .bbp-user-section,
-.md-bbpress #bbp-user-body .bbp-user-profile {
-  display: grid;
-  gap: 0.85rem;
+.md-profile__handle {
+  margin: 0.25rem 0 0;
+  color: var(--md-muted);
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
-.md-bbpress #bbp-user-body p,
-.md-bbpress #bbp-user-body .bbp-user-forum-role,
-.md-bbpress #bbp-user-body .bbp-user-topic-count,
-.md-bbpress #bbp-user-body .bbp-user-reply-count {
-  margin: 0;
-  padding: 0.85rem 1rem;
-  background: color-mix(in srgb, var(--md-page-bg) 65%, var(--md-surface));
-  border: 1px solid var(--md-line);
-  border-radius: 12px;
+.md-profile__bio {
+  margin: 0 0 1.25rem;
   color: var(--md-text);
+  line-height: 1.55;
   font-size: 1rem;
 }
 
-.md-bbpress #bbp-user-body a { color: var(--md-link); font-weight: 650; }
+.md-profile__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0 0 1.35rem;
+}
 
+.md-profile__stat {
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--md-line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--md-page-bg) 70%, var(--md-surface));
+}
+
+.md-profile__stat-label {
+  display: block;
+  color: var(--md-muted);
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.25rem;
+}
+
+.md-profile__stat-value {
+  display: block;
+  color: var(--md-ink);
+  font-size: 1.25rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.md-profile__meta {
+  margin: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.md-profile__meta-row {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--md-line);
+}
+
+.md-profile__meta-row dt {
+  margin: 0;
+  color: var(--md-muted);
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.md-profile__meta-row dd {
+  margin: 0;
+  color: var(--md-text);
+  font-size: 0.98rem;
+}
+
+.md-profile__meta-row a {
+  color: var(--md-link);
+  font-weight: 650;
+}
+
+/* Hide leftover Favorite/Subscribe chrome */
+.md-bbpress #favorite-toggle,
+.md-bbpress #subscription-toggle,
+.md-bbpress a.favorite-toggle,
+.md-bbpress a.subscription-toggle,
+.md-community-toolbar__actions a.favorite-toggle,
+.md-community-toolbar__actions a.subscription-toggle {
+  display: none !important;
+}
+
+html[data-md-theme="light"] .md-profile-aside,
 html[data-md-theme="light"] .md-bbpress #bbp-single-user-details,
 html[data-md-theme="light"] .md-bbpress #bbp-user-body {
   background: #fff;
 }
 
+html[data-md-theme="dark"] .md-profile-aside,
 html[data-md-theme="dark"] .md-bbpress #bbp-single-user-details,
 html[data-md-theme="dark"] .md-bbpress #bbp-user-body {
   background: var(--md-surface);
@@ -1282,6 +1386,13 @@ html[data-md-theme="dark"] .md-bbpress #bbp-user-body {
   .md-main--community #bbp-user-wrapper,
   .md-bbpress #bbp-user-wrapper {
     grid-template-columns: 1fr;
+  }
+  .md-profile__stats {
+    grid-template-columns: 1fr;
+  }
+  .md-profile__meta-row {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
   }
 }
 
