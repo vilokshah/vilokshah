@@ -22,3 +22,24 @@ WordPress Importer skips same titles by default. **Manual Docs v2.6.1+** include
 Then set version root slugs to `goat,flamingo,hummingbird`.
 
 Regenerate: `python3 generate-demo-1000.py`
+
+## bbPress community demo (`bbpress-demo.xml`)
+
+**5 forums · 30 topics · 40 replies** for styling Manual Docs + bbPress.
+
+### Recommended (one-click)
+
+1. Activate **bbPress** and the **Manual Docs** theme
+2. Appearance → **Docs Stats** → **Create sample forums (5 / 30 / 40)**
+
+### Or import the WXR file
+
+1. Activate **bbPress** first (otherwise `forum` / `topic` / `reply` will not import correctly)
+2. Tools → Import → WordPress → upload `bbpress-demo.xml`
+3. Assign content to an admin user
+4. Tools → Forums → **Repair** (parent topic, parent forum, counts, last activity)
+5. Settings → Permalinks → Save
+
+Download: https://raw.githubusercontent.com/vilokshah/vilokshah/cursor/manual-docs-theme-e7d3/manual-docs/sample-data/bbpress-demo.xml
+
+Regenerate: `python3 generate-bbpress-demo.py`

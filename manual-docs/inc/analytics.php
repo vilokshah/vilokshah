@@ -209,6 +209,29 @@ function manual_docs_stats_admin_actions() {
 			);
 		}
 	}
+
+	if ( isset( $_POST['manual_docs_install_bbpress_sample'] ) && function_exists( 'manual_docs_install_bbpress_sample' ) ) {
+		check_admin_referer( 'manual_docs_stats_actions' );
+		$result = manual_docs_install_bbpress_sample();
+		if ( is_wp_error( $result ) ) {
+			add_settings_error( 'manual_docs_stats', 'bbp_sample_err', $result->get_error_message(), 'error' );
+		} else {
+			$url = ! empty( $result['url'] ) ? $result['url'] : admin_url( 'edit.php?post_type=forum' );
+			add_settings_error(
+				'manual_docs_stats',
+				'bbp_sample_ok',
+				sprintf(
+					/* translators: 1: forums count, 2: topics count, 3: replies count, 4: link */
+					__( 'Sample community data ready: %1$d forums, %2$d topics, %3$d replies. %4$s', 'manual-docs' ),
+					(int) $result['forums'],
+					(int) $result['topics'],
+					(int) $result['replies'],
+					'<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener">' . esc_html__( 'Open forums', 'manual-docs' ) . '</a>'
+				),
+				'updated'
+			);
+		}
+	}
 }
 add_action( 'admin_init', 'manual_docs_stats_admin_actions' );
 
@@ -231,6 +254,9 @@ function manual_docs_render_stats_page() {
 		<form method="post" style="margin:1rem 0 1.5rem;">
 			<?php wp_nonce_field( 'manual_docs_stats_actions' ); ?>
 			<?php submit_button( __( 'Create sample elements document', 'manual-docs' ), 'secondary', 'manual_docs_install_sample', false ); ?>
+			<?php if ( function_exists( 'manual_docs_bbpress_active' ) && manual_docs_bbpress_active() ) : ?>
+				<?php submit_button( __( 'Create sample forums (5 / 30 / 40)', 'manual-docs' ), 'secondary', 'manual_docs_install_bbpress_sample', false ); ?>
+			<?php endif; ?>
 			<?php submit_button( __( 'Reset all stats', 'manual-docs' ), 'delete', 'manual_docs_reset_stats', false ); ?>
 		</form>
 
