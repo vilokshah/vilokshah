@@ -15,7 +15,7 @@ get_header();
 		<p><?php esc_html_e( 'The page you are looking for does not exist or may have moved.', 'manual-docs' ); ?></p>
 		<p>
 			<a class="md-btn md-btn--primary" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Go home', 'manual-docs' ); ?></a>
-			<a class="md-btn md-btn--ghost" href="<?php echo esc_url( get_post_type_archive_link( 'manual_documentation' ) ); ?>"><?php esc_html_e( 'Browse docs', 'manual-docs' ); ?></a>
+			<a class="md-btn md-btn--ghost" href="<?php echo esc_url( function_exists( 'manual_docs_get_docs_entry_url' ) ? manual_docs_get_docs_entry_url() : home_url( '/' ) ); ?>"><?php esc_html_e( 'Browse docs', 'manual-docs' ); ?></a>
 		</p>
 	</div>
 </main>

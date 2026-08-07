@@ -38,6 +38,7 @@ function manual_docs_default_options() {
 		'default_version_slug' => 'goat',
 		'cpt_rewrite_slug'     => 'documentation',
 		'permalink_mode'       => 'pretty',
+		'hide_docs_archive'    => 1,
 		'show_toc'             => 1,
 		'show_pdf'             => 1,
 		'show_updated'         => 1,
@@ -195,7 +196,7 @@ function manual_docs_save_options() {
 	$clean = array();
 	$color_keys = array( 'primary_color', 'accent_color', 'header_bg', 'sidebar_bg', 'content_bg', 'page_bg', 'text_color', 'link_color', 'pdf_color', 'active_bar_color', 'footer_cta_color' );
 	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'login_page_path', 'pdf_watermark', 'footer_text', 'footer_copyright', 'font_display', 'font_body', 'tree_scope' );
-	$bool_keys  = array( 'require_login', 'show_community_cta', 'show_toc', 'show_pdf', 'show_updated', 'show_edit_link', 'tree_expand_active', 'tree_lazy' );
+	$bool_keys  = array( 'require_login', 'show_community_cta', 'show_toc', 'show_pdf', 'show_updated', 'show_edit_link', 'tree_expand_active', 'tree_lazy', 'hide_docs_archive' );
 	$int_keys   = array( 'logo_dark_id', 'logo_light_id' );
 
 	foreach ( $color_keys as $key ) {
@@ -242,10 +243,12 @@ function manual_docs_save_options() {
 		}
 	}
 
-	// Flush when rewrite slug or permalink mode changes.
+	// Flush when rewrite slug, permalink mode, or archive visibility changes.
 	$old_slug = is_array( $old ) && ! empty( $old['cpt_rewrite_slug'] ) ? $old['cpt_rewrite_slug'] : 'documentation';
 	$old_mode = is_array( $old ) && ! empty( $old['permalink_mode'] ) ? $old['permalink_mode'] : 'pretty';
-	if ( $old_slug !== $clean['cpt_rewrite_slug'] || $old_mode !== $clean['permalink_mode'] ) {
+	$old_hide = is_array( $old ) ? ! empty( $old['hide_docs_archive'] ) : true;
+	$new_hide = ! empty( $clean['hide_docs_archive'] );
+	if ( $old_slug !== $clean['cpt_rewrite_slug'] || $old_mode !== $clean['permalink_mode'] || $old_hide !== $new_hide ) {
 		delete_option( 'manual_docs_permalinks_flushed_2_5' );
 		if ( function_exists( 'manual_docs_hard_flush_rewrites' ) ) {
 			manual_docs_hard_flush_rewrites();
@@ -431,7 +434,7 @@ function manual_docs_render_options_page() {
 					<th><label for="version_root_slugs"><?php esc_html_e( 'Version root slugs', 'manual-docs' ); ?></label></th>
 					<td>
 						<input class="large-text" type="text" id="version_root_slugs" name="manual_docs_options[version_root_slugs]" value="<?php echo esc_attr( $o['version_root_slugs'] ); ?>" />
-						<p class="description"><?php esc_html_e( 'Comma-separated top-level documentation slugs, e.g. goat,flamingo,hummingbird. Leave empty to use all top-level docs.', 'manual-docs' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Comma-separated top-level documentation slugs that are release versions only (e.g. goat,flamingo,hummingbird). Other parent pages are excluded from the version switcher.', 'manual-docs' ); ?></p>
 					</td>
 				</tr>
 				<tr>
@@ -540,7 +543,8 @@ function manual_docs_render_options_page() {
 				<tr>
 					<th><?php esc_html_e( 'Access', 'manual-docs' ); ?></th>
 					<td>
-						<label><input type="checkbox" name="manual_docs_options[require_login]" value="1" <?php checked( $o['require_login'], 1 ); ?> /> <?php esc_html_e( 'Require login to view documentation', 'manual-docs' ); ?></label>
+						<label><input type="checkbox" name="manual_docs_options[require_login]" value="1" <?php checked( $o['require_login'], 1 ); ?> /> <?php esc_html_e( 'Require login to view documentation', 'manual-docs' ); ?></label><br />
+						<label><input type="checkbox" name="manual_docs_options[hide_docs_archive]" value="1" <?php checked( ! empty( $o['hide_docs_archive'] ), 1 ); ?> /> <?php esc_html_e( 'Hide /docs archive page (redirect visitors to the default release)', 'manual-docs' ); ?></label>
 					</td>
 				</tr>
 				<tr>
@@ -597,51 +601,86 @@ function manual_docs_render_options_page() {
 }
 
 /**
- * Print CSS variables from options.
+ * Print CSS variables from options (after main.css so values win).
  */
 function manual_docs_options_css() {
+	// Prefer inline on main stylesheet so load order cannot override colors.
+	if ( wp_style_is( 'manual-docs-main', 'enqueued' ) || wp_style_is( 'manual-docs-main', 'done' ) ) {
+		return;
+	}
+	echo '<style id="manual-docs-options-css">' . manual_docs_get_options_css_text() . '</style>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+add_action( 'wp_head', 'manual_docs_options_css', 100 );
+
+/**
+ * Build options CSS text.
+ *
+ * @return string
+ */
+function manual_docs_get_options_css_text() {
 	$o            = manual_docs_get_options();
 	$font_display = function_exists( 'manual_docs_font_stack' ) ? manual_docs_font_stack( isset( $o['font_display'] ) ? $o['font_display'] : 'sora', 'sora' ) : '"Sora", "Segoe UI", sans-serif';
 	$font_body    = function_exists( 'manual_docs_font_stack' ) ? manual_docs_font_stack( isset( $o['font_body'] ) ? $o['font_body'] : 'ibm-plex-sans', 'ibm-plex-sans' ) : '"IBM Plex Sans", "Segoe UI", sans-serif';
-	// Keep quotes intact for CSS (avoid esc_html turning " into &quot;).
 	$font_display = preg_replace( '/[^a-zA-Z0-9\s,\-"\']/', '', $font_display );
 	$font_body    = preg_replace( '/[^a-zA-Z0-9\s,\-"\']/', '', $font_body );
-	?>
-	<style id="manual-docs-options-css">
-		:root {
-			--md-font-display: <?php echo $font_display; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sanitized above ?>;
-			--md-font-body: <?php echo $font_body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
-			--md-footer-cta: <?php echo esc_html( ! empty( $o['footer_cta_color'] ) ? $o['footer_cta_color'] : '#e11d48' ); ?>;
-		}
-		html[data-md-theme="dark"],
-		html[data-md-theme="light"] {
-			--md-font-display: <?php echo $font_display; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
-			--md-font-body: <?php echo $font_body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
-		}
-		body {
-			font-family: var(--md-font-body);
-		}
-		h1, h2, h3, h4, h5, h6,
-		.md-doc-title,
-		.md-brand__text,
-		.md-hero__title {
-			font-family: var(--md-font-display);
-		}
-		/* Admin color overrides apply to dark mode; light mode keeps its own palette. */
-		html[data-md-theme="dark"] {
-			--md-primary: <?php echo esc_html( $o['primary_color'] ); ?>;
-			--md-accent: <?php echo esc_html( $o['accent_color'] ); ?>;
-			--md-accent-soft: color-mix(in srgb, <?php echo esc_html( $o['accent_color'] ); ?> 16%, transparent);
-			--md-link: <?php echo esc_html( $o['link_color'] ); ?>;
-			--md-pdf: <?php echo esc_html( $o['pdf_color'] ); ?>;
-			--md-active-bar: <?php echo esc_html( $o['active_bar_color'] ); ?>;
-			--md-header-bg: <?php echo esc_html( $o['header_bg'] ); ?>;
-			--md-sidebar-bg: <?php echo esc_html( $o['sidebar_bg'] ); ?>;
-			--md-content-bg: <?php echo esc_html( $o['content_bg'] ); ?>;
-			--md-page-bg: <?php echo esc_html( $o['page_bg'] ); ?>;
-			--md-text: <?php echo esc_html( $o['text_color'] ); ?>;
-		}
-	</style>
-	<?php
+
+	$primary = esc_html( $o['primary_color'] );
+	$accent  = esc_html( $o['accent_color'] );
+	$link    = esc_html( $o['link_color'] );
+	$pdf     = esc_html( $o['pdf_color'] );
+	$bar     = esc_html( $o['active_bar_color'] );
+	$header  = esc_html( $o['header_bg'] );
+	$sidebar = esc_html( $o['sidebar_bg'] );
+	$content = esc_html( $o['content_bg'] );
+	$page    = esc_html( $o['page_bg'] );
+	$text    = esc_html( $o['text_color'] );
+	$cta     = esc_html( ! empty( $o['footer_cta_color'] ) ? $o['footer_cta_color'] : '#e11d48' );
+
+	return "
+:root {
+	--md-font-display: {$font_display};
+	--md-font-body: {$font_body};
+	--md-footer-cta: {$cta};
 }
-add_action( 'wp_head', 'manual_docs_options_css', 5 );
+html[data-md-theme=\"dark\"],
+html[data-md-theme=\"light\"] {
+	--md-font-display: {$font_display};
+	--md-font-body: {$font_body};
+	--md-primary: {$primary};
+	--md-accent: {$accent};
+	--md-accent-soft: color-mix(in srgb, {$accent} 16%, transparent);
+	--md-link: {$link};
+	--md-pdf: {$pdf};
+	--md-active-bar: {$bar};
+	--md-header-bg: {$header};
+	--md-sidebar-bg: {$sidebar};
+	--md-content-bg: {$content};
+	--md-page-bg: {$page};
+	--md-text: {$text};
+	--md-ink: {$primary};
+	--md-footer-cta: {$cta};
+}
+body { font-family: var(--md-font-body); background: var(--md-page-bg); color: var(--md-text); }
+h1, h2, h3, h4, h5, h6,
+.md-doc-title,
+.md-brand__text,
+.md-hero__title { font-family: var(--md-font-display); }
+.md-header { background: var(--md-header-bg); }
+.md-docs-sidebar { background: var(--md-sidebar-bg); }
+.md-doc-article, .md-archive, .md-docs-shell { background: var(--md-content-bg); }
+.md-meta-pdf, .md-meta-pdf:hover { color: var(--md-pdf); }
+.md-doc-nav__item.is-active > a { border-left-color: var(--md-active-bar); color: var(--md-link); }
+.md-footer-newsletter__submit { background: var(--md-footer-cta); }
+";
+}
+
+/**
+ * Attach options CSS after main.css (fixes colors not applying).
+ */
+function manual_docs_enqueue_options_css() {
+	if ( ! wp_style_is( 'manual-docs-main', 'enqueued' ) ) {
+		return;
+	}
+	wp_add_inline_style( 'manual-docs-main', manual_docs_get_options_css_text() );
+}
+add_action( 'wp_enqueue_scripts', 'manual_docs_enqueue_options_css', 30 );

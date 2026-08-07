@@ -22,6 +22,14 @@ Drop-in replacement theme for sites already using the Manual documentation stack
 
 Your existing Documentation Categories (`manualdocumentationcategory`) and documents stay intact. The theme only registers the CPT/taxonomy if they are missing.
 
+### Static homepage
+
+`front-page.php` respects **Settings → Reading → A static page**. Assign any page as the homepage. To use the DigiDocs search portal layout, edit that page and set Template = **Docs Portal**.
+
+### Hide /docs archive
+
+Enabled by default (**Hide /docs archive page**). Visiting `/docs/` redirects to the default release. Link users to specific version URLs (or homepage CTAs) instead.
+
 ### Gutenberg categories & parent
 
 The theme forces `show_in_rest` + `hierarchical` + `page-attributes` on the Manual CPT/taxonomy so the block editor shows **Categories** and **Parent**. After activating, save Permalinks once. If categories still do not appear, deactivate conflicting Manual plugins temporarily and re-save the document.

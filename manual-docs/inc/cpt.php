@@ -86,8 +86,9 @@ function manual_docs_force_cpt_rest_args( $args, $post_type ) {
 		}
 	}
 
-	if ( ! isset( $args['has_archive'] ) || false === $args['has_archive'] ) {
-		$args['has_archive'] = $slug;
+	if ( ! isset( $args['has_archive'] ) || false === $args['has_archive'] || true === $args['has_archive'] || is_string( $args['has_archive'] ) ) {
+		$hide_archive = function_exists( 'manual_docs_get_option' ) ? (bool) manual_docs_get_option( 'hide_docs_archive', true ) : true;
+		$args['has_archive'] = $hide_archive ? false : $slug;
 	}
 
 	return $args;

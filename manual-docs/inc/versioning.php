@@ -14,7 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Get configured / discovered version root posts.
+ * Get configured version root posts.
+ *
+ * Only posts listed in Version root IDs / Version root slugs are treated as
+ * releases. Other top-level docs (e.g. standalone parents) are excluded.
  *
  * @return WP_Post[]
  */
@@ -36,29 +39,11 @@ function manual_docs_get_version_roots() {
 		}
 	}
 
-	// Always merge in other top-level docs so flamingo/hummingbird appear even if
-	// only one configured slug matched (partial import / -2 slug suffixes).
-	$top_level = get_posts(
-		array(
-			'post_type'      => 'manual_documentation',
-			'post_parent'    => 0,
-			'posts_per_page' => 50,
-			'orderby'        => 'menu_order title',
-			'order'          => 'ASC',
-			'post_status'    => 'publish',
-		)
-	);
+	$ids = array_values( array_unique( array_filter( array_map( 'intval', $ids ) ) ) );
 
+	// No configured roots → no version switcher (do not auto-promote every top-level doc).
 	if ( empty( $ids ) ) {
-		return $top_level;
-	}
-
-	$id_set = array_map( 'intval', $ids );
-	foreach ( $top_level as $post ) {
-		if ( ! in_array( (int) $post->ID, $id_set, true ) ) {
-			$ids[]    = (int) $post->ID;
-			$id_set[] = (int) $post->ID;
-		}
+		return array();
 	}
 
 	$posts = get_posts(
@@ -68,10 +53,46 @@ function manual_docs_get_version_roots() {
 			'posts_per_page' => count( $ids ),
 			'orderby'        => 'post__in',
 			'post_status'    => 'publish',
+			'post_parent'    => 0,
 		)
 	);
 
 	return $posts;
+}
+
+/**
+ * Default URL to open documentation (first / default version root).
+ *
+ * @return string
+ */
+function manual_docs_get_docs_entry_url() {
+	$versions     = manual_docs_get_version_roots();
+	$default_slug = manual_docs_get_option( 'default_version_slug', '' );
+
+	if ( ! empty( $versions ) ) {
+		$start = $versions[0];
+		if ( $default_slug ) {
+			foreach ( $versions as $v ) {
+				if ( $v->post_name === $default_slug || 0 === strpos( $v->post_name, sanitize_title( $default_slug ) . '-' ) ) {
+					$start = $v;
+					break;
+				}
+			}
+		}
+		$url = get_permalink( $start );
+		if ( $url ) {
+			return $url;
+		}
+	}
+
+	if ( ! manual_docs_get_option( 'hide_docs_archive', true ) ) {
+		$archive = get_post_type_archive_link( 'manual_documentation' );
+		if ( $archive ) {
+			return $archive;
+		}
+	}
+
+	return home_url( '/' );
 }
 
 /**

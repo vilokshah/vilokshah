@@ -144,6 +144,13 @@ function manual_docs_enforce_access() {
 		return;
 	}
 
+	// Hide the CPT archive (/docs/) — send people to the default release instead.
+	if ( is_post_type_archive( 'manual_documentation' ) && manual_docs_get_option( 'hide_docs_archive', true ) ) {
+		$target = function_exists( 'manual_docs_get_docs_entry_url' ) ? manual_docs_get_docs_entry_url() : home_url( '/' );
+		wp_safe_redirect( $target, 301 );
+		exit;
+	}
+
 	if ( manual_docs_require_login_for_docs() && ! is_user_logged_in() ) {
 		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 		$redirect    = manual_docs_safe_redirect_url( home_url( $request_uri ) );

@@ -13,12 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Fallback primary menu.
  */
 function manual_docs_primary_fallback() {
-	$items = array(
-		array(
-			'url'   => get_post_type_archive_link( 'manual_documentation' ),
+	$items = array();
+	$docs  = function_exists( 'manual_docs_get_docs_entry_url' ) ? manual_docs_get_docs_entry_url() : '';
+	if ( $docs ) {
+		$items[] = array(
+			'url'   => $docs,
 			'label' => __( 'Docs', 'manual-docs' ),
-		),
-	);
+		);
+	}
 
 	if ( function_exists( 'manual_docs_bbpress_active' ) && manual_docs_bbpress_active() && function_exists( 'bbp_get_forums_url' ) ) {
 		$items[] = array(
@@ -645,7 +647,7 @@ function manual_docs_breadcrumbs( $post_id = null ) {
 
 	$items[] = array(
 		'label' => __( 'Docs', 'manual-docs' ),
-		'url'   => get_post_type_archive_link( 'manual_documentation' ),
+		'url'   => function_exists( 'manual_docs_get_docs_entry_url' ) ? manual_docs_get_docs_entry_url() : home_url( '/' ),
 	);
 
 	$root = manual_docs_get_version_root_for_doc( $post_id );
