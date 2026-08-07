@@ -1470,7 +1470,10 @@ html[data-md-theme="light"] .md-footer__bar {
   .md-community-home__panel { flex-direction: column; align-items: flex-start; }
   .md-footer__inner--legacy { grid-template-columns: 1fr; }
   .md-footer__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .md-hero__search { width: 80%; max-width: 80%; }
+  .md-hero__search { width: 100%; max-width: 100%; }
+  .md-404__inner { width: min(100%, calc(100% - 2rem)); }
+  .md-404__actions { width: 100%; }
+  .md-404__actions .md-btn { flex: 1 1 auto; justify-content: center; text-align: center; }
   .md-doc-pager { grid-template-columns: 1fr; }
   .md-doc-header__title-row { flex-direction: column; align-items: stretch; }
   .md-doc-header__version { margin-left: 0; align-self: flex-end; }
