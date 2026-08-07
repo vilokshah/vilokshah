@@ -29,10 +29,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<li class="bbp-footer md-reply-list__footer">
 		<div class="tr">
-			<div>
-				<span class="td colspan<?php echo ( bbp_show_lead_topic() ) ? '2' : '3'; ?>"><?php bbp_topic_reply_count( 0, true ); ?></span>
+			<div class="td">
+				<?php bbp_reply_pagination_count(); ?>
 			</div>
-		</div><!-- .tr -->
+		</div>
 	</li>
 </ul><!-- #topic-<?php bbp_topic_id(); ?>-replies -->
 

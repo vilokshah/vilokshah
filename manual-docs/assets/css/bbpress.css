@@ -228,7 +228,23 @@
   gap: 0.55rem;
 }
 
+.md-community-toolbar__actions .md-btn--create-topic {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--md-footer-cta, var(--md-accent)) !important;
+  color: #fff !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  padding: 0.65rem 1.15rem !important;
+  font-weight: 750;
+  font-size: 0.95rem;
+  text-decoration: none !important;
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--md-footer-cta, var(--md-accent)) 30%, transparent);
+}
+
 .md-community-toolbar__actions a.favorite-toggle,
+.md-community-toolbar__actions #favorite-toggle a.favorite-toggle,
 .md-community-toolbar__actions a[href*="favorite"] {
   display: inline-flex;
   align-items: center;
@@ -240,11 +256,11 @@
   font-weight: 650;
   font-size: 0.92rem;
   text-decoration: none !important;
+  cursor: pointer;
 }
 
-.md-community-toolbar__actions .md-btn--subscribe,
 .md-community-toolbar__actions a.subscription-toggle,
-.md-community-toolbar__actions a.md-btn--subscribe {
+.md-community-toolbar__actions #subscription-toggle a.subscription-toggle {
   display: inline-flex !important;
   align-items: center;
   gap: 0.4rem;
@@ -257,15 +273,19 @@
   font-size: 0.95rem;
   text-decoration: none !important;
   box-shadow: 0 8px 20px color-mix(in srgb, var(--md-footer-cta, var(--md-accent)) 30%, transparent);
+  cursor: pointer;
 }
 
-/* Hide leftover subscribe/favorite that slip into topic chrome */
+/* Hide leftover subscribe/favorite outside the community toolbar */
 .md-bbpress .bbp-topic-revision-log + .subscription-toggle,
 .bbp-template-notice + .subscription-toggle,
 #bbpress-forums > .subscription-toggle,
 #bbpress-forums .bbp-topic-tags + p .subscription-toggle,
-.md-bbpress .favorite-toggle + .subscription-toggle {
-  /* native duplicates suppressed in PHP; CSS belt-and-suspenders for layout leftovers */
+.md-bbpress #bbpress-forums > #subscription-toggle,
+.md-bbpress #bbpress-forums > #favorite-toggle,
+.md-bbpress #bbpress-forums .bbp-topic-tags ~ #subscription-toggle,
+.md-bbpress #bbpress-forums .bbp-topic-tags ~ #favorite-toggle {
+  display: none !important;
 }
 
 .md-community-topic-title {
@@ -293,6 +313,31 @@
 .md-bbpress #bbpress-forums .bbp-breadcrumb a {
   color: var(--md-link);
   font-weight: 600;
+}
+
+/* Native bbPress search above cards is removed — hero search is the only search */
+.md-bbpress #bbpress-forums > .bbp-search-form,
+.md-bbpress #bbpress-forums form#bbp-search-form,
+.md-bbpress #bbpress-forums div.bbp-search-form,
+.md-bbpress #bbpress-forums .bbp-search-form {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Give breadcrumb / list a clear gutter under the toolbar */
+.md-bbpress #bbpress-forums div.bbp-breadcrumb,
+.md-bbpress #bbpress-forums .bbp-breadcrumb {
+  margin-bottom: 1.25rem;
+}
+
+.md-bbpress #bbpress-forums ul.bbp-forums,
+.md-bbpress #bbpress-forums ul.bbp-topics,
+.md-bbpress #bbpress-forums .md-forum-list,
+.md-bbpress #bbpress-forums .md-topic-list {
+  margin-top: 0.35rem;
 }
 
 /* Status / notices */
@@ -749,11 +794,33 @@
   box-shadow: none;
 }
 
-/* Reduce vote-widget gutter noise when present */
+/* Hide third-party vote / rating widgets (orphan “0” scores) */
 .md-bbpress .gdwpro-voting,
 .md-bbpress .gd-rating,
-.md-bbpress .wp-ulike-is-single {
-  margin: 0.5rem 0;
+.md-bbpress .gdrts-rating-block,
+.md-bbpress .gdrts-rating-fonticon,
+.md-bbpress .gdrts-stars-block,
+.md-bbpress .wp-ulike-is-single,
+.md-bbpress .wp_ulike_general_class,
+.md-bbpress .wpulike,
+.md-bbpress .wp-ulike-classic,
+.md-bbpress .thumbs-rating-container,
+.md-bbpress .rating-wrapper,
+.md-bbpress .post-ratings,
+.md-bbpress .kk-star-ratings,
+.md-bbpress .rmp-widgets-container,
+.md-bbpress .yasr-auto-insert-box,
+.md-bbpress .rate-response,
+.md-bbpress .bbp-reply-content > .rating,
+.md-bbpress .md-reply-card .rating,
+.md-topic-card .gdrts-rating-block,
+.md-reply-card .gdrts-rating-block {
+  display: none !important;
+}
+
+.md-reply-list__footer .td {
+  color: var(--md-muted);
+  font-size: 0.92rem;
 }
 
 /* Forms — each label tightly grouped with its control; larger gaps between fields */

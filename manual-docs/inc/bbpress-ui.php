@@ -105,6 +105,7 @@ function manual_docs_render_community_hero( $title ) {
 		$q = (string) bbp_get_search_terms();
 	}
 	?>
+	<?php $GLOBALS['md_community_hero_rendered'] = true; ?>
 	<header class="md-community-hero">
 		<p class="md-community-hero__eyebrow"><?php esc_html_e( 'Community', 'manual-docs' ); ?></p>
 		<h1 class="md-community-hero__title"><?php echo esc_html( $title ); ?></h1>
@@ -129,7 +130,7 @@ function manual_docs_render_community_hero( $title ) {
 }
 
 /**
- * Render stats bar + single Subscribe control.
+ * Render stats bar + Create Topic + Favorite/Subscribe.
  */
 function manual_docs_render_community_toolbar() {
 	$stats = manual_docs_community_stats();
@@ -140,46 +141,177 @@ function manual_docs_render_community_toolbar() {
 			<span><strong><?php echo esc_html( number_format_i18n( $stats['replies'] ) ); ?></strong> <?php esc_html_e( 'Replies', 'manual-docs' ); ?></span>
 		</p>
 		<div class="md-community-toolbar__actions">
-			<?php
-			$GLOBALS['md_rendering_subscribe_toolbar'] = true;
-			if ( function_exists( 'bbp_is_single_forum' ) && bbp_is_single_forum() && function_exists( 'bbp_get_forum_subscription_link' ) ) {
-				echo bbp_get_forum_subscription_link( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					array(
-						'before'      => '',
-						'after'       => '',
-						'subscribe'   => __( 'Subscribe', 'manual-docs' ),
-						'unsubscribe' => __( 'Unsubscribe', 'manual-docs' ),
-					)
-				);
-			} elseif ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() && function_exists( 'bbp_get_topic_subscription_link' ) ) {
-				if ( function_exists( 'bbp_get_topic_favorite_link' ) ) {
-					echo bbp_get_topic_favorite_link( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						array(
-							'before' => '',
-							'after'  => '',
-						)
-					);
-				} elseif ( function_exists( 'bbp_get_user_favorites_link' ) ) {
-					echo bbp_get_user_favorites_link(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				}
-				echo bbp_get_topic_subscription_link( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					array(
-						'before'      => '',
-						'after'       => '',
-						'subscribe'   => __( 'Subscribe', 'manual-docs' ),
-						'unsubscribe' => __( 'Unsubscribe', 'manual-docs' ),
-					)
-				);
-			}
-			$GLOBALS['md_rendering_subscribe_toolbar'] = false;
-			?>
+			<?php manual_docs_render_create_topic_button(); ?>
+			<?php manual_docs_render_engagement_buttons(); ?>
 		</div>
 	</div>
 	<?php
 }
 
 /**
- * Hide default bbPress subscribe/favorite in topic header (we render one set in toolbar).
+ * Resolve a forum ID for the Create Topic CTA.
+ *
+ * @return int
+ */
+function manual_docs_get_create_topic_forum_id() {
+	if ( function_exists( 'bbp_is_single_forum' ) && bbp_is_single_forum() ) {
+		return (int) bbp_get_forum_id();
+	}
+	if ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() && function_exists( 'bbp_get_topic_forum_id' ) ) {
+		$topic_id = (int) bbp_get_topic_id();
+		if ( ! $topic_id ) {
+			$topic_id = (int) get_queried_object_id();
+		}
+		return (int) bbp_get_topic_forum_id( $topic_id );
+	}
+	if ( function_exists( 'bbp_is_single_reply' ) && bbp_is_single_reply() && function_exists( 'bbp_get_reply_forum_id' ) ) {
+		return (int) bbp_get_reply_forum_id();
+	}
+
+	if ( function_exists( 'manual_docs_get_academy_forum' ) ) {
+		$academy = manual_docs_get_academy_forum();
+		if ( $academy ) {
+			return (int) $academy->ID;
+		}
+	}
+
+	$q = new WP_Query(
+		array(
+			'post_type'              => function_exists( 'bbp_get_forum_post_type' ) ? bbp_get_forum_post_type() : 'forum',
+			'post_status'            => 'publish',
+			'posts_per_page'         => 1,
+			'orderby'                => 'menu_order title',
+			'order'                  => 'ASC',
+			'post_parent'            => 0,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		)
+	);
+	return ! empty( $q->posts[0] ) ? (int) $q->posts[0] : 0;
+}
+
+/**
+ * “Create Topic” CTA for forums / topics / replies views.
+ */
+function manual_docs_render_create_topic_button() {
+	$label    = __( 'Create Topic', 'manual-docs' );
+	$forum_id = manual_docs_get_create_topic_forum_id();
+	$url      = '';
+
+	if ( ! is_user_logged_in() ) {
+		$redirect = $forum_id && function_exists( 'bbp_get_forum_permalink' )
+			? bbp_get_forum_permalink( $forum_id ) . '#new-post'
+			: ( function_exists( 'manual_docs_bbpress_directory_url' ) ? manual_docs_bbpress_directory_url( 'forums' ) : home_url( '/' ) );
+		$url   = wp_login_url( $redirect );
+		$label = __( 'Log in to create a topic', 'manual-docs' );
+	} elseif ( $forum_id && function_exists( 'bbp_get_forum_permalink' ) ) {
+		$can_create = true;
+		if ( function_exists( 'bbp_current_user_can_access_create_topic_form' ) && function_exists( 'bbp_is_single_forum' ) && bbp_is_single_forum() ) {
+			$can_create = (bool) bbp_current_user_can_access_create_topic_form();
+		} elseif ( function_exists( 'bbp_current_user_can_publish_topics' ) ) {
+			$can_create = (bool) bbp_current_user_can_publish_topics();
+		} elseif ( ! current_user_can( 'publish_topics' ) ) {
+			$can_create = false;
+		}
+		if ( $can_create ) {
+			$url = bbp_get_forum_permalink( $forum_id ) . '#new-post';
+		}
+	}
+
+	if ( ! $url ) {
+		return;
+	}
+	?>
+	<a class="md-btn md-btn--primary md-btn--create-topic" href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $label ); ?></a>
+	<?php
+}
+
+/**
+ * Favorite + Subscribe with bbPress engagement wrappers (AJAX-ready).
+ */
+function manual_docs_render_engagement_buttons() {
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	$GLOBALS['md_rendering_subscribe_toolbar'] = true;
+
+	$args = array(
+		'before'      => '',
+		'after'       => '',
+		'subscribe'   => __( 'Subscribe', 'manual-docs' ),
+		'unsubscribe' => __( 'Unsubscribe', 'manual-docs' ),
+		'favorite'    => __( 'Favorite', 'manual-docs' ),
+		'favorited'   => __( 'Unfavorite', 'manual-docs' ),
+	);
+
+	if ( function_exists( 'bbp_is_single_forum' ) && bbp_is_single_forum() && function_exists( 'bbp_get_forum_subscription_link' ) ) {
+		$object_id = (int) bbp_get_forum_id();
+		if ( ! $object_id ) {
+			$object_id = (int) get_queried_object_id();
+		}
+		$args['object_id'] = $object_id;
+		$html              = bbp_get_forum_subscription_link( $args );
+		if ( $html ) {
+			echo '<span class="md-engagement md-engagement--subscribe">' . $html . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+	} elseif ( ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() )
+		|| ( function_exists( 'bbp_is_single_reply' ) && bbp_is_single_reply() ) ) {
+		$object_id = (int) bbp_get_topic_id();
+		if ( ! $object_id ) {
+			$object_id = (int) get_queried_object_id();
+		}
+		$args['object_id'] = $object_id;
+
+		if ( function_exists( 'bbp_get_topic_favorite_link' ) ) {
+			$html = bbp_get_topic_favorite_link( $args );
+			if ( $html ) {
+				echo '<span class="md-engagement md-engagement--favorite">' . $html . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
+		}
+		if ( function_exists( 'bbp_get_topic_subscription_link' ) ) {
+			$html = bbp_get_topic_subscription_link( $args );
+			if ( $html ) {
+				echo '<span class="md-engagement md-engagement--subscribe">' . $html . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
+		}
+	}
+
+	$GLOBALS['md_rendering_subscribe_toolbar'] = false;
+}
+
+/**
+ * Keep Favorite/Subscribe labels clean (no pipe separators) after AJAX refresh.
+ *
+ * @param array $args Parse args.
+ * @return array
+ */
+function manual_docs_engagement_parse_args( $args ) {
+	if ( empty( $GLOBALS['md_rendering_subscribe_toolbar'] ) && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		return $args;
+	}
+	$args['before'] = '';
+	$args['after']  = '';
+	if ( array_key_exists( 'subscribe', $args ) ) {
+		$args['subscribe']   = __( 'Subscribe', 'manual-docs' );
+		$args['unsubscribe'] = __( 'Unsubscribe', 'manual-docs' );
+	}
+	if ( array_key_exists( 'favorite', $args ) ) {
+		$args['favorite']  = __( 'Favorite', 'manual-docs' );
+		$args['favorited'] = __( 'Unfavorite', 'manual-docs' );
+	}
+	return $args;
+}
+add_filter( 'bbp_before_get_user_subscribe_link_parse_args', 'manual_docs_engagement_parse_args' );
+add_filter( 'bbp_before_get_user_favorites_link_parse_args', 'manual_docs_engagement_parse_args' );
+add_filter( 'bbp_before_get_topic_subscribe_link_parse_args', 'manual_docs_engagement_parse_args' );
+add_filter( 'bbp_before_get_topic_favorite_link_parse_args', 'manual_docs_engagement_parse_args' );
+add_filter( 'bbp_before_get_forum_subscribe_link_parse_args', 'manual_docs_engagement_parse_args' );
+
+/**
+ * Hide default bbPress subscribe/favorite in topic chrome (toolbar owns the only set).
  *
  * @param string $html Link HTML.
  * @return string
@@ -188,23 +320,83 @@ function manual_docs_suppress_duplicate_topic_actions( $html ) {
 	if ( ! empty( $GLOBALS['md_rendering_subscribe_toolbar'] ) ) {
 		return $html;
 	}
+	// AJAX engagement responses must pass through or Favorite/Subscribe appear broken.
+	if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ( function_exists( 'bbp_is_ajax' ) && bbp_is_ajax() ) ) {
+		return $html;
+	}
 	if ( is_admin() ) {
 		return $html;
 	}
-	// Keep favorites/subscribe on profiles and directories.
 	if ( function_exists( 'bbp_is_single_user' ) && bbp_is_single_user() ) {
 		return $html;
 	}
 	if ( ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() )
-		|| ( function_exists( 'bbp_is_single_forum' ) && bbp_is_single_forum() ) ) {
+		|| ( function_exists( 'bbp_is_single_forum' ) && bbp_is_single_forum() )
+		|| ( function_exists( 'bbp_is_single_reply' ) && bbp_is_single_reply() ) ) {
 		return '';
 	}
 	return $html;
 }
+add_filter( 'bbp_get_user_subscribe_link', 'manual_docs_suppress_duplicate_topic_actions', 5 );
 add_filter( 'bbp_get_topic_subscribe_link', 'manual_docs_suppress_duplicate_topic_actions', 5 );
 add_filter( 'bbp_get_forum_subscribe_link', 'manual_docs_suppress_duplicate_topic_actions', 5 );
 add_filter( 'bbp_get_topic_favorite_link', 'manual_docs_suppress_duplicate_topic_actions', 5 );
 add_filter( 'bbp_get_user_favorites_link', 'manual_docs_suppress_duplicate_topic_actions', 5 );
+
+/**
+ * Ensure bbPress engagements (Favorite/Subscribe AJAX) scripts load on community pages.
+ */
+function manual_docs_enqueue_bbpress_engagements() {
+	if ( ! function_exists( 'is_bbpress' ) || ! is_bbpress() ) {
+		return;
+	}
+	if ( ! function_exists( 'bbp_is_single_forum' ) ) {
+		return;
+	}
+	if ( ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! ( function_exists( 'bbp_is_single_reply' ) && bbp_is_single_reply() ) ) {
+		return;
+	}
+
+	$src = '';
+	if ( function_exists( 'bbp_get_theme_compat_url' ) ) {
+		$src = trailingslashit( bbp_get_theme_compat_url() ) . 'js/engagements.js';
+	} elseif ( defined( 'BBPRESS_PLUGIN_URL' ) ) {
+		$src = BBPRESS_PLUGIN_URL . 'templates/default/js/engagements.js';
+	}
+
+	if ( ! wp_script_is( 'bbpress-engagements', 'registered' ) && $src ) {
+		$ver = function_exists( 'bbp_get_version' ) ? bbp_get_version() : MANUAL_DOCS_VERSION;
+		wp_register_script( 'bbpress-engagements', $src, array( 'jquery' ), $ver, true );
+	}
+
+	if ( wp_script_is( 'bbpress-engagements', 'registered' ) || wp_script_is( 'bbpress-engagements', 'enqueued' ) ) {
+		wp_enqueue_script( 'bbpress-engagements' );
+	}
+
+	if ( function_exists( 'bbp_get_ajax_url' ) && ( wp_script_is( 'bbpress-engagements', 'enqueued' ) || wp_script_is( 'bbpress-engagements', 'registered' ) ) ) {
+		wp_localize_script(
+			'bbpress-engagements',
+			'bbpEngagementJS',
+			array(
+				'bbp_ajaxurl'        => bbp_get_ajax_url(),
+				'generic_ajax_error' => __( 'Something went wrong. Refresh your browser and try again.', 'manual-docs' ),
+			)
+		);
+	}
+}
+add_action( 'wp_enqueue_scripts', 'manual_docs_enqueue_bbpress_engagements', 40 );
+
+/**
+ * Remove the native bbPress search form above forum/topic cards (hero search replaces it).
+ *
+ * @param string $form Search form HTML.
+ * @return string
+ */
+function manual_docs_remove_inline_bbpress_search( $form ) {
+	unset( $form );
+	return '';
+}
+add_filter( 'bbp_get_search_form', 'manual_docs_remove_inline_bbpress_search', 99 );
 
 /**
  * Initials from a display name.
@@ -364,24 +556,6 @@ function manual_docs_community_avatar_html( $user_id, $size = 44 ) {
 }
 
 /**
- * Style subscription links as primary buttons.
- *
- * @param string $html Link HTML.
- * @return string
- */
-function manual_docs_style_subscription_link( $html ) {
-	if ( ! $html || empty( $GLOBALS['md_rendering_subscribe_toolbar'] ) ) {
-		return $html;
-	}
-	if ( false !== strpos( $html, 'md-btn--subscribe' ) ) {
-		return $html;
-	}
-	return preg_replace( '/class="([^"]*)"/', 'class="$1 md-btn md-btn--primary md-btn--subscribe"', $html, 1 );
-}
-add_filter( 'bbp_get_forum_subscribe_link', 'manual_docs_style_subscription_link', 20 );
-add_filter( 'bbp_get_topic_subscribe_link', 'manual_docs_style_subscription_link', 20 );
-
-/**
  * Whether a sidebar widget id should be hidden on the community sidebar.
  *
  * @param string $widget_id Widget id (e.g. archives-2, block-5).
@@ -459,18 +633,25 @@ function manual_docs_filter_community_sidebar_widgets( $instance, $widget, $args
 add_filter( 'widget_display_callback', 'manual_docs_filter_community_sidebar_widgets', 10, 3 );
 
 /**
- * Hide meaningless “Viewing 0 posts” counts (common above new-topic forms).
+ * Hide meaningless “Viewing 0 posts” counts and relabel reply views as replies.
  *
  * @param string $ret Count HTML/text.
  * @return string
  */
-function manual_docs_hide_zero_posts_pagination( $ret ) {
+function manual_docs_filter_pagination_count( $ret ) {
 	$text = wp_strip_all_tags( (string) $ret );
-	if ( preg_match( '/\b0\s+posts?\b/i', $text ) ) {
+	if ( preg_match( '/\b0\s+(?:posts?|replies|reply)\b/i', $text ) ) {
 		return '';
+	}
+	// Topic/reply threads: bbPress says “posts”; community copy should say “replies”.
+	if ( ( function_exists( 'bbp_is_single_topic' ) && bbp_is_single_topic() )
+		|| ( function_exists( 'bbp_is_single_reply' ) && bbp_is_single_reply() )
+		|| ( function_exists( 'bbp_is_reply_edit' ) && bbp_is_reply_edit() ) ) {
+		$ret = preg_replace( '/\bposts\b/i', 'replies', (string) $ret );
+		$ret = preg_replace( '/\bpost\b/i', 'reply', $ret );
 	}
 	return $ret;
 }
-add_filter( 'bbp_get_topic_pagination_count', 'manual_docs_hide_zero_posts_pagination' );
-add_filter( 'bbp_get_reply_pagination_count', 'manual_docs_hide_zero_posts_pagination' );
-add_filter( 'bbp_get_forum_pagination_count', 'manual_docs_hide_zero_posts_pagination' );
+add_filter( 'bbp_get_topic_pagination_count', 'manual_docs_filter_pagination_count' );
+add_filter( 'bbp_get_reply_pagination_count', 'manual_docs_filter_pagination_count' );
+add_filter( 'bbp_get_forum_pagination_count', 'manual_docs_filter_pagination_count' );
