@@ -114,14 +114,37 @@ p { margin: 0 0 1em; }
 }
 .md-btn:hover { transform: translateY(-1px); text-decoration: none; }
 .md-btn--primary { background: var(--md-accent); color: #fff; }
-.md-btn--primary:hover { filter: brightness(1.05); color: #fff; }
+.md-btn--primary:hover,
+.md-btn--primary:focus { filter: brightness(1.05); color: #fff; }
 .md-btn--ghost { background: rgba(255,255,255,0.06); color: var(--md-ink); border-color: var(--md-line); }
-.md-btn--ghost:hover { background: var(--md-surface); color: var(--md-ink); }
+.md-btn--ghost:hover,
+.md-btn--ghost:focus { background: var(--md-surface); color: var(--md-ink); }
 html[data-md-theme="light"] .md-btn--ghost {
   background: #f1f5f9; color: var(--md-ink);
 }
-html[data-md-theme="light"] .md-btn--ghost:hover {
-  background: #e2e8f0;
+html[data-md-theme="light"] .md-btn--ghost:hover,
+html[data-md-theme="light"] .md-btn--ghost:focus {
+  background: #e2e8f0; color: var(--md-ink);
+}
+/* Keep button label contrast when buttons are <a> inside .md-doc-content */
+.md-doc-content a.md-btn--primary,
+.md-doc-content a.md-btn--primary:hover,
+.md-doc-content a.md-btn--primary:focus,
+.md-diff__actions a.md-btn--primary,
+.md-diff__actions a.md-btn--primary:hover,
+.md-diff__actions a.md-btn--primary:focus {
+  color: #fff;
+  background: var(--md-accent);
+  text-decoration: none;
+}
+.md-doc-content a.md-btn--ghost,
+.md-doc-content a.md-btn--ghost:hover,
+.md-doc-content a.md-btn--ghost:focus,
+.md-diff__actions a.md-btn--ghost,
+.md-diff__actions a.md-btn--ghost:hover,
+.md-diff__actions a.md-btn--ghost:focus {
+  color: var(--md-ink);
+  text-decoration: none;
 }
 .md-btn--sm { padding: 0.5rem 0.8rem; font-size: 0.875rem; }
 

@@ -760,9 +760,20 @@ html[data-md-theme=\"{$mode}\"] .md-docs-tree a,
 html[data-md-theme=\"{$mode}\"] .md-menu a,
 html[data-md-theme=\"{$mode}\"] .md-header a,
 html[data-md-theme=\"{$mode}\"] .md-meta-item { color: var(--md-text); }
-html[data-md-theme=\"{$mode}\"] .md-doc-content a,
+html[data-md-theme=\"{$mode}\"] .md-doc-content a:not(.md-btn),
 html[data-md-theme=\"{$mode}\"] .md-doc-toc__list a.is-active,
 html[data-md-theme=\"{$mode}\"] .md-doc-toc__list a:hover { color: var(--md-link); }
+html[data-md-theme=\"{$mode}\"] .md-doc-content a.md-btn--primary,
+html[data-md-theme=\"{$mode}\"] .md-doc-content a.md-btn--primary:hover,
+html[data-md-theme=\"{$mode}\"] .md-doc-content a.md-btn--primary:focus {
+	color: #fff;
+	background: var(--md-accent);
+}
+html[data-md-theme=\"{$mode}\"] .md-doc-content a.md-btn--ghost,
+html[data-md-theme=\"{$mode}\"] .md-doc-content a.md-btn--ghost:hover,
+html[data-md-theme=\"{$mode}\"] .md-doc-content a.md-btn--ghost:focus {
+	color: var(--md-ink);
+}
 html[data-md-theme=\"{$mode}\"] .md-doc-toc__list a,
 html[data-md-theme=\"{$mode}\"] .md-breadcrumb,
 html[data-md-theme=\"{$mode}\"] .md-breadcrumb a { color: var(--md-muted); }
