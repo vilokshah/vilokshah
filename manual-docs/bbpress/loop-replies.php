@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<li class="bbp-footer md-reply-list__footer">
 		<div class="tr">
 			<div class="td">
-				<?php bbp_reply_pagination_count(); ?>
+				<?php bbp_topic_pagination_count(); ?>
 			</div>
 		</div>
 	</li>

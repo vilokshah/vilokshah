@@ -653,5 +653,4 @@ function manual_docs_filter_pagination_count( $ret ) {
 	return $ret;
 }
 add_filter( 'bbp_get_topic_pagination_count', 'manual_docs_filter_pagination_count' );
-add_filter( 'bbp_get_reply_pagination_count', 'manual_docs_filter_pagination_count' );
 add_filter( 'bbp_get_forum_pagination_count', 'manual_docs_filter_pagination_count' );
