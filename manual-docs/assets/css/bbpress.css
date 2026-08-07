@@ -194,30 +194,30 @@
   margin-bottom: 1rem;
 }
 
-/* Explicit light overrides for older bbPress default CSS */
+/* Explicit light/dark polish — still driven by theme CSS variables */
 html[data-md-theme="light"] .md-bbpress {
-  background: #ffffff;
-  border-color: #dbe3ee;
-  color: #334155;
+  background: var(--md-surface);
+  border-color: var(--md-line);
+  color: var(--md-text);
 }
 
 html[data-md-theme="light"] .md-bbpress #bbpress-forums ul.bbp-forums,
 html[data-md-theme="light"] .md-bbpress #bbpress-forums ul.bbp-topics,
 html[data-md-theme="light"] .md-bbpress #bbpress-forums ul.bbp-replies,
 html[data-md-theme="light"] .md-bbpress #bbpress-forums ul.bbp-search-results {
-  background: #ffffff;
-  border-color: #dbe3ee;
+  background: var(--md-surface);
+  border-color: var(--md-line);
 }
 
 html[data-md-theme="light"] .md-bbpress #bbpress-forums li.bbp-header,
 html[data-md-theme="light"] .md-bbpress #bbpress-forums li.bbp-footer {
-  background: #f8fafc;
-  color: #64748b;
+  background: var(--md-sidebar-bg);
+  color: var(--md-muted);
 }
 
 html[data-md-theme="light"] .md-bbpress #bbpress-forums .bbp-forum-title,
 html[data-md-theme="light"] .md-bbpress #bbpress-forums .bbp-topic-permalink {
-  color: #0f172a;
+  color: var(--md-ink);
 }
 
 html[data-md-theme="light"] .md-bbpress #bbpress-forums input[type="text"],
@@ -226,9 +226,9 @@ html[data-md-theme="light"] .md-bbpress #bbpress-forums input[type="email"],
 html[data-md-theme="light"] .md-bbpress #bbpress-forums input[type="url"],
 html[data-md-theme="light"] .md-bbpress #bbpress-forums textarea,
 html[data-md-theme="light"] .md-bbpress #bbpress-forums select {
-  background: #ffffff;
-  color: #0f172a;
-  border-color: #dbe3ee;
+  background: var(--md-surface);
+  color: var(--md-text);
+  border-color: var(--md-line);
 }
 
 html[data-md-theme="dark"] .md-bbpress {

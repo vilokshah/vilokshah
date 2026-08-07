@@ -62,7 +62,7 @@ Switcher finds the matching doc under another root by relative slug path, then t
 - Brand name, home hero copy, footer text
 - **Dark + light logos** — separate uploads that swap with the theme toggle (fallback: Site Identity logo)
 - **Heading / body font families** — curated Google Fonts + System UI
-- Colors: accents/links apply to both themes; backgrounds + body text customize Dark only (Light keeps a fixed readable palette)
+- Colors: separate **Dark theme colors** and **Light theme colors** pickers (accents, backgrounds, text)
 - Version roots (slugs or IDs), switcher label, default version
 - Require login, TOC/PDF/updated/edit toggles, community CTA
 - Light/dark toggle on the front-end header (both themes are fully styled)

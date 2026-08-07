@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function manual_docs_default_options() {
 	return array(
 		'require_login'        => 1,
+		// Dark theme palette (legacy keys kept for backward compatibility).
 		'primary_color'        => '#e8eef7',
 		'accent_color'         => '#3b82f6',
 		'header_bg'            => '#0b1220',
@@ -27,6 +28,19 @@ function manual_docs_default_options() {
 		'link_color'           => '#60a5fa',
 		'pdf_color'            => '#f87171',
 		'active_bar_color'     => '#f43f5e',
+		'footer_cta_color'     => '#e11d48',
+		// Light theme palette (independent).
+		'light_primary_color'    => '#0f172a',
+		'light_accent_color'     => '#2563eb',
+		'light_header_bg'        => '#ffffff',
+		'light_sidebar_bg'       => '#f8fafc',
+		'light_content_bg'       => '#ffffff',
+		'light_page_bg'          => '#eef2f7',
+		'light_text_color'       => '#334155',
+		'light_link_color'       => '#1d4ed8',
+		'light_pdf_color'        => '#dc2626',
+		'light_active_bar_color' => '#e11d48',
+		'light_footer_cta_color' => '#e11d48',
 		'brand_name'           => '',
 		'hero_title'           => __( 'Documentation', 'manual-docs' ),
 		'hero_text'            => __( 'Search guides, explore products, and find answers fast.', 'manual-docs' ),
@@ -52,7 +66,6 @@ function manual_docs_default_options() {
 		'pdf_watermark'        => 'Digitate Docs',
 		'footer_text'          => '',
 		'footer_copyright'     => '',
-		'footer_cta_color'     => '#e11d48',
 		'logo_dark_id'         => 0,
 		'logo_light_id'        => 0,
 		'font_display'         => 'sora',
@@ -194,7 +207,30 @@ function manual_docs_save_options() {
 	}
 
 	$clean = array();
-	$color_keys = array( 'primary_color', 'accent_color', 'header_bg', 'sidebar_bg', 'content_bg', 'page_bg', 'text_color', 'link_color', 'pdf_color', 'active_bar_color', 'footer_cta_color' );
+	$color_keys = array(
+		'primary_color',
+		'accent_color',
+		'header_bg',
+		'sidebar_bg',
+		'content_bg',
+		'page_bg',
+		'text_color',
+		'link_color',
+		'pdf_color',
+		'active_bar_color',
+		'footer_cta_color',
+		'light_primary_color',
+		'light_accent_color',
+		'light_header_bg',
+		'light_sidebar_bg',
+		'light_content_bg',
+		'light_page_bg',
+		'light_text_color',
+		'light_link_color',
+		'light_pdf_color',
+		'light_active_bar_color',
+		'light_footer_cta_color',
+	);
 	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'login_page_path', 'pdf_watermark', 'footer_text', 'footer_copyright', 'font_display', 'font_body', 'tree_scope' );
 	$bool_keys  = array( 'require_login', 'show_community_cta', 'show_toc', 'show_pdf', 'show_updated', 'show_edit_link', 'tree_expand_active', 'tree_lazy', 'hide_docs_archive' );
 	$int_keys   = array( 'logo_dark_id', 'logo_light_id' );
@@ -398,28 +434,54 @@ function manual_docs_render_options_page() {
 				</tr>
 			</table>
 
-			<h2 class="title"><?php esc_html_e( 'Colors', 'manual-docs' ); ?></h2>
-			<p class="description"><?php esc_html_e( 'Accent, link, PDF, active bar, and Subscribe colors apply to both Dark and Light. Header / sidebar / content / page backgrounds and body text apply to Dark only — Light keeps its own readable palette so contrast stays clean.', 'manual-docs' ); ?></p>
+			<h2 class="title"><?php esc_html_e( 'Dark theme colors', 'manual-docs' ); ?></h2>
+			<p class="description"><?php esc_html_e( 'Used when the front-end toggle is on Dark. Existing sites keep these values from earlier versions.', 'manual-docs' ); ?></p>
 			<table class="form-table" role="presentation">
 				<?php
-				$colors = array(
-					'primary_color'    => __( 'Primary / header text (Dark)', 'manual-docs' ),
-					'accent_color'     => __( 'Accent (both themes)', 'manual-docs' ),
-					'link_color'       => __( 'Link color (both themes)', 'manual-docs' ),
-					'active_bar_color' => __( 'Active tree bar (both themes)', 'manual-docs' ),
-					'pdf_color'        => __( 'PDF button (both themes)', 'manual-docs' ),
-					'footer_cta_color' => __( 'Footer Subscribe button (both themes)', 'manual-docs' ),
-					'header_bg'        => __( 'Header background (Dark)', 'manual-docs' ),
-					'sidebar_bg'       => __( 'Sidebar background (Dark)', 'manual-docs' ),
-					'content_bg'       => __( 'Content panel background (Dark)', 'manual-docs' ),
-					'page_bg'          => __( 'Page background (Dark)', 'manual-docs' ),
-					'text_color'       => __( 'Body text (Dark)', 'manual-docs' ),
+				$dark_colors = array(
+					'primary_color'    => __( 'Primary / headings', 'manual-docs' ),
+					'accent_color'     => __( 'Accent', 'manual-docs' ),
+					'link_color'       => __( 'Link color', 'manual-docs' ),
+					'active_bar_color' => __( 'Active tree bar', 'manual-docs' ),
+					'pdf_color'        => __( 'PDF button', 'manual-docs' ),
+					'footer_cta_color' => __( 'Footer Subscribe button', 'manual-docs' ),
+					'header_bg'        => __( 'Header background', 'manual-docs' ),
+					'sidebar_bg'       => __( 'Sidebar background', 'manual-docs' ),
+					'content_bg'       => __( 'Content panel background', 'manual-docs' ),
+					'page_bg'          => __( 'Page background', 'manual-docs' ),
+					'text_color'       => __( 'Body text', 'manual-docs' ),
 				);
-				foreach ( $colors as $key => $label ) :
+				foreach ( $dark_colors as $key => $label ) :
 					?>
 					<tr>
 						<th><label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label></th>
 						<td><input class="md-color-field" type="text" id="<?php echo esc_attr( $key ); ?>" name="manual_docs_options[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $o[ $key ] ); ?>" /></td>
+					</tr>
+				<?php endforeach; ?>
+			</table>
+
+			<h2 class="title"><?php esc_html_e( 'Light theme colors', 'manual-docs' ); ?></h2>
+			<p class="description"><?php esc_html_e( 'Used when the front-end toggle is on Light. Completely separate from Dark — change one without affecting the other.', 'manual-docs' ); ?></p>
+			<table class="form-table" role="presentation">
+				<?php
+				$light_colors = array(
+					'light_primary_color'    => __( 'Primary / headings', 'manual-docs' ),
+					'light_accent_color'     => __( 'Accent', 'manual-docs' ),
+					'light_link_color'       => __( 'Link color', 'manual-docs' ),
+					'light_active_bar_color' => __( 'Active tree bar', 'manual-docs' ),
+					'light_pdf_color'        => __( 'PDF button', 'manual-docs' ),
+					'light_footer_cta_color' => __( 'Footer Subscribe button', 'manual-docs' ),
+					'light_header_bg'        => __( 'Header background', 'manual-docs' ),
+					'light_sidebar_bg'       => __( 'Sidebar background', 'manual-docs' ),
+					'light_content_bg'       => __( 'Content panel background', 'manual-docs' ),
+					'light_page_bg'          => __( 'Page background', 'manual-docs' ),
+					'light_text_color'       => __( 'Body text', 'manual-docs' ),
+				);
+				foreach ( $light_colors as $key => $label ) :
+					?>
+					<tr>
+						<th><label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label></th>
+						<td><input class="md-color-field" type="text" id="<?php echo esc_attr( $key ); ?>" name="manual_docs_options[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( isset( $o[ $key ] ) ? $o[ $key ] : '' ); ?>" /></td>
 					</tr>
 				<?php endforeach; ?>
 			</table>
@@ -614,6 +676,102 @@ function manual_docs_options_css() {
 add_action( 'wp_head', 'manual_docs_options_css', 100 );
 
 /**
+ * Build CSS custom properties + component hooks for one theme mode.
+ *
+ * @param string $mode   'dark' or 'light'.
+ * @param array  $colors Escaped hex colors: primary, accent, link, pdf, bar, header, sidebar, content, page, text, cta.
+ * @return string
+ */
+function manual_docs_palette_css_block( $mode, $colors ) {
+	$mode     = ( 'light' === $mode ) ? 'light' : 'dark';
+	$primary  = $colors['primary'];
+	$accent   = $colors['accent'];
+	$link     = $colors['link'];
+	$pdf      = $colors['pdf'];
+	$bar      = $colors['bar'];
+	$header   = $colors['header'];
+	$sidebar  = $colors['sidebar'];
+	$content  = $colors['content'];
+	$page     = $colors['page'];
+	$text     = $colors['text'];
+	$cta      = $colors['cta'];
+	$line_mix = ( 'light' === $mode ) ? '82%' : '70%';
+	$muted_mix = ( 'light' === $mode ) ? '55%' : '72%';
+
+	return "
+html[data-md-theme=\"{$mode}\"] {
+	--md-primary: {$primary};
+	--md-accent: {$accent};
+	--md-accent-soft: color-mix(in srgb, {$accent} 16%, transparent);
+	--md-link: {$link};
+	--md-pdf: {$pdf};
+	--md-active-bar: {$bar};
+	--md-footer-cta: {$cta};
+	--md-header-bg: {$header};
+	--md-sidebar-bg: {$sidebar};
+	--md-content-bg: {$content};
+	--md-page-bg: {$page};
+	--md-text: {$text};
+	--md-ink: {$primary};
+	--md-surface: {$content};
+	--md-muted: color-mix(in srgb, {$text} {$muted_mix}, #64748b);
+	--md-line: color-mix(in srgb, {$content} {$line_mix}, #94a3b8);
+}
+html[data-md-theme=\"{$mode}\"] body { background: var(--md-page-bg); color: var(--md-text); }
+html[data-md-theme=\"{$mode}\"] h1,
+html[data-md-theme=\"{$mode}\"] h2,
+html[data-md-theme=\"{$mode}\"] h3,
+html[data-md-theme=\"{$mode}\"] h4,
+html[data-md-theme=\"{$mode}\"] h5,
+html[data-md-theme=\"{$mode}\"] h6,
+html[data-md-theme=\"{$mode}\"] .md-doc-title,
+html[data-md-theme=\"{$mode}\"] .md-page-title,
+html[data-md-theme=\"{$mode}\"] .md-brand__text,
+html[data-md-theme=\"{$mode}\"] .md-hero__title { color: var(--md-ink); }
+html[data-md-theme=\"{$mode}\"] .md-header { background: var(--md-header-bg); border-bottom-color: var(--md-line); }
+html[data-md-theme=\"{$mode}\"] .md-docs-sidebar { background: var(--md-sidebar-bg); border-right-color: var(--md-line); }
+html[data-md-theme=\"{$mode}\"] .md-doc-article,
+html[data-md-theme=\"{$mode}\"] .md-archive,
+html[data-md-theme=\"{$mode}\"] .md-docs-shell { background: var(--md-content-bg); }
+html[data-md-theme=\"{$mode}\"] .md-doc-content,
+html[data-md-theme=\"{$mode}\"] .md-doc-toc__card,
+html[data-md-theme=\"{$mode}\"] .md-version-switcher,
+html[data-md-theme=\"{$mode}\"] .md-doc-pager__link,
+html[data-md-theme=\"{$mode}\"] .md-docs-search-modal__dialog,
+html[data-md-theme=\"{$mode}\"] .md-live-search__results { background: var(--md-surface); color: var(--md-text); border-color: var(--md-line); }
+html[data-md-theme=\"{$mode}\"] .md-doc-content h1,
+html[data-md-theme=\"{$mode}\"] .md-doc-content h2,
+html[data-md-theme=\"{$mode}\"] .md-doc-content h3,
+html[data-md-theme=\"{$mode}\"] .md-doc-content h4 { color: var(--md-ink); }
+html[data-md-theme=\"{$mode}\"] .md-doc-content p,
+html[data-md-theme=\"{$mode}\"] .md-doc-content li,
+html[data-md-theme=\"{$mode}\"] .md-doc-content td,
+html[data-md-theme=\"{$mode}\"] .md-doc-nav a,
+html[data-md-theme=\"{$mode}\"] .md-docs-tree a,
+html[data-md-theme=\"{$mode}\"] .md-menu a,
+html[data-md-theme=\"{$mode}\"] .md-header a,
+html[data-md-theme=\"{$mode}\"] .md-meta-item { color: var(--md-text); }
+html[data-md-theme=\"{$mode}\"] .md-doc-content a,
+html[data-md-theme=\"{$mode}\"] .md-doc-toc__list a.is-active,
+html[data-md-theme=\"{$mode}\"] .md-doc-toc__list a:hover { color: var(--md-link); }
+html[data-md-theme=\"{$mode}\"] .md-doc-toc__list a,
+html[data-md-theme=\"{$mode}\"] .md-breadcrumb,
+html[data-md-theme=\"{$mode}\"] .md-breadcrumb a { color: var(--md-muted); }
+html[data-md-theme=\"{$mode}\"] .md-version-select { color: var(--md-ink); }
+html[data-md-theme=\"{$mode}\"] .md-badge { background: var(--md-accent-soft); color: var(--md-accent); }
+html[data-md-theme=\"{$mode}\"] .md-doc-nav__item.is-active > a {
+	border-left-color: var(--md-active-bar);
+	color: var(--md-link);
+	background: var(--md-accent-soft);
+}
+html[data-md-theme=\"{$mode}\"] .md-meta-pdf,
+html[data-md-theme=\"{$mode}\"] .md-meta-pdf:hover { color: var(--md-pdf); }
+html[data-md-theme=\"{$mode}\"] .md-footer-newsletter__submit { background: var(--md-footer-cta); }
+html[data-md-theme=\"{$mode}\"] .md-footer { border-top-color: var(--md-line); }
+";
+}
+
+/**
  * Build options CSS text.
  *
  * @return string
@@ -625,86 +783,54 @@ function manual_docs_get_options_css_text() {
 	$font_display = preg_replace( '/[^a-zA-Z0-9\s,\-"\']/', '', $font_display );
 	$font_body    = preg_replace( '/[^a-zA-Z0-9\s,\-"\']/', '', $font_body );
 
-	$primary = esc_html( $o['primary_color'] );
-	$accent  = esc_html( $o['accent_color'] );
-	$link    = esc_html( $o['link_color'] );
-	$pdf     = esc_html( $o['pdf_color'] );
-	$bar     = esc_html( $o['active_bar_color'] );
-	$header  = esc_html( $o['header_bg'] );
-	$sidebar = esc_html( $o['sidebar_bg'] );
-	$content = esc_html( $o['content_bg'] );
-	$page    = esc_html( $o['page_bg'] );
-	$text    = esc_html( $o['text_color'] );
-	$cta     = esc_html( ! empty( $o['footer_cta_color'] ) ? $o['footer_cta_color'] : '#e11d48' );
+	$dark = array(
+		'primary' => esc_html( $o['primary_color'] ),
+		'accent'  => esc_html( $o['accent_color'] ),
+		'link'    => esc_html( $o['link_color'] ),
+		'pdf'     => esc_html( $o['pdf_color'] ),
+		'bar'     => esc_html( $o['active_bar_color'] ),
+		'header'  => esc_html( $o['header_bg'] ),
+		'sidebar' => esc_html( $o['sidebar_bg'] ),
+		'content' => esc_html( $o['content_bg'] ),
+		'page'    => esc_html( $o['page_bg'] ),
+		'text'    => esc_html( $o['text_color'] ),
+		'cta'     => esc_html( ! empty( $o['footer_cta_color'] ) ? $o['footer_cta_color'] : '#e11d48' ),
+	);
 
-	/*
-	 * Brand accents apply to both themes.
-	 * Structural surfaces/text apply to dark only — light keeps its own readable palette
-	 * so admin dark colors cannot wash out light-mode content.
-	 * Component rules that consume structural vars are also dark-scoped so a late
-	 * inline stylesheet cannot force light-gray text onto light surfaces.
-	 */
-	return "
+	$light = array(
+		'primary' => esc_html( $o['light_primary_color'] ),
+		'accent'  => esc_html( $o['light_accent_color'] ),
+		'link'    => esc_html( $o['light_link_color'] ),
+		'pdf'     => esc_html( $o['light_pdf_color'] ),
+		'bar'     => esc_html( $o['light_active_bar_color'] ),
+		'header'  => esc_html( $o['light_header_bg'] ),
+		'sidebar' => esc_html( $o['light_sidebar_bg'] ),
+		'content' => esc_html( $o['light_content_bg'] ),
+		'page'    => esc_html( $o['light_page_bg'] ),
+		'text'    => esc_html( $o['light_text_color'] ),
+		'cta'     => esc_html( ! empty( $o['light_footer_cta_color'] ) ? $o['light_footer_cta_color'] : '#e11d48' ),
+	);
+
+	$css  = "
 :root {
 	--md-font-display: {$font_display};
 	--md-font-body: {$font_body};
-	--md-footer-cta: {$cta};
 }
 html[data-md-theme=\"dark\"],
 html[data-md-theme=\"light\"] {
 	--md-font-display: {$font_display};
 	--md-font-body: {$font_body};
-	--md-accent: {$accent};
-	--md-accent-soft: color-mix(in srgb, {$accent} 16%, transparent);
-	--md-link: {$link};
-	--md-pdf: {$pdf};
-	--md-active-bar: {$bar};
-	--md-footer-cta: {$cta};
-}
-html[data-md-theme=\"dark\"] {
-	--md-primary: {$primary};
-	--md-header-bg: {$header};
-	--md-sidebar-bg: {$sidebar};
-	--md-content-bg: {$content};
-	--md-page-bg: {$page};
-	--md-text: {$text};
-	--md-ink: {$primary};
-	--md-surface: {$content};
-	--md-muted: color-mix(in srgb, {$text} 72%, #64748b);
-	--md-line: color-mix(in srgb, {$content} 70%, #94a3b8);
 }
 body { font-family: var(--md-font-body); }
 h1, h2, h3, h4, h5, h6,
 .md-doc-title,
 .md-brand__text,
 .md-hero__title { font-family: var(--md-font-display); }
-html[data-md-theme=\"dark\"] body { background: var(--md-page-bg); color: var(--md-text); }
-html[data-md-theme=\"dark\"] h1,
-html[data-md-theme=\"dark\"] h2,
-html[data-md-theme=\"dark\"] h3,
-html[data-md-theme=\"dark\"] h4,
-html[data-md-theme=\"dark\"] h5,
-html[data-md-theme=\"dark\"] h6,
-html[data-md-theme=\"dark\"] .md-doc-title,
-html[data-md-theme=\"dark\"] .md-brand__text,
-html[data-md-theme=\"dark\"] .md-hero__title { color: var(--md-ink); }
-html[data-md-theme=\"dark\"] .md-header { background: var(--md-header-bg); }
-html[data-md-theme=\"dark\"] .md-docs-sidebar { background: var(--md-sidebar-bg); }
-html[data-md-theme=\"dark\"] .md-doc-article,
-html[data-md-theme=\"dark\"] .md-archive,
-html[data-md-theme=\"dark\"] .md-docs-shell { background: var(--md-content-bg); }
-html[data-md-theme=\"dark\"] .md-doc-content,
-html[data-md-theme=\"dark\"] .md-doc-toc__card,
-html[data-md-theme=\"dark\"] .md-version-switcher { background: var(--md-surface); color: var(--md-text); }
-html[data-md-theme=\"dark\"] .md-doc-content h1,
-html[data-md-theme=\"dark\"] .md-doc-content h2,
-html[data-md-theme=\"dark\"] .md-doc-content h3,
-html[data-md-theme=\"dark\"] .md-doc-content h4,
-html[data-md-theme=\"dark\"] .md-doc-title { color: var(--md-ink); }
-.md-meta-pdf, .md-meta-pdf:hover { color: var(--md-pdf); }
-.md-doc-nav__item.is-active > a { border-left-color: var(--md-active-bar); color: var(--md-link); }
-.md-footer-newsletter__submit { background: var(--md-footer-cta); }
 ";
+	$css .= manual_docs_palette_css_block( 'dark', $dark );
+	$css .= manual_docs_palette_css_block( 'light', $light );
+
+	return $css;
 }
 
 /**
