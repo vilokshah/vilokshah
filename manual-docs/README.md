@@ -85,7 +85,31 @@ Appearance → **Widgets**:
 
 Copyright text and Subscribe button color are under Appearance → Manual Docs.
 
-## Live search
+## Gutenberg vs Classic Editor
+
+**Recommendation:** use the **block editor (Gutenberg)** for documentation when you can.
+
+| Element | Best tool |
+| --- | --- |
+| Tables (add/remove columns) | Core **Table** block |
+| Images, galleries, embeds | Core media blocks |
+| Headings, lists, quotes | Core blocks |
+| Code (line numbers + Copy on front) | Core **Code** block — theme enhances display |
+| Accordion / Tabs / Callouts | **Content Elements** sidebar panel (inserts shortcodes) |
+
+The theme already enables REST for `manual_documentation`. If Gutenberg previously failed (“Updating failed” / invalid JSON), update to this theme, flush permalinks, and temporarily disable conflicting Manual plugins. If you still prefer Classic Editor, keep it — the **Content Elements** panel works there too (TinyMCE “Elements” button focuses the panel).
+
+## Content Elements panel
+
+On every documentation edit screen (sidebar):
+
+- Callout builder
+- Accordion builder (add items)
+- Tabs builder
+- Code block inserter
+- Table starter (columns × rows + headers)
+
+Front-end automatically adds **line numbers + Copy** to code blocks and horizontal scroll wrappers for wide tables.
 
 Configured as a REST endpoint that queries `manual_documentation` posts (optional version root scope), with an AJAX fallback.
 

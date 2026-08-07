@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MANUAL_DOCS_VERSION', '2.9.6' );
+define( 'MANUAL_DOCS_VERSION', '2.9.7' );
 
 /**
  * Version roots for JS (search filters).
@@ -181,6 +181,13 @@ function manual_docs_scripts() {
 			MANUAL_DOCS_VERSION,
 			true
 		);
+		wp_enqueue_script(
+			'manual-docs-code',
+			MANUAL_DOCS_URI . '/assets/js/code-blocks.js',
+			array(),
+			MANUAL_DOCS_VERSION,
+			true
+		);
 	}
 
 	if ( is_singular( 'manual_documentation' ) ) {
@@ -251,6 +258,7 @@ $manual_docs_includes = array(
 	'widgets.php',
 	'analytics.php',
 	'shortcodes.php',
+	'editor-tools.php',
 );
 
 foreach ( $manual_docs_includes as $file ) {

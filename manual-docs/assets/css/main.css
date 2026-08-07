@@ -774,6 +774,101 @@ html[data-md-theme="light"] .md-docs-search-trigger:hover {
   background: #1e293b; color: #e2e8f0; padding: 0.1em 0.35em; border-radius: 4px;
 }
 
+/* Enhanced code blocks (copy + line numbers) */
+.md-code-block {
+  margin: 1.25rem 0;
+  border: 1px solid var(--md-line);
+  border-radius: var(--md-radius-sm);
+  overflow: hidden;
+  background: #0b1220;
+}
+.md-code-block__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.4rem 0.75rem;
+  background: #111827;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+}
+.md-code-block__lang {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+.md-code-block__copy {
+  appearance: none;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: transparent;
+  color: #e2e8f0;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0.25rem 0.55rem;
+  cursor: pointer;
+}
+.md-code-block__copy:hover { background: rgba(255,255,255,0.06); }
+.md-code-block__copy.is-copied {
+  border-color: #34d399;
+  color: #34d399;
+}
+.md-code-block__body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: stretch;
+  overflow: auto;
+}
+.md-code-block__lines {
+  padding: 1rem 0.65rem 1rem 0.85rem;
+  margin: 0;
+  border-right: 1px solid rgba(148, 163, 184, 0.2);
+  color: #64748b;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  white-space: pre;
+  text-align: right;
+  user-select: none;
+  background: #0b1220;
+}
+.md-code-block pre {
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 1rem 1rem 1rem 0.85rem !important;
+  overflow: visible;
+  line-height: 1.55;
+  font-size: 0.82rem;
+}
+.md-code-block pre code {
+  background: transparent !important;
+  color: #e2e8f0;
+  padding: 0 !important;
+  border: 0 !important;
+  font-size: inherit;
+}
+
+.md-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  margin: 1.25rem 0;
+  border: 1px solid var(--md-line);
+  border-radius: var(--md-radius-sm);
+}
+.md-table-scroll table {
+  margin: 0 !important;
+  border: 0;
+  min-width: 100%;
+}
+.md-table-scroll th,
+.md-table-scroll td {
+  white-space: nowrap;
+}
+
 /* Light theme polish — surfaces follow CSS variables (admin Light palette) */
 html[data-md-theme="light"] .md-doc-content :not(pre) > code {
   background: color-mix(in srgb, var(--md-line) 65%, #ffffff);

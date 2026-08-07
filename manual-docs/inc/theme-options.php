@@ -310,6 +310,12 @@ function manual_docs_render_options_page() {
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Manual Docs Settings', 'manual-docs' ); ?></h1>
 		<p><?php esc_html_e( 'Configure branding, colors, access, and release-version roots (parent documentation pages such as goat, flamingo, hummingbird).', 'manual-docs' ); ?></p>
+		<div class="notice notice-info inline" style="margin:12px 0 18px;">
+			<p>
+				<strong><?php esc_html_e( 'Authoring tip:', 'manual-docs' ); ?></strong>
+				<?php esc_html_e( 'Prefer Gutenberg for tables, images, and code. Use the Content Elements sidebar on each document for accordion, tabs, and callouts. Front-end code blocks get line numbers + Copy automatically. If Gutenberg failed before, update this theme, flush Permalinks, and disable conflicting Manual plugins — or keep Classic Editor; the Content Elements panel still works.', 'manual-docs' ); ?>
+			</p>
+		</div>
 		<form method="post">
 			<?php wp_nonce_field( 'manual_docs_save_options', 'manual_docs_options_nonce' ); ?>
 

@@ -1,0 +1,31 @@
+/* Content Elements metabox (admin) */
+.md-editor-tools .description { margin-top: 0; }
+.md-editor-tools__panel {
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  padding: 0.55rem 0.65rem 0.75rem;
+  margin: 0 0 0.65rem;
+  background: #fff;
+}
+.md-editor-tools__panel summary {
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 0.45rem;
+}
+.md-editor-tools__item {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 0.55rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px dashed #e5e7eb;
+}
+.md-editor-tools__item:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+.md-editor-tools select,
+.md-editor-tools input[type="text"],
+.md-editor-tools textarea { margin-top: 0.2rem; }
+.md-editor-tools .button { margin-top: 0.15rem; }
+.md-editor-tools__toast {
+  margin: 0.5rem 0 0;
+  color: #0a7a32;
+  font-weight: 600;
+}
