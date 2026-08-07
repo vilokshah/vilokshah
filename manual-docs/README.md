@@ -67,8 +67,10 @@ Switcher finds the matching doc under another root by relative slug path, then t
 - Require login, TOC/PDF/updated/edit toggles, community CTA
 - Light/dark toggle on the front-end header (both themes are fully styled)
 - Collapsible documentation tree (‹ arrow) to widen the content column
-- TOC Hide/Show on the right “On this page” panel
+- TOC Hide/Show expands the content column (same idea as the tree toggle)
 - Docs tree chrome: favicon left, panel toggle + search icons right; search opens a centered modal so long titles stay readable
+- **Docs Stats** (Appearance → Docs Stats) — top visited documents + frequent searches
+- Homepage Docs Portal — brand + search only (no category/version grids)
 - **Large libraries** — tree defaults to active version only + lazy-load children; reading-order cache for prev/next
 - **Customizable footer** — 4 widget columns (Contacts / Company / Support / Stay Connected) + copyright bar
 
@@ -131,6 +133,8 @@ Theme controls (complement your magic-link login plugin; do not replace WP harde
 - PDF print/download view
 - Role-based category access (Allowed Roles checkboxes on category edit)
 - bbPress community templates + CTA (native `forum` / `topic` / `reply` CPTs)
+- Content shortcodes: tabs, accordion, callouts (`[md_tabs]`, `[md_accordion]`, `[md_note]`…)
+- Docs Stats admin + kitchen-sink sample installer
 - Security hardening
 
 ## bbPress / community (`forum`, `topic`, `reply`)

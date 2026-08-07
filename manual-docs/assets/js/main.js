@@ -134,11 +134,23 @@
     }
   });
 
-  // TOC hide/show toggle (class-based so CSS display:flex cannot override [hidden]).
-  function syncTocToggle(btn, collapsed) {
-    if (!btn) return;
-    btn.textContent = collapsed ? 'show' : 'hide';
-    btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+  // TOC hide/show — collapses column so content expands (like tree menu).
+  function applyTocCollapsed(collapsed) {
+    var layout = qs('.md-doc-layout');
+    var aside = qs('[data-md-toc]');
+    if (layout) layout.classList.toggle('is-toc-collapsed', !!collapsed);
+    if (aside) aside.classList.toggle('is-collapsed', !!collapsed);
+    var list = aside ? aside.querySelector('[data-md-toc-list]') : null;
+    if (list) {
+      if (collapsed) list.setAttribute('hidden', '');
+      else list.removeAttribute('hidden');
+    }
+    qsa('[data-md-toc-toggle]').forEach(function (btn) {
+      btn.textContent = collapsed ? 'show' : 'hide';
+      btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      btn.title = collapsed ? 'Show table of contents' : 'Hide table of contents';
+    });
+    try { localStorage.setItem('manualDocsTocCollapsed', collapsed ? '1' : '0'); } catch (err) {}
   }
 
   document.addEventListener('click', function (e) {
@@ -146,32 +158,16 @@
     if (!btn) return;
     e.preventDefault();
     var aside = btn.closest('[data-md-toc]');
-    var card = btn.closest('.md-doc-toc__card') || aside;
-    if (!card) return;
-    var list = card.querySelector('[data-md-toc-list]');
-    if (!list) return;
     var collapsed = !(aside && aside.classList.contains('is-collapsed'));
-    if (aside) aside.classList.toggle('is-collapsed', collapsed);
-    if (collapsed) list.setAttribute('hidden', '');
-    else list.removeAttribute('hidden');
-    syncTocToggle(btn, collapsed);
-    try { localStorage.setItem('manualDocsTocCollapsed', collapsed ? '1' : '0'); } catch (err) {}
+    applyTocCollapsed(collapsed);
   });
 
-  // Restore TOC collapsed preference.
   (function initTocState() {
     var aside = qs('[data-md-toc]');
     if (!aside) return;
-    var btn = aside.querySelector('[data-md-toc-toggle]');
-    var list = aside.querySelector('[data-md-toc-list]');
     var collapsed = false;
     try { collapsed = localStorage.getItem('manualDocsTocCollapsed') === '1'; } catch (err) {}
-    aside.classList.toggle('is-collapsed', collapsed);
-    if (list) {
-      if (collapsed) list.setAttribute('hidden', '');
-      else list.removeAttribute('hidden');
-    }
-    syncTocToggle(btn, collapsed);
+    applyTocCollapsed(collapsed);
   })();
 
   // Docs tree sidebar collapse (maximize content width).
@@ -291,4 +287,70 @@
       input.focus();
     }
   });
+
+  // Tabs shortcode — build tablist from panels.
+  function initTabs(root) {
+    qsa('[data-md-tabs]', root || document).forEach(function (wrap) {
+      if (wrap.getAttribute('data-md-tabs-ready')) return;
+      var panels = qsa('[data-md-tab-panel]', wrap);
+      if (!panels.length) return;
+      wrap.setAttribute('data-md-tabs-ready', '1');
+      var list = document.createElement('div');
+      list.className = 'md-tabs__list';
+      list.setAttribute('role', 'tablist');
+      panels.forEach(function (panel, i) {
+        var title = panel.getAttribute('data-title') || ('Tab ' + (i + 1));
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'md-tabs__tab' + (i === 0 ? ' is-active' : '');
+        btn.setAttribute('role', 'tab');
+        btn.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+        btn.setAttribute('aria-controls', panel.id);
+        btn.textContent = title;
+        if (i !== 0) panel.setAttribute('hidden', '');
+        else panel.removeAttribute('hidden');
+        btn.addEventListener('click', function () {
+          panels.forEach(function (p) { p.setAttribute('hidden', ''); });
+          qsa('.md-tabs__tab', list).forEach(function (t) {
+            t.classList.remove('is-active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          panel.removeAttribute('hidden');
+          btn.classList.add('is-active');
+          btn.setAttribute('aria-selected', 'true');
+        });
+        list.appendChild(btn);
+      });
+      wrap.insertBefore(list, wrap.firstChild);
+    });
+  }
+
+  document.addEventListener('click', function (e) {
+    var trigger = e.target.closest('[data-md-acc-trigger]');
+    if (!trigger) return;
+    var item = trigger.closest('[data-md-acc-item]');
+    if (!item) return;
+    var panel = item.querySelector('.md-accordion__panel');
+    var open = item.classList.contains('is-open');
+    item.classList.toggle('is-open', !open);
+    trigger.setAttribute('aria-expanded', open ? 'false' : 'true');
+    if (panel) {
+      if (open) panel.setAttribute('hidden', '');
+      else panel.removeAttribute('hidden');
+    }
+  });
+
+  initTabs();
+  document.addEventListener('manualDocs:contentReady', function () {
+    initTabs(document.getElementById('md-doc-content') || document);
+  });
+  // Also init after AJAX content swaps if MutationObserver-friendly path is missing.
+  var moTarget = document.getElementById('md-doc-content');
+  if (moTarget && window.MutationObserver) {
+    var moTimer = null;
+    new MutationObserver(function () {
+      clearTimeout(moTimer);
+      moTimer = setTimeout(function () { initTabs(moTarget); }, 50);
+    }).observe(moTarget, { childList: true, subtree: false });
+  }
 })();

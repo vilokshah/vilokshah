@@ -75,16 +75,19 @@
 
     if (tocAside) {
       tocAside.hidden = false;
-      // Preserve user collapsed preference after AJAX rebuilds.
+      // Preserve user collapsed preference after AJAX rebuilds (content expands).
       var collapsed = false;
       try { collapsed = localStorage.getItem('manualDocsTocCollapsed') === '1'; } catch (e) {}
       tocAside.classList.toggle('is-collapsed', collapsed);
+      var layout = document.querySelector('.md-doc-layout');
+      if (layout) layout.classList.toggle('is-toc-collapsed', collapsed);
       if (collapsed) list.setAttribute('hidden', '');
       else list.removeAttribute('hidden');
       var toggleBtn = tocAside.querySelector('[data-md-toc-toggle]');
       if (toggleBtn) {
         toggleBtn.textContent = collapsed ? 'show' : 'hide';
         toggleBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        toggleBtn.title = collapsed ? 'Show table of contents' : 'Hide table of contents';
       }
     }
 

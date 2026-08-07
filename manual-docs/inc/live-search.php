@@ -170,6 +170,10 @@ function manual_docs_rest_search( WP_REST_Request $request ) {
 		}
 	}
 
+	if ( function_exists( 'manual_docs_track_search_query' ) ) {
+		manual_docs_track_search_query( $q );
+	}
+
 	return rest_ensure_response( array( 'results' => $results ) );
 }
 

@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MANUAL_DOCS_VERSION', '2.9.5' );
+define( 'MANUAL_DOCS_VERSION', '2.9.6' );
 
 /**
  * Version roots for JS (search filters).
@@ -249,6 +249,8 @@ $manual_docs_includes = array(
 	'customizer.php',
 	'helpers.php',
 	'widgets.php',
+	'analytics.php',
+	'shortcodes.php',
 );
 
 foreach ( $manual_docs_includes as $file ) {

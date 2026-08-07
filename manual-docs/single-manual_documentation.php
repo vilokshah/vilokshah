@@ -78,8 +78,8 @@ $version      = manual_docs_get_doc_version();
 						<aside class="md-doc-toc" data-md-toc aria-label="<?php esc_attr_e( 'On this page', 'manual-docs' ); ?>">
 							<div class="md-doc-toc__card">
 								<p class="md-doc-toc__title">
-									<?php esc_html_e( 'On this page', 'manual-docs' ); ?>
-									<button type="button" class="md-doc-toc__hide" data-md-toc-toggle aria-expanded="true" aria-controls="md-toc-list"><?php esc_html_e( 'hide', 'manual-docs' ); ?></button>
+									<span class="md-doc-toc__title-label"><?php esc_html_e( 'On this page', 'manual-docs' ); ?></span>
+									<button type="button" class="md-doc-toc__hide" data-md-toc-toggle aria-expanded="true" aria-controls="md-toc-list" title="<?php esc_attr_e( 'Hide table of contents', 'manual-docs' ); ?>"><?php esc_html_e( 'hide', 'manual-docs' ); ?></button>
 								</p>
 								<nav id="md-toc-list" class="md-doc-toc__list" data-md-toc-list></nav>
 							</div>

@@ -163,6 +163,10 @@ function manual_docs_rest_get_doc( WP_REST_Request $request ) {
 function manual_docs_get_doc_payload( WP_Post $post ) {
 	$post_id = (int) $post->ID;
 
+	if ( function_exists( 'manual_docs_track_doc_view' ) ) {
+		manual_docs_track_doc_view( $post_id );
+	}
+
 	// Ensure global $post is set for template tags / filters.
 	$GLOBALS['post'] = $post;
 	setup_postdata( $post );
