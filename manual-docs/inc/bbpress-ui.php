@@ -382,7 +382,57 @@ add_filter( 'bbp_get_forum_subscribe_link', 'manual_docs_style_subscription_link
 add_filter( 'bbp_get_topic_subscribe_link', 'manual_docs_style_subscription_link', 20 );
 
 /**
- * Hide Archives / Categories widgets on the community sidebar.
+ * Whether a sidebar widget id should be hidden on the community sidebar.
+ *
+ * @param string $widget_id Widget id (e.g. archives-2, block-5).
+ * @return bool
+ */
+function manual_docs_is_hidden_community_widget( $widget_id ) {
+	$widget_id = (string) $widget_id;
+	if ( preg_match( '/^(archives|categories)(-|$)/', $widget_id ) ) {
+		return true;
+	}
+	// Block widgets (WP 5.8+).
+	if ( 0 === strpos( $widget_id, 'block-' ) ) {
+		$number = (int) str_replace( 'block-', '', $widget_id );
+		$blocks = get_option( 'widget_block', array() );
+		$content = '';
+		if ( $number && ! empty( $blocks[ $number ]['content'] ) ) {
+			$content = (string) $blocks[ $number ]['content'];
+		} elseif ( ! empty( $blocks[ $widget_id ]['content'] ) ) {
+			$content = (string) $blocks[ $widget_id ]['content'];
+		}
+		if ( $content && ( false !== strpos( $content, 'wp:archives' ) || false !== strpos( $content, 'wp:categories' ) || false !== strpos( $content, 'wp-block-archives' ) || false !== strpos( $content, 'wp-block-categories' ) ) ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * Strip Archives / Categories from the community sidebar before render.
+ *
+ * @param array $sidebars Sidebars widgets map.
+ * @return array
+ */
+function manual_docs_strip_community_sidebar_widgets( $sidebars ) {
+	if ( empty( $sidebars['community-sidebar'] ) || ! is_array( $sidebars['community-sidebar'] ) ) {
+		return $sidebars;
+	}
+	$sidebars['community-sidebar'] = array_values(
+		array_filter(
+			$sidebars['community-sidebar'],
+			static function ( $id ) {
+				return ! manual_docs_is_hidden_community_widget( $id );
+			}
+		)
+	);
+	return $sidebars;
+}
+add_filter( 'sidebars_widgets', 'manual_docs_strip_community_sidebar_widgets', 100 );
+
+/**
+ * Hide Archives / Categories widgets on the community sidebar (legacy callback).
  *
  * @param array|false $instance Widget settings.
  * @param WP_Widget   $widget   Widget instance.
@@ -396,11 +446,31 @@ function manual_docs_filter_community_sidebar_widgets( $instance, $widget, $args
 	if ( $widget instanceof WP_Widget_Archives || $widget instanceof WP_Widget_Categories ) {
 		return false;
 	}
-	// Also match by id_base for block/legacy variants.
 	$id_base = isset( $widget->id_base ) ? $widget->id_base : '';
-	if ( in_array( $id_base, array( 'archives', 'categories', 'block-archives', 'block-categories' ), true ) ) {
+	if ( in_array( $id_base, array( 'archives', 'categories' ), true ) ) {
+		return false;
+	}
+	$widget_id = isset( $widget->id ) ? $widget->id : '';
+	if ( $widget_id && manual_docs_is_hidden_community_widget( $widget_id ) ) {
 		return false;
 	}
 	return $instance;
 }
 add_filter( 'widget_display_callback', 'manual_docs_filter_community_sidebar_widgets', 10, 3 );
+
+/**
+ * Hide meaningless “Viewing 0 posts” counts (common above new-topic forms).
+ *
+ * @param string $ret Count HTML/text.
+ * @return string
+ */
+function manual_docs_hide_zero_posts_pagination( $ret ) {
+	$text = wp_strip_all_tags( (string) $ret );
+	if ( preg_match( '/\b0\s+posts?\b/i', $text ) ) {
+		return '';
+	}
+	return $ret;
+}
+add_filter( 'bbp_get_topic_pagination_count', 'manual_docs_hide_zero_posts_pagination' );
+add_filter( 'bbp_get_reply_pagination_count', 'manual_docs_hide_zero_posts_pagination' );
+add_filter( 'bbp_get_forum_pagination_count', 'manual_docs_hide_zero_posts_pagination' );

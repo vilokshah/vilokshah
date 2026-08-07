@@ -80,8 +80,16 @@ if ( function_exists( 'bbp_is_single_user' ) && bbp_is_single_user() ) {
 			if ( function_exists( 'manual_docs_render_recent_topics_panel' ) ) {
 				manual_docs_render_recent_topics_panel();
 			}
+			// Only render allowed community widgets (Archives/Categories stripped in filters).
 			if ( is_active_sidebar( 'community-sidebar' ) ) {
+				ob_start();
 				dynamic_sidebar( 'community-sidebar' );
+				$sidebar_html = ob_get_clean();
+				if ( $sidebar_html ) {
+					// Belt-and-suspenders: drop archive/category markup if a block still leaked.
+					$sidebar_html = preg_replace( '#<section\b[^>]*class="[^"]*(?:widget_archive|widget_categories|wp-block-archives|wp-block-categories)[^"]*"[^>]*>.*?</section>#is', '', $sidebar_html );
+					echo $sidebar_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				}
 			}
 			?>
 		</aside>

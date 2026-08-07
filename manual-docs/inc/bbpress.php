@@ -32,6 +32,14 @@ function manual_docs_bbpress_assets() {
 		array( 'manual-docs-main' ),
 		MANUAL_DOCS_VERSION
 	);
+
+	wp_enqueue_script(
+		'manual-docs-community-ui',
+		MANUAL_DOCS_URI . '/assets/js/community-ui.js',
+		array(),
+		MANUAL_DOCS_VERSION,
+		true
+	);
 }
 add_action( 'wp_enqueue_scripts', 'manual_docs_bbpress_assets', 20 );
 
