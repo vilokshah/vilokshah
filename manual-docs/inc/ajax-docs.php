@@ -21,10 +21,16 @@ function manual_docs_register_doc_routes() {
 			'callback'            => 'manual_docs_rest_get_doc',
 			'permission_callback' => 'manual_docs_search_permission',
 			'args'                => array(
-				'id' => array(
+				'id'           => array(
 					'required'          => true,
 					'type'              => 'integer',
 					'sanitize_callback' => 'absint',
+				),
+				'include_tree' => array(
+					'required'          => false,
+					'type'              => 'integer',
+					'sanitize_callback' => 'absint',
+					'default'           => 1,
 				),
 			),
 		)
@@ -151,7 +157,12 @@ function manual_docs_rest_get_doc( WP_REST_Request $request ) {
 		);
 	}
 
-	return rest_ensure_response( manual_docs_get_doc_payload( $post ) );
+	$include_tree = true;
+	if ( null !== $request->get_param( 'include_tree' ) ) {
+		$include_tree = (bool) absint( $request->get_param( 'include_tree' ) );
+	}
+
+	return rest_ensure_response( manual_docs_get_doc_payload( $post, array( 'include_tree' => $include_tree ) ) );
 }
 
 /**
@@ -160,7 +171,24 @@ function manual_docs_rest_get_doc( WP_REST_Request $request ) {
  * @param WP_Post $post Post.
  * @return array
  */
-function manual_docs_get_doc_payload( WP_Post $post ) {
+/**
+ * Build JSON payload for AJAX document rendering.
+ *
+ * @param WP_Post $post Post.
+ * @param array   $args {
+ *     Optional args.
+ *     @type bool $include_tree Whether to rebuild sidebar tree HTML (expensive on large libraries).
+ * }
+ * @return array
+ */
+function manual_docs_get_doc_payload( WP_Post $post, $args = array() ) {
+	$args = wp_parse_args(
+		$args,
+		array(
+			'include_tree' => true,
+		)
+	);
+
 	$post_id = (int) $post->ID;
 
 	if ( function_exists( 'manual_docs_track_doc_view' ) ) {
@@ -175,13 +203,16 @@ function manual_docs_get_doc_payload( WP_Post $post ) {
 	$toc     = manual_docs_extract_toc_from_html( $content );
 	$content = manual_docs_inject_heading_ids( $content, $toc );
 
-	$version = manual_docs_get_doc_version( $post_id );
+	$version  = manual_docs_get_doc_version( $post_id );
 	$adjacent = manual_docs_adjacent_docs( $post_id );
 	$root     = manual_docs_get_version_root_for_doc( $post_id );
 
-	ob_start();
-	manual_docs_render_doc_nav( manual_docs_get_version_scoped_tree( $post_id ), $post_id );
-	$tree_html = ob_get_clean();
+	$tree_html = '';
+	if ( ! empty( $args['include_tree'] ) ) {
+		ob_start();
+		manual_docs_render_doc_nav( manual_docs_get_version_scoped_tree( $post_id ), $post_id );
+		$tree_html = ob_get_clean();
+	}
 
 	$payload = array(
 		'id'            => $post_id,
@@ -198,9 +229,12 @@ function manual_docs_get_doc_payload( WP_Post $post ) {
 		'version'       => $version,
 		'versionBadge'  => $version ? $version['name'] : '',
 		'versionRootId' => $root ? (int) $root->ID : 0,
+		'prevId'        => ! empty( $adjacent['prev'] ) ? (int) $adjacent['prev']->ID : 0,
+		'nextId'        => ! empty( $adjacent['next'] ) ? (int) $adjacent['next']->ID : 0,
 		'pdfUrl'        => manual_docs_get_pdf_url( $post_id, true ),
 		'toc'           => $toc,
 		'treeHtml'      => $tree_html,
+		'includeTree'   => ! empty( $args['include_tree'] ),
 		'breadcrumbs'   => manual_docs_get_buffered_markup( 'manual_docs_breadcrumbs', array( $post_id ) ),
 		'versionHtml'   => manual_docs_get_buffered_markup( 'manual_docs_render_version_switcher', array( $post_id ) ),
 		'pagerHtml'     => manual_docs_get_pager_html( $adjacent ),
@@ -376,8 +410,14 @@ function manual_docs_ajax_get_doc() {
 		wp_send_json_error( array( 'message' => __( 'Missing document id.', 'manual-docs' ) ), 400 );
 	}
 
+	$include_tree = true;
+	if ( isset( $_GET['include_tree'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		$include_tree = (bool) absint( $_GET['include_tree'] ); // phpcs:ignore WordPress.Security.NonceVerification
+	}
+
 	$request = new WP_REST_Request( 'GET', '/manual-docs/v1/doc/' . $id );
 	$request->set_param( 'id', $id );
+	$request->set_param( 'include_tree', $include_tree ? 1 : 0 );
 	$response = manual_docs_rest_get_doc( $request );
 
 	if ( is_wp_error( $response ) ) {

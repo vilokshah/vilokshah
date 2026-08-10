@@ -1,5 +1,10 @@
 /**
  * AJAX document loader — tree menu, pager, version switcher, History API + TOC.
+ *
+ * Performance notes:
+ * - Same-version navigations skip rebuilding sidebar treeHtml (biggest cost on large libraries).
+ * - Tree is refreshed when the version root changes, or when the target doc is not in the tree.
+ * - Prev/Next docs are prefetched into the in-memory cache after each successful load.
  */
 (function (window, document) {
   'use strict';
@@ -16,6 +21,7 @@
   var cache = {};
   var currentController = null;
   var navigating = false;
+  var currentRootId = parseInt(article.getAttribute('data-md-version-root') || '0', 10) || 0;
 
   function qs(sel, ctx) {
     return (ctx || document).querySelector(sel);
@@ -28,9 +34,15 @@
     shell.setAttribute('aria-busy', isLoading ? 'true' : 'false');
   }
 
+  function treeHasDoc(docId) {
+    var tree = qs('[data-md-doc-tree]', shell) || qs('.md-docs-sidebar__nav', shell);
+    if (!tree) return false;
+    return !!tree.querySelector('[data-md-doc-id="' + docId + '"]');
+  }
+
   function updateTreeActive(docId) {
     var tree = qs('[data-md-doc-tree]', shell) || qs('.md-docs-sidebar__nav', shell);
-    if (!tree) return;
+    if (!tree) return false;
 
     tree.querySelectorAll('.md-doc-nav__item.is-active').forEach(function (li) {
       li.classList.remove('is-active');
@@ -41,7 +53,6 @@
 
     var link = tree.querySelector('[data-md-doc-id="' + docId + '"]');
     if (!link) {
-      // Fallback: match by pathname.
       var path = window.location.pathname.replace(/\/$/, '');
       tree.querySelectorAll('a[href]').forEach(function (a) {
         try {
@@ -50,20 +61,23 @@
         } catch (e) { /* ignore */ }
       });
     }
-    if (!link) return;
+    if (!link) return false;
 
     link.setAttribute('aria-current', 'page');
     var li = link.closest('.md-doc-nav__item') || link.parentElement;
     if (li) li.classList.add('is-active');
 
-    // Expand ancestors visually if nested.
     var parent = link.parentElement;
     while (parent && parent !== tree) {
       if (parent.classList && parent.classList.contains('md-doc-nav__item')) {
         parent.classList.add('is-expanded');
+        parent.classList.remove('is-collapsed');
+        var kids = parent.querySelector('.md-doc-nav__children');
+        if (kids) kids.hidden = false;
       }
       parent = parent.parentElement;
     }
+    return true;
   }
 
   function closeMobileSidebar() {
@@ -75,6 +89,10 @@
 
   function applyDoc(data, pushState) {
     article.setAttribute('data-md-doc-id', String(data.id));
+    if (data.versionRootId) {
+      currentRootId = parseInt(data.versionRootId, 10) || 0;
+      article.setAttribute('data-md-version-root', String(currentRootId));
+    }
 
     var titleEl = qs('[data-md-doc-title]', article);
     if (titleEl) titleEl.textContent = data.title;
@@ -118,7 +136,7 @@
 
     contentEl.innerHTML = data.content || '';
 
-    if (typeof data.treeHtml === 'string') {
+    if (typeof data.treeHtml === 'string' && data.treeHtml) {
       var tree = qs('[data-md-doc-tree]', shell);
       if (tree) tree.innerHTML = data.treeHtml;
     }
@@ -135,7 +153,7 @@
       window.ManualDocsTOC.build({ toc: data.toc || [] });
     }
 
-    updateTreeActive(data.id);
+    var foundInTree = updateTreeActive(data.id);
     document.title = data.title + ' — ' + (document.title.split(' — ').pop() || document.title);
 
     if (pushState) {
@@ -145,19 +163,13 @@
     var top = article.getBoundingClientRect().top + window.pageYOffset - 72;
     window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
     article.focus({ preventScroll: true });
+
+    return foundInTree;
   }
 
-  function fetchDoc(id) {
-    if (cache[id]) {
-      return Promise.resolve(cache[id]);
-    }
-
-    if (currentController) {
-      currentController.abort();
-    }
-    currentController = window.AbortController ? new AbortController() : null;
-
-    var url = manualDocs.restUrl + 'doc/' + encodeURIComponent(id);
+  function requestDoc(id, includeTree) {
+    var url = manualDocs.restUrl + 'doc/' + encodeURIComponent(id) +
+      '?include_tree=' + (includeTree ? '1' : '0');
     var opts = {
       credentials: 'same-origin',
       headers: {
@@ -182,7 +194,8 @@
 
         var ajaxUrl = manualDocs.ajaxUrl +
           '?action=manual_docs_get_doc&nonce=' + encodeURIComponent(manualDocs.nonce) +
-          '&id=' + encodeURIComponent(id);
+          '&id=' + encodeURIComponent(id) +
+          '&include_tree=' + (includeTree ? '1' : '0');
 
         return fetch(ajaxUrl, { credentials: 'same-origin' })
           .then(function (r) { return r.json(); })
@@ -192,11 +205,68 @@
             }
             return payload.data;
           });
-      })
-      .then(function (data) {
-        cache[id] = data;
-        return data;
       });
+  }
+
+  function fetchDoc(id, opts) {
+    opts = opts || {};
+    var includeTree = !!opts.includeTree;
+    var forceNetwork = !!opts.forceNetwork;
+
+    if (!forceNetwork && cache[id]) {
+      var cached = cache[id];
+      // Cached payload without tree is fine unless caller requires tree.
+      if (!includeTree || (cached.treeHtml && cached.treeHtml.length)) {
+        return Promise.resolve(cached);
+      }
+    }
+
+    if (!opts.background) {
+      if (currentController) {
+        currentController.abort();
+      }
+      currentController = window.AbortController ? new AbortController() : null;
+    }
+
+    // Background prefetch must not share/abort the main controller.
+    var fetchPromise;
+    if (opts.background) {
+      var bgUrl = manualDocs.restUrl + 'doc/' + encodeURIComponent(id) + '?include_tree=0';
+      fetchPromise = fetch(bgUrl, {
+        credentials: 'same-origin',
+        headers: {
+          'Accept': 'application/json',
+          'X-WP-Nonce': manualDocs.restNonce || manualDocs.nonce
+        }
+      }).then(function (res) {
+        if (!res.ok) throw new Error('prefetch-fail');
+        return res.json();
+      }).catch(function () {
+        return null;
+      });
+    } else {
+      fetchPromise = requestDoc(id, includeTree);
+    }
+
+    return fetchPromise.then(function (data) {
+      if (!data) return data;
+      // Prefer payload that includes tree when merging into cache.
+      if (!cache[id] || (data.treeHtml && data.treeHtml.length) || includeTree) {
+        cache[id] = data;
+      } else if (!cache[id]) {
+        cache[id] = data;
+      }
+      return data;
+    });
+  }
+
+  function prefetchNeighbors(data) {
+    var ids = [data.prevId, data.nextId];
+    ids.forEach(function (nid) {
+      nid = parseInt(nid, 10) || 0;
+      if (!nid || cache[nid]) return;
+      fetchDoc(nid, { includeTree: false, background: true });
+    });
   }
 
   function navigateToDoc(id, opts) {
@@ -210,14 +280,32 @@
     navigating = true;
     setLoading(true);
 
-    return fetchDoc(id)
+    // Same-version clicks: skip tree rebuild. Version switches / missing nodes: include tree.
+    var includeTree = !!opts.includeTree;
+    if (!includeTree && opts.forceTree) includeTree = true;
+    if (!includeTree && !treeHasDoc(id) && !opts.allowMissingTree) {
+      // Target not visible in sidebar yet (collapsed lazy branch / other version) — need tree.
+      includeTree = true;
+    }
+
+    return fetchDoc(id, { includeTree: includeTree, forceNetwork: !!opts.forceNetwork })
       .then(function (data) {
-        applyDoc(data, opts.pushState !== false);
+        var found = applyDoc(data, opts.pushState !== false);
         closeMobileSidebar();
+
+        // Recovery: doc still missing from tree after a no-tree fetch (other branch / version).
+        if (!found && !data.treeHtml) {
+          return fetchDoc(id, { includeTree: true, forceNetwork: true }).then(function (full) {
+            applyDoc(full, false);
+            prefetchNeighbors(full);
+          });
+        }
+
+        prefetchNeighbors(data);
+        return data;
       })
       .catch(function (err) {
         if (err && err.name === 'AbortError') return;
-        // Hard fallback.
         if (opts.href) {
           window.location.href = opts.href;
         }
@@ -235,7 +323,6 @@
     return 0;
   }
 
-  // Intercept tree / pager / in-content doc links marked for AJAX.
   document.addEventListener('click', function (e) {
     var link = e.target.closest('a[data-md-ajax-doc], .md-docs-sidebar__nav a, [data-md-doc-tree] a, [data-md-pager] a');
     if (!link || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -245,20 +332,23 @@
     if (!href || href.charAt(0) === '#') return;
 
     var id = resolveDocIdFromLink(link);
-    // Sidebar menu items without data attr: try cache miss via URL path load fallback.
     if (!id && link.closest('.md-docs-sidebar__nav, [data-md-doc-tree]')) {
-      // Allow WP menus: still try to AJAX if URL looks like a docs permalink by fetching via full navigation fallback.
-      // Without an ID we cannot use the REST id endpoint; fall through to normal navigation.
       return;
     }
 
     if (!id) return;
 
     e.preventDefault();
-    navigateToDoc(id, { href: link.href, pushState: true });
+    // Sidebar click: link is already in the tree — skip tree rebuild.
+    var fromTree = !!link.closest('[data-md-doc-tree], .md-docs-sidebar__nav, [data-md-pager]');
+    navigateToDoc(id, {
+      href: link.href,
+      pushState: true,
+      includeTree: false,
+      allowMissingTree: fromTree
+    });
   });
 
-  // Version switcher (delegated — HTML is replaced after AJAX).
   document.addEventListener('change', function (e) {
     var select = e.target.closest('.md-version-select');
     if (!select) return;
@@ -269,13 +359,13 @@
     var id = parseInt(option.getAttribute('data-md-doc-id') || '0', 10);
     var url = option.value;
     if (id) {
-      navigateToDoc(id, { href: url, pushState: true });
+      // Version change always needs a fresh tree for the new root.
+      navigateToDoc(id, { href: url, pushState: true, includeTree: true, forceNetwork: true });
     } else if (url) {
       window.location.href = url;
     }
   });
 
-  // Live search result clicks (sidebar modal or in-shell search).
   document.addEventListener('click', function (e) {
     var item = e.target.closest('.md-live-search__item');
     if (!item) return;
@@ -295,14 +385,12 @@
   window.addEventListener('popstate', function (e) {
     var id = e.state && e.state.mdDocId;
     if (!id) {
-      // Try parse from current article mapping — reload if unknown.
       window.location.reload();
       return;
     }
     navigateToDoc(id, { pushState: false, force: true });
   });
 
-  // Seed history state for back-button support.
   if (!window.history.state || !window.history.state.mdDocId) {
     var initialId = parseInt(article.getAttribute('data-md-doc-id'), 10);
     if (initialId) {
@@ -310,7 +398,18 @@
     }
   }
 
-  // Expose for live-search integration.
+  // Prefetch neighbors for the initially rendered document.
+  (function seedPrefetch() {
+    var pager = qs('[data-md-pager]', article);
+    if (!pager) return;
+    pager.querySelectorAll('a[data-md-doc-id]').forEach(function (a) {
+      var nid = parseInt(a.getAttribute('data-md-doc-id') || '0', 10);
+      if (nid && !cache[nid]) {
+        fetchDoc(nid, { includeTree: false, background: true });
+      }
+    });
+  })();
+
   window.ManualDocsAjax = {
     navigateToDoc: navigateToDoc,
     fetchDoc: fetchDoc

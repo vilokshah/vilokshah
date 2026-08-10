@@ -17,6 +17,8 @@ $show_edit    = (bool) manual_docs_get_option( 'show_edit_link', true );
 $version      = manual_docs_get_doc_version();
 $compare_to   = function_exists( 'manual_docs_get_compare_request' ) ? manual_docs_get_compare_request() : '';
 $is_compare   = $compare_to && function_exists( 'manual_docs_version_diff_enabled' ) && manual_docs_version_diff_enabled();
+$doc_id       = (int) get_queried_object_id();
+$version_root = ( $doc_id && function_exists( 'manual_docs_get_version_root_for_doc' ) ) ? manual_docs_get_version_root_for_doc( $doc_id ) : null;
 ?>
 
 <main id="main-content" class="md-main md-main--docs<?php echo $is_compare ? ' md-main--compare' : ''; ?>">
@@ -29,7 +31,7 @@ $is_compare   = $compare_to && function_exists( 'manual_docs_version_diff_enable
 
 		<?php while ( have_posts() ) : ?>
 			<?php the_post(); ?>
-			<article <?php post_class( 'md-doc-article' ); ?> id="md-doc-article" data-md-doc-id="<?php the_ID(); ?>" aria-live="polite" tabindex="-1">
+			<article <?php post_class( 'md-doc-article' ); ?> id="md-doc-article" data-md-doc-id="<?php the_ID(); ?>" data-md-version-root="<?php echo esc_attr( $version_root ? (string) (int) $version_root->ID : '0' ); ?>" aria-live="polite" tabindex="-1">
 				<div class="md-ajax-progress" data-md-ajax-progress hidden><span class="md-ajax-progress__bar"></span></div>
 
 				<header class="md-doc-header">
