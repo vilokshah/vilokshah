@@ -95,7 +95,6 @@
   function loadLazyChildren(li, kids, open) {
     if (!open || !kids || !kids.hasAttribute('data-md-lazy-parent')) return Promise.resolve();
     if (kids.getAttribute('data-md-loading') === '1') {
-      // Return the in-flight promise if we stored one.
       return kids._mdLazyPromise || Promise.resolve();
     }
     // Already hydrated with real child docs — clear lazy flag.
@@ -103,7 +102,7 @@
       kids.removeAttribute('data-md-lazy-parent');
       return Promise.resolve();
     }
-    if (typeof manualDocs === 'undefined' || !manualDocs.restUrl) return Promise.resolve();
+    if (typeof manualDocs === 'undefined') return Promise.resolve();
 
     var parentId = kids.getAttribute('data-md-lazy-parent');
     var article = document.getElementById('md-doc-article');
@@ -111,31 +110,65 @@
     kids.setAttribute('data-md-loading', '1');
     kids.innerHTML = '<li class="md-doc-nav__item"><span class="md-nav-empty">Loading…</span></li>';
 
-    var url = manualDocs.restUrl + 'nav-children?parent=' + encodeURIComponent(parentId) +
-      '&current=' + encodeURIComponent(currentId);
-
-    var promise = fetch(url, {
-      credentials: 'same-origin',
-      headers: {
-        'Accept': 'application/json',
-        'X-WP-Nonce': manualDocs.restNonce || manualDocs.nonce
+    function applyHtml(html) {
+      // Bail if a newer injectDocChildren already filled this node.
+      if (!kids.hasAttribute('data-md-loading') && kids.querySelector('a[data-md-doc-id]')) {
+        return;
       }
-    })
-      .then(function (res) {
+      kids.innerHTML = html || '';
+      kids.removeAttribute('data-md-lazy-parent');
+      kids.removeAttribute('data-md-loading');
+      kids._mdLazyPromise = null;
+    }
+
+    function fail() {
+      if (kids.querySelector('a[data-md-doc-id]')) {
+        kids.removeAttribute('data-md-loading');
+        kids._mdLazyPromise = null;
+        return;
+      }
+      kids.innerHTML = '<li class="md-doc-nav__item"><span class="md-nav-empty">Could not load</span></li>';
+      kids.removeAttribute('data-md-loading');
+      kids._mdLazyPromise = null;
+    }
+
+    function fetchViaRest() {
+      if (!manualDocs.restUrl) return Promise.reject(new Error('no-rest'));
+      var url = manualDocs.restUrl + 'nav-children?parent=' + encodeURIComponent(parentId) +
+        '&current=' + encodeURIComponent(currentId);
+      return fetch(url, {
+        credentials: 'same-origin',
+        headers: {
+          'Accept': 'application/json',
+          'X-WP-Nonce': manualDocs.restNonce || ''
+        }
+      }).then(function (res) {
         if (!res.ok) throw new Error('nav-fail');
         return res.json();
-      })
-      .then(function (data) {
-        kids.innerHTML = (data && data.html) ? data.html : '';
-        kids.removeAttribute('data-md-lazy-parent');
-        kids.removeAttribute('data-md-loading');
-        kids._mdLazyPromise = null;
-      })
-      .catch(function () {
-        kids.innerHTML = '<li class="md-doc-nav__item"><span class="md-nav-empty">Could not load</span></li>';
-        kids.removeAttribute('data-md-loading');
-        kids._mdLazyPromise = null;
+      }).then(function (data) {
+        applyHtml(data && data.html);
       });
+    }
+
+    function fetchViaAjax() {
+      if (!manualDocs.ajaxUrl) return Promise.reject(new Error('no-ajax'));
+      var url = manualDocs.ajaxUrl +
+        '?action=manual_docs_nav_children&nonce=' + encodeURIComponent(manualDocs.nonce || '') +
+        '&parent=' + encodeURIComponent(parentId) +
+        '&current=' + encodeURIComponent(currentId);
+      return fetch(url, { credentials: 'same-origin' })
+        .then(function (res) { return res.json(); })
+        .then(function (payload) {
+          if (!payload || !payload.success) throw new Error('ajax-nav-fail');
+          applyHtml(payload.data && payload.data.html);
+        });
+    }
+
+    var promise = fetchViaRest().catch(function () {
+      return fetchViaAjax();
+    }).catch(function () {
+      fail();
+    });
 
     kids._mdLazyPromise = promise;
     return promise;
@@ -147,7 +180,13 @@
   function ensureNavItemExpanded(li) {
     if (!li || !li.classList.contains('has-children')) return Promise.resolve();
     var kids = directChildList(li);
-    var twist = li.querySelector(':scope > [data-md-tree-toggle]') || li.querySelector('[data-md-tree-toggle]');
+    var twist = null;
+    for (var i = 0; i < li.children.length; i++) {
+      if (li.children[i].hasAttribute && li.children[i].hasAttribute('data-md-tree-toggle')) {
+        twist = li.children[i];
+        break;
+      }
+    }
     li.classList.add('is-expanded');
     if (twist) twist.setAttribute('aria-expanded', 'true');
     if (kids) {

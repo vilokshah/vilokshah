@@ -214,6 +214,16 @@ function manual_docs_get_doc_payload( WP_Post $post, $args = array() ) {
 		$tree_html = ob_get_clean();
 	}
 
+	// Always include direct children HTML (cheap). Lets the AJAX client expand the
+	// active parent without a full tree rebuild or a second nav-children race.
+	$has_children  = manual_docs_doc_has_children( $post_id );
+	$children_html = '';
+	if ( $has_children ) {
+		ob_start();
+		manual_docs_render_nav_children_html( $post_id, $post_id );
+		$children_html = (string) ob_get_clean();
+	}
+
 	$payload = array(
 		'id'            => $post_id,
 		'title'         => get_the_title( $post ),
@@ -235,6 +245,8 @@ function manual_docs_get_doc_payload( WP_Post $post, $args = array() ) {
 		'toc'           => $toc,
 		'treeHtml'      => $tree_html,
 		'includeTree'   => ! empty( $args['include_tree'] ),
+		'hasChildren'   => (bool) $has_children,
+		'childrenHtml'  => $children_html,
 		'breadcrumbs'   => manual_docs_get_buffered_markup( 'manual_docs_breadcrumbs', array( $post_id ) ),
 		'versionHtml'   => manual_docs_get_buffered_markup( 'manual_docs_render_version_switcher', array( $post_id ) ),
 		'pagerHtml'     => manual_docs_get_pager_html( $adjacent ),
@@ -430,3 +442,30 @@ function manual_docs_ajax_get_doc() {
 }
 add_action( 'wp_ajax_manual_docs_get_doc', 'manual_docs_ajax_get_doc' );
 add_action( 'wp_ajax_nopriv_manual_docs_get_doc', 'manual_docs_ajax_get_doc' );
+
+/**
+ * Classic admin-ajax fallback for lazy nav children.
+ */
+function manual_docs_ajax_nav_children() {
+	if ( ! manual_docs_verify_nonce( 'manual_docs_search', 'nonce' ) ) {
+		wp_send_json_error( array( 'message' => __( 'Invalid request.', 'manual-docs' ) ), 403 );
+	}
+
+	$parent_id = isset( $_GET['parent'] ) ? absint( $_GET['parent'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification
+	$current   = isset( $_GET['current'] ) ? absint( $_GET['current'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification
+
+	$request = new WP_REST_Request( 'GET', '/manual-docs/v1/nav-children' );
+	$request->set_param( 'parent', $parent_id );
+	$request->set_param( 'current', $current );
+	$response = manual_docs_rest_nav_children( $request );
+
+	if ( is_wp_error( $response ) ) {
+		$data   = $response->get_error_data();
+		$status = ( is_array( $data ) && isset( $data['status'] ) ) ? (int) $data['status'] : 400;
+		wp_send_json_error( array( 'message' => $response->get_error_message() ), $status );
+	}
+
+	wp_send_json_success( $response->get_data() );
+}
+add_action( 'wp_ajax_manual_docs_nav_children', 'manual_docs_ajax_nav_children' );
+add_action( 'wp_ajax_nopriv_manual_docs_nav_children', 'manual_docs_ajax_nav_children' );
