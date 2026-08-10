@@ -177,16 +177,69 @@
   /**
    * Expand a nav item and lazy-load children if needed (used after AJAX doc navigation).
    */
+  function getTwistButton(li) {
+    if (!li || !li.children) return null;
+    for (var i = 0; i < li.children.length; i++) {
+      if (li.children[i].hasAttribute && li.children[i].hasAttribute('data-md-tree-toggle')) {
+        return li.children[i];
+      }
+    }
+    return null;
+  }
+
+  function collapseNavItem(li) {
+    if (!li) return;
+    li.classList.remove('is-expanded');
+    var twist = getTwistButton(li);
+    if (twist) twist.setAttribute('aria-expanded', 'false');
+    var kids = directChildList(li);
+    if (kids) {
+      kids.setAttribute('hidden', '');
+      kids.hidden = true;
+    }
+  }
+
+  /**
+   * Accordion: keep only the active doc path expanded; collapse every other branch.
+   */
+  function collapseBranchesOutsidePath(activeLi) {
+    var tree = qs('[data-md-doc-tree]') || qs('.md-docs-sidebar__nav');
+    if (!tree || !activeLi) return;
+
+    var keep = [];
+    var node = activeLi;
+    while (node && node !== tree) {
+      if (node.classList && node.classList.contains('md-doc-nav__item')) {
+        keep.push(node);
+      }
+      node = node.parentElement;
+    }
+
+    qsa('.md-doc-nav__item.is-expanded', tree).forEach(function (li) {
+      if (keep.indexOf(li) === -1) {
+        collapseNavItem(li);
+      }
+    });
+  }
+
+  /**
+   * Accordion: when opening a node via the chevron, close its siblings.
+   */
+  function collapseSiblingBranches(li) {
+    if (!li || !li.parentElement) return;
+    var siblings = li.parentElement.children;
+    for (var i = 0; i < siblings.length; i++) {
+      var sib = siblings[i];
+      if (sib !== li && sib.classList && sib.classList.contains('md-doc-nav__item') && sib.classList.contains('is-expanded')) {
+        collapseNavItem(sib);
+      }
+    }
+  }
+
   function ensureNavItemExpanded(li) {
     if (!li || !li.classList.contains('has-children')) return Promise.resolve();
     var kids = directChildList(li);
-    var twist = null;
-    for (var i = 0; i < li.children.length; i++) {
-      if (li.children[i].hasAttribute && li.children[i].hasAttribute('data-md-tree-toggle')) {
-        twist = li.children[i];
-        break;
-      }
-    }
+    var twist = getTwistButton(li);
     li.classList.add('is-expanded');
     if (twist) twist.setAttribute('aria-expanded', 'true');
     if (kids) {
@@ -203,6 +256,10 @@
     var link = tree.querySelector('[data-md-doc-id="' + docId + '"]');
     if (!link) return Promise.resolve();
     var li = link.closest('.md-doc-nav__item');
+    if (!li) return Promise.resolve();
+
+    collapseBranchesOutsidePath(li);
+
     var chain = [];
     var node = li;
     while (node && node !== tree) {
@@ -235,6 +292,9 @@
     ensureNavItemExpanded: ensureNavItemExpanded,
     ensureDocExpandedInTree: ensureDocExpandedInTree,
     hydrateExpandedLazyBranches: hydrateExpandedLazyBranches,
+    collapseBranchesOutsidePath: collapseBranchesOutsidePath,
+    collapseSiblingBranches: collapseSiblingBranches,
+    collapseNavItem: collapseNavItem,
     directChildList: directChildList
   };
 
@@ -251,6 +311,9 @@
     var needsLoad = kids && kids.hasAttribute('data-md-lazy-parent') &&
       !kids.querySelector('a[data-md-doc-id], a[data-md-ajax-doc]');
     var open = needsLoad ? true : !isExpanded;
+    if (open) {
+      collapseSiblingBranches(li);
+    }
     li.classList.toggle('is-expanded', open);
     twist.setAttribute('aria-expanded', open ? 'true' : 'false');
     if (kids) {

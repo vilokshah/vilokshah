@@ -80,6 +80,11 @@
     var li = link.closest('.md-doc-nav__item') || link.parentElement;
     if (li) li.classList.add('is-active');
 
+    // Accordion: close branches that are not ancestors of the active doc.
+    if (li && window.ManualDocsTree && typeof window.ManualDocsTree.collapseBranchesOutsidePath === 'function') {
+      window.ManualDocsTree.collapseBranchesOutsidePath(li);
+    }
+
     // Only toggle each item's own child list (not a nested descendant UL).
     var parent = li;
     while (parent && parent !== tree) {
