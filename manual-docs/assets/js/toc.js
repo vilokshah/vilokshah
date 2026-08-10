@@ -70,6 +70,11 @@
 
     if (!headings.length) {
       if (tocAside) tocAside.hidden = true;
+      var emptyLayout = document.querySelector('.md-doc-layout');
+      if (emptyLayout) {
+        emptyLayout.classList.add('md-doc-layout--no-toc');
+        emptyLayout.classList.remove('is-toc-collapsed');
+      }
       return;
     }
 
@@ -80,7 +85,10 @@
       try { collapsed = localStorage.getItem('manualDocsTocCollapsed') === '1'; } catch (e) {}
       tocAside.classList.toggle('is-collapsed', collapsed);
       var layout = document.querySelector('.md-doc-layout');
-      if (layout) layout.classList.toggle('is-toc-collapsed', collapsed);
+      if (layout) {
+        layout.classList.remove('md-doc-layout--no-toc');
+        layout.classList.toggle('is-toc-collapsed', collapsed);
+      }
       if (collapsed) list.setAttribute('hidden', '');
       else list.removeAttribute('hidden');
       var toggleBtn = tocAside.querySelector('[data-md-toc-toggle]');

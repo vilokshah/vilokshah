@@ -45,7 +45,7 @@ function manual_docs_default_options() {
 		'hero_title'           => __( 'Documentation', 'manual-docs' ),
 		'hero_text'            => __( 'Search guides, explore products, and find answers fast.', 'manual-docs' ),
 		'hero_eyebrow'         => '',
-		'show_community_cta'   => 1,
+		'show_community_cta'   => 0,
 		'academy_forum_slug'   => 'academy-support',
 		'version_label'        => __( 'Release version', 'manual-docs' ),
 		'version_root_slugs'   => 'goat,flamingo,hummingbird',
@@ -648,9 +648,9 @@ function manual_docs_render_options_page() {
 						<label><input type="checkbox" name="manual_docs_options[show_edit_link]" value="1" <?php checked( $o['show_edit_link'], 1 ); ?> /> <?php esc_html_e( 'Show edit link (for editors)', 'manual-docs' ); ?></label><br />
 						<label><input type="checkbox" name="manual_docs_options[tree_expand_active]" value="1" <?php checked( $o['tree_expand_active'], 1 ); ?> /> <?php esc_html_e( 'Auto-expand active tree branch', 'manual-docs' ); ?></label><br />
 						<label><input type="checkbox" name="manual_docs_options[tree_lazy]" value="1" <?php checked( ! empty( $o['tree_lazy'] ), 1 ); ?> /> <?php esc_html_e( 'Lazy-load tree children (recommended for large libraries)', 'manual-docs' ); ?></label><br />
-						<label><input type="checkbox" name="manual_docs_options[show_community_cta]" value="1" <?php checked( $o['show_community_cta'], 1 ); ?> /> <?php esc_html_e( 'Show community CTA', 'manual-docs' ); ?></label><br />
 						<label><input type="checkbox" name="manual_docs_options[enable_version_diff]" value="1" <?php checked( ! empty( $o['enable_version_diff'] ), 1 ); ?> /> <?php esc_html_e( 'Enable version diff (Compare across releases)', 'manual-docs' ); ?></label>
 						<p class="description" style="margin-top:6px;"><?php esc_html_e( 'When enabled, docs show a “Compare versions” control. Turn off to hide the feature completely with no other impact.', 'manual-docs' ); ?></p>
+						<p class="description" style="margin-top:6px;"><?php esc_html_e( 'For libraries with thousands of docs, keep Lazy-load tree children enabled. Previous/Next uses a cached reading order (rebuilt after doc saves).', 'manual-docs' ); ?></p>
 					</td>
 				</tr>
 				<tr>

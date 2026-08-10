@@ -103,10 +103,6 @@ $is_compare   = $compare_to && function_exists( 'manual_docs_version_diff_enable
 				<nav class="md-doc-pager" data-md-pager aria-label="<?php esc_attr_e( 'Document navigation', 'manual-docs' ); ?>">
 					<?php echo manual_docs_get_pager_html( $adjacent ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</nav>
-
-				<div data-md-community-slot>
-					<?php if ( manual_docs_get_option( 'show_community_cta', true ) ) { manual_docs_render_community_cta(); } ?>
-				</div>
 				<?php endif; ?>
 			</article>
 		<?php endwhile; ?>

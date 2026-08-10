@@ -491,21 +491,8 @@ function manual_docs_install_bbpress_sample() {
 }
 
 /**
- * Add community CTA on documentation pages.
+ * Community CTA (removed from documentation pages for multi-site theme use).
  */
 function manual_docs_render_community_cta() {
-	if ( ! manual_docs_bbpress_active() || ! manual_docs_get_option( 'show_community_cta', true ) ) {
-		return;
-	}
-
-	$forum_url = function_exists( 'bbp_get_forums_url' ) ? bbp_get_forums_url() : home_url( '/forums/' );
-	?>
-	<aside class="md-community-cta">
-		<div class="md-community-cta__inner">
-			<h3><?php esc_html_e( 'Need help from the community?', 'manual-docs' ); ?></h3>
-			<p><?php esc_html_e( 'Ask questions, share tips, and connect with other members in the forums.', 'manual-docs' ); ?></p>
-			<a class="md-btn md-btn--primary" href="<?php echo esc_url( $forum_url ); ?>"><?php esc_html_e( 'Visit Forums', 'manual-docs' ); ?></a>
-		</div>
-	</aside>
-	<?php
+	// Intentionally empty — docs no longer render a forums CTA below content.
 }

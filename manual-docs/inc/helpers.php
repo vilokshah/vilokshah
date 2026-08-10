@@ -373,26 +373,92 @@ function manual_docs_get_direct_child_posts( $parent = 0 ) {
 			$out[] = $post;
 		}
 	}
+	if ( $out ) {
+		manual_docs_prime_has_children_cache( wp_list_pluck( $out, 'ID' ) );
+	}
 	return $out;
+}
+
+/**
+ * Shared request cache for has-children checks.
+ *
+ * @param int|null $post_id Post ID (null = no read).
+ * @param bool|null $value  When non-null, write this value.
+ * @return bool|null
+ */
+function manual_docs_has_children_cache( $post_id = null, $value = null ) {
+	static $cache = array();
+	if ( null === $post_id ) {
+		return null;
+	}
+	$post_id = (int) $post_id;
+	if ( null !== $value ) {
+		$cache[ $post_id ] = (bool) $value;
+		return $cache[ $post_id ];
+	}
+	if ( array_key_exists( $post_id, $cache ) ) {
+		return (bool) $cache[ $post_id ];
+	}
+	return null;
 }
 
 /**
  * Whether a documentation post has published children.
  *
+ * Request-cached; sibling batches are primed via manual_docs_prime_has_children_cache().
+ *
  * @param int $post_id Post ID.
  * @return bool
  */
 function manual_docs_doc_has_children( $post_id ) {
-	global $wpdb;
 	$post_id = (int) $post_id;
-	$found   = $wpdb->get_var(
+	$cached  = manual_docs_has_children_cache( $post_id );
+	if ( null !== $cached ) {
+		return $cached;
+	}
+
+	global $wpdb;
+	$found = $wpdb->get_var(
 		$wpdb->prepare(
 			"SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_type = %s AND post_status = 'publish' LIMIT 1",
 			$post_id,
 			'manual_documentation'
 		)
 	);
-	return ! empty( $found );
+	return (bool) manual_docs_has_children_cache( $post_id, ! empty( $found ) );
+}
+
+/**
+ * Prime has-children cache for a list of parent IDs (one SQL query).
+ *
+ * @param int[] $post_ids Post IDs.
+ */
+function manual_docs_prime_has_children_cache( $post_ids ) {
+	$post_ids = array_values( array_unique( array_filter( array_map( 'intval', (array) $post_ids ) ) ) );
+	if ( ! $post_ids ) {
+		return;
+	}
+
+	$to_check = array();
+	foreach ( $post_ids as $id ) {
+		if ( null === manual_docs_has_children_cache( $id ) ) {
+			$to_check[] = $id;
+			manual_docs_has_children_cache( $id, false );
+		}
+	}
+	if ( ! $to_check ) {
+		return;
+	}
+
+	global $wpdb;
+	$placeholders = implode( ',', array_fill( 0, count( $to_check ), '%d' ) );
+	$sql          = "SELECT DISTINCT post_parent FROM {$wpdb->posts} WHERE post_parent IN ($placeholders) AND post_type = %s AND post_status = 'publish'";
+	$params       = array_merge( $to_check, array( 'manual_documentation' ) );
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- placeholders built above.
+	$parents = $wpdb->get_col( $wpdb->prepare( $sql, $params ) );
+	foreach ( (array) $parents as $pid ) {
+		manual_docs_has_children_cache( (int) $pid, true );
+	}
 }
 
 /**
@@ -717,7 +783,7 @@ function manual_docs_get_version_reading_order( $root_id ) {
 }
 
 /**
- * Bust cached reading-order / tree helpers when docs change.
+ * Bust cached reading-order helpers when docs change.
  *
  * @param int $post_id Post ID.
  */
@@ -729,39 +795,70 @@ function manual_docs_bust_doc_caches( $post_id ) {
 	$root = function_exists( 'manual_docs_get_version_root_for_doc' ) ? manual_docs_get_version_root_for_doc( $post_id ) : null;
 	if ( $root ) {
 		delete_transient( 'manual_docs_read_order_' . (int) $root->ID );
+		delete_transient( 'manual_docs_children_map_v1' );
+		return;
 	}
-	if ( function_exists( 'manual_docs_get_version_roots' ) ) {
-		foreach ( manual_docs_get_version_roots() as $r ) {
-			delete_transient( 'manual_docs_read_order_' . (int) $r->ID );
-		}
-	}
+	// Orphan / root-level doc — clear map so next rebuild is correct.
+	delete_transient( 'manual_docs_children_map_v1' );
 }
 add_action( 'save_post_manual_documentation', 'manual_docs_bust_doc_caches' );
 add_action( 'before_delete_post', 'manual_docs_bust_doc_caches' );
 
 /**
- * Collect descendant IDs in DFS pre-order.
+ * Parent → child ID map for all published docs (one query, request + transient cached).
+ *
+ * @return array<int,int[]>
+ */
+function manual_docs_get_doc_children_map() {
+	static $map = null;
+	if ( null !== $map ) {
+		return $map;
+	}
+
+	$cached = get_transient( 'manual_docs_children_map_v1' );
+	if ( is_array( $cached ) ) {
+		$map = $cached;
+		return $map;
+	}
+
+	global $wpdb;
+	$rows = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT ID, post_parent FROM {$wpdb->posts}
+			WHERE post_type = %s AND post_status = 'publish'
+			ORDER BY menu_order ASC, post_title ASC",
+			'manual_documentation'
+		),
+		ARRAY_A
+	);
+
+	$map = array();
+	foreach ( (array) $rows as $row ) {
+		$pid = (int) $row['post_parent'];
+		$id  = (int) $row['ID'];
+		if ( ! isset( $map[ $pid ] ) ) {
+			$map[ $pid ] = array();
+		}
+		$map[ $pid ][] = $id;
+	}
+
+	set_transient( 'manual_docs_children_map_v1', $map, 12 * HOUR_IN_SECONDS );
+	return $map;
+}
+
+/**
+ * Collect descendant IDs in DFS pre-order (uses cached parent→children map).
  *
  * @param int   $parent_id Parent.
  * @param int[] $out       Collector.
  */
 function manual_docs_collect_doc_ids_dfs( $parent_id, &$out ) {
-	$children = get_posts(
-		array(
-			'post_type'              => 'manual_documentation',
-			'post_parent'            => (int) $parent_id,
-			'posts_per_page'         => -1,
-			'orderby'                => 'menu_order title',
-			'order'                  => 'ASC',
-			'post_status'            => 'publish',
-			'fields'                 => 'ids',
-			'no_found_rows'          => true,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		)
-	);
-
-	foreach ( $children as $cid ) {
+	$map       = manual_docs_get_doc_children_map();
+	$parent_id = (int) $parent_id;
+	if ( empty( $map[ $parent_id ] ) ) {
+		return;
+	}
+	foreach ( $map[ $parent_id ] as $cid ) {
 		$cid   = (int) $cid;
 		$out[] = $cid;
 		manual_docs_collect_doc_ids_dfs( $cid, $out );

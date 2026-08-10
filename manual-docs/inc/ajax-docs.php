@@ -204,7 +204,7 @@ function manual_docs_get_doc_payload( WP_Post $post ) {
 		'breadcrumbs'   => manual_docs_get_buffered_markup( 'manual_docs_breadcrumbs', array( $post_id ) ),
 		'versionHtml'   => manual_docs_get_buffered_markup( 'manual_docs_render_version_switcher', array( $post_id ) ),
 		'pagerHtml'     => manual_docs_get_pager_html( $adjacent ),
-		'communityHtml' => manual_docs_get_option( 'show_community_cta', true ) ? manual_docs_get_buffered_markup( 'manual_docs_render_community_cta' ) : '',
+		'communityHtml' => '',
 		'parent'        => (int) $post->post_parent,
 		'menuOrder'     => (int) $post->menu_order,
 		'editUrl'       => current_user_can( 'edit_post', $post_id ) ? get_edit_post_link( $post_id, 'raw' ) : '',

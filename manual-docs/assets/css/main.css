@@ -1098,6 +1098,11 @@ html[data-md-theme="light"] .md-diff-hl--add {
   transition: grid-template-columns .28s var(--md-ease);
 }
 .md-doc-layout--no-toc { grid-template-columns: 1fr; }
+/* Expand content when TOC aside is hidden (no headings on the page). */
+.md-doc-layout:has(.md-doc-toc[hidden]) {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
 .md-doc-layout.is-toc-collapsed {
   grid-template-columns: minmax(0, 1fr) 52px;
   gap: 0.75rem;
