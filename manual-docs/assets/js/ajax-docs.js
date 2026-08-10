@@ -40,6 +40,19 @@
     return !!tree.querySelector('[data-md-doc-id="' + docId + '"]');
   }
 
+  function directChildList(li) {
+    if (window.ManualDocsTree && typeof window.ManualDocsTree.directChildList === 'function') {
+      return window.ManualDocsTree.directChildList(li);
+    }
+    if (!li || !li.children) return null;
+    for (var i = 0; i < li.children.length; i++) {
+      if (li.children[i].classList && li.children[i].classList.contains('md-doc-nav__children')) {
+        return li.children[i];
+      }
+    }
+    return null;
+  }
+
   function updateTreeActive(docId) {
     var tree = qs('[data-md-doc-tree]', shell) || qs('.md-docs-sidebar__nav', shell);
     if (!tree) return false;
@@ -67,13 +80,19 @@
     var li = link.closest('.md-doc-nav__item') || link.parentElement;
     if (li) li.classList.add('is-active');
 
-    var parent = link.parentElement;
+    // Only toggle each item's own child list (not a nested descendant UL).
+    var parent = li;
     while (parent && parent !== tree) {
       if (parent.classList && parent.classList.contains('md-doc-nav__item')) {
         parent.classList.add('is-expanded');
         parent.classList.remove('is-collapsed');
-        var kids = parent.querySelector('.md-doc-nav__children');
-        if (kids) kids.hidden = false;
+        var kids = directChildList(parent);
+        if (kids) {
+          kids.removeAttribute('hidden');
+          kids.hidden = false;
+        }
+        var twist = parent.querySelector(':scope > [data-md-tree-toggle]') || parent.querySelector('[data-md-tree-toggle]');
+        if (twist) twist.setAttribute('aria-expanded', 'true');
       }
       parent = parent.parentElement;
     }
@@ -165,8 +184,8 @@
     article.focus({ preventScroll: true });
 
     // After skipping treeHtml rebuild, still expand + lazy-load children for the active doc.
-    if (foundInTree && window.ManualDocsTree && typeof window.ManualDocsTree.ensureDocExpandedInTree === 'function') {
-      window.ManualDocsTree.ensureDocExpandedInTree(data.id);
+    if (foundInTree) {
+      expandDocInTree(data.id);
     }
 
     return foundInTree;
@@ -274,13 +293,24 @@
     });
   }
 
+  function expandDocInTree(id) {
+    if (window.ManualDocsTree && typeof window.ManualDocsTree.ensureDocExpandedInTree === 'function') {
+      return window.ManualDocsTree.ensureDocExpandedInTree(id);
+    }
+    return Promise.resolve();
+  }
+
   function navigateToDoc(id, opts) {
     opts = opts || {};
     id = parseInt(id, 10);
     if (!id || navigating) return Promise.resolve();
 
     var currentId = parseInt(article.getAttribute('data-md-doc-id'), 10);
-    if (currentId === id && !opts.force) return Promise.resolve();
+    if (currentId === id && !opts.force) {
+      // Re-clicking the current parent doc should still drill into children.
+      expandDocInTree(id);
+      return Promise.resolve();
+    }
 
     navigating = true;
     setLoading(true);
@@ -346,6 +376,10 @@
     e.preventDefault();
     // Sidebar click: link is already in the tree — skip tree rebuild.
     var fromTree = !!link.closest('[data-md-doc-tree], .md-docs-sidebar__nav, [data-md-pager]');
+    // Optimistic: expand + lazy-load children immediately on first click (don't wait for doc fetch).
+    if (fromTree && link.closest('[data-md-doc-tree], .md-docs-sidebar__nav')) {
+      expandDocInTree(id);
+    }
     navigateToDoc(id, {
       href: link.href,
       pushState: true,

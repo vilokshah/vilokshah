@@ -77,10 +77,29 @@
   });
 
   // Tree expand/collapse (delegated for AJAX-replaced trees) + lazy children.
+  function directChildList(li) {
+    if (!li || !li.children) return null;
+    for (var i = 0; i < li.children.length; i++) {
+      if (li.children[i].classList && li.children[i].classList.contains('md-doc-nav__children')) {
+        return li.children[i];
+      }
+    }
+    return null;
+  }
+
+  function kidsNeedLazyLoad(kids) {
+    return !!(kids && kids.hasAttribute('data-md-lazy-parent') &&
+      !kids.querySelector('a[data-md-doc-id], a[data-md-ajax-doc]'));
+  }
+
   function loadLazyChildren(li, kids, open) {
     if (!open || !kids || !kids.hasAttribute('data-md-lazy-parent')) return Promise.resolve();
-    if (kids.getAttribute('data-md-loading') === '1') return Promise.resolve();
-    if (kids.querySelector('li')) {
+    if (kids.getAttribute('data-md-loading') === '1') {
+      // Return the in-flight promise if we stored one.
+      return kids._mdLazyPromise || Promise.resolve();
+    }
+    // Already hydrated with real child docs — clear lazy flag.
+    if (kids.querySelector('a[data-md-doc-id], a[data-md-ajax-doc]')) {
       kids.removeAttribute('data-md-lazy-parent');
       return Promise.resolve();
     }
@@ -95,7 +114,7 @@
     var url = manualDocs.restUrl + 'nav-children?parent=' + encodeURIComponent(parentId) +
       '&current=' + encodeURIComponent(currentId);
 
-    return fetch(url, {
+    var promise = fetch(url, {
       credentials: 'same-origin',
       headers: {
         'Accept': 'application/json',
@@ -110,21 +129,16 @@
         kids.innerHTML = (data && data.html) ? data.html : '';
         kids.removeAttribute('data-md-lazy-parent');
         kids.removeAttribute('data-md-loading');
+        kids._mdLazyPromise = null;
       })
       .catch(function () {
         kids.innerHTML = '<li class="md-doc-nav__item"><span class="md-nav-empty">Could not load</span></li>';
         kids.removeAttribute('data-md-loading');
+        kids._mdLazyPromise = null;
       });
-  }
 
-  function directChildList(li) {
-    if (!li || !li.children) return null;
-    for (var i = 0; i < li.children.length; i++) {
-      if (li.children[i].classList && li.children[i].classList.contains('md-doc-nav__children')) {
-        return li.children[i];
-      }
-    }
-    return null;
+    kids._mdLazyPromise = promise;
+    return promise;
   }
 
   /**
@@ -133,11 +147,12 @@
   function ensureNavItemExpanded(li) {
     if (!li || !li.classList.contains('has-children')) return Promise.resolve();
     var kids = directChildList(li);
-    var twist = li.querySelector('[data-md-tree-toggle]');
+    var twist = li.querySelector(':scope > [data-md-tree-toggle]') || li.querySelector('[data-md-tree-toggle]');
     li.classList.add('is-expanded');
     if (twist) twist.setAttribute('aria-expanded', 'true');
     if (kids) {
       kids.removeAttribute('hidden');
+      kids.hidden = false;
       return loadLazyChildren(li, kids, true);
     }
     return Promise.resolve();
@@ -164,28 +179,59 @@
     return seq;
   }
 
+  /** Hydrate any expanded-but-empty lazy branches (e.g. active path on first paint). */
+  function hydrateExpandedLazyBranches() {
+    var tree = qs('[data-md-doc-tree]') || qs('.md-docs-sidebar__nav');
+    if (!tree) return;
+    qsa('.md-doc-nav__item.is-expanded.has-children', tree).forEach(function (li) {
+      var kids = directChildList(li);
+      if (kidsNeedLazyLoad(kids)) {
+        ensureNavItemExpanded(li);
+      }
+    });
+  }
+
   window.ManualDocsTree = {
     loadLazyChildren: loadLazyChildren,
     ensureNavItemExpanded: ensureNavItemExpanded,
-    ensureDocExpandedInTree: ensureDocExpandedInTree
+    ensureDocExpandedInTree: ensureDocExpandedInTree,
+    hydrateExpandedLazyBranches: hydrateExpandedLazyBranches,
+    directChildList: directChildList
   };
 
   document.addEventListener('click', function (e) {
     var twist = e.target.closest('[data-md-tree-toggle]');
     if (!twist) return;
     e.preventDefault();
+    e.stopPropagation();
     var li = twist.closest('.md-doc-nav__item');
     if (!li) return;
     var kids = directChildList(li);
-    var open = !li.classList.contains('is-expanded');
+    var isExpanded = li.classList.contains('is-expanded');
+    // If marked expanded but children never loaded (AJAX skip-tree race), load on this click.
+    var needsLoad = kids && kids.hasAttribute('data-md-lazy-parent') &&
+      !kids.querySelector('a[data-md-doc-id], a[data-md-ajax-doc]');
+    var open = needsLoad ? true : !isExpanded;
     li.classList.toggle('is-expanded', open);
     twist.setAttribute('aria-expanded', open ? 'true' : 'false');
     if (kids) {
-      if (open) kids.removeAttribute('hidden');
-      else kids.setAttribute('hidden', '');
+      if (open) {
+        kids.removeAttribute('hidden');
+        kids.hidden = false;
+      } else {
+        kids.setAttribute('hidden', '');
+        kids.hidden = true;
+      }
       loadLazyChildren(li, kids, open);
     }
   });
+
+  // First paint: active ancestors may be is-expanded with an empty lazy UL.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hydrateExpandedLazyBranches);
+  } else {
+    hydrateExpandedLazyBranches();
+  }
 
   // TOC hide/show — collapses column so content expands (like tree menu).
   function applyTocCollapsed(collapsed) {
