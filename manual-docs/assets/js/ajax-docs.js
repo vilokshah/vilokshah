@@ -164,6 +164,11 @@
     window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
     article.focus({ preventScroll: true });
 
+    // After skipping treeHtml rebuild, still expand + lazy-load children for the active doc.
+    if (foundInTree && window.ManualDocsTree && typeof window.ManualDocsTree.ensureDocExpandedInTree === 'function') {
+      window.ManualDocsTree.ensureDocExpandedInTree(data.id);
+    }
+
     return foundInTree;
   }
 

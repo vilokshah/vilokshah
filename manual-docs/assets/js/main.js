@@ -117,13 +117,66 @@
       });
   }
 
+  function directChildList(li) {
+    if (!li || !li.children) return null;
+    for (var i = 0; i < li.children.length; i++) {
+      if (li.children[i].classList && li.children[i].classList.contains('md-doc-nav__children')) {
+        return li.children[i];
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Expand a nav item and lazy-load children if needed (used after AJAX doc navigation).
+   */
+  function ensureNavItemExpanded(li) {
+    if (!li || !li.classList.contains('has-children')) return Promise.resolve();
+    var kids = directChildList(li);
+    var twist = li.querySelector('[data-md-tree-toggle]');
+    li.classList.add('is-expanded');
+    if (twist) twist.setAttribute('aria-expanded', 'true');
+    if (kids) {
+      kids.removeAttribute('hidden');
+      return loadLazyChildren(li, kids, true);
+    }
+    return Promise.resolve();
+  }
+
+  function ensureDocExpandedInTree(docId) {
+    var tree = qs('[data-md-doc-tree]') || qs('.md-docs-sidebar__nav');
+    if (!tree || !docId) return Promise.resolve();
+    var link = tree.querySelector('[data-md-doc-id="' + docId + '"]');
+    if (!link) return Promise.resolve();
+    var li = link.closest('.md-doc-nav__item');
+    var chain = [];
+    var node = li;
+    while (node && node !== tree) {
+      if (node.classList && node.classList.contains('md-doc-nav__item')) {
+        chain.unshift(node);
+      }
+      node = node.parentElement;
+    }
+    var seq = Promise.resolve();
+    chain.forEach(function (item) {
+      seq = seq.then(function () { return ensureNavItemExpanded(item); });
+    });
+    return seq;
+  }
+
+  window.ManualDocsTree = {
+    loadLazyChildren: loadLazyChildren,
+    ensureNavItemExpanded: ensureNavItemExpanded,
+    ensureDocExpandedInTree: ensureDocExpandedInTree
+  };
+
   document.addEventListener('click', function (e) {
     var twist = e.target.closest('[data-md-tree-toggle]');
     if (!twist) return;
     e.preventDefault();
     var li = twist.closest('.md-doc-nav__item');
     if (!li) return;
-    var kids = li.querySelector(':scope > .md-doc-nav__children');
+    var kids = directChildList(li);
     var open = !li.classList.contains('is-expanded');
     li.classList.toggle('is-expanded', open);
     twist.setAttribute('aria-expanded', open ? 'true' : 'false');

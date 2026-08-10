@@ -194,7 +194,7 @@ function manual_docs_scripts() {
 		wp_enqueue_script(
 			'manual-docs-ajax-docs',
 			MANUAL_DOCS_URI . '/assets/js/ajax-docs.js',
-			array( 'manual-docs-toc', 'manual-docs-live-search' ),
+			array( 'manual-docs-main', 'manual-docs-toc', 'manual-docs-live-search' ),
 			MANUAL_DOCS_VERSION,
 			true
 		);
