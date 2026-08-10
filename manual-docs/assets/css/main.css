@@ -496,6 +496,17 @@ html.md-docs-search-open { overflow: hidden; }
   align-items: center;
   gap: 0.2rem;
 }
+.md-docs-sidebar__product {
+  margin: 0;
+  padding: 0.55rem 0.9rem 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--md-muted);
+  border-bottom: 1px solid color-mix(in srgb, var(--md-line) 70%, transparent);
+}
+.md-docs-sidebar__product[hidden] { display: none !important; }
 .md-docs-sidebar__body {
   min-height: 0;
   flex: 1;
@@ -547,6 +558,9 @@ html[data-md-theme="light"] .md-docs-search-trigger:hover {
 }
 .md-docs-shell.is-tree-collapsed .md-docs-sidebar__chrome-actions {
   flex-direction: column;
+}
+.md-docs-shell.is-tree-collapsed .md-docs-sidebar__product {
+  display: none !important;
 }
 .md-docs-shell.is-tree-collapsed .md-docs-sidebar__body {
   display: none;

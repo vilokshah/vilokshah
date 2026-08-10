@@ -390,6 +390,9 @@ function manual_docs_render_version_switcher( $post_id = null ) {
 				<?php foreach ( $roots as $root ) : ?>
 					<?php
 					$sibling = manual_docs_find_version_sibling( $post_id, $root->ID );
+					if ( function_exists( 'manual_docs_prefer_product_version_sibling' ) ) {
+						$sibling = manual_docs_prefer_product_version_sibling( $sibling, $post_id, (int) $root->ID );
+					}
 					// Always allow switching — fall back to the version root when no twin page.
 					$target  = $sibling ? $sibling : $root;
 					$url     = get_permalink( $target );

@@ -300,6 +300,21 @@ function manual_docs_render_docs_sidebar( $args = array() ) {
 				</button>
 			</div>
 		</div>
+		<?php
+		$product_label = '';
+		if ( function_exists( 'manual_docs_resolve_product_term' ) && function_exists( 'manual_docs_product_tree_enabled' ) && manual_docs_product_tree_enabled() ) {
+			$ctx_id  = (int) get_queried_object_id();
+			$p_term  = manual_docs_resolve_product_term( $ctx_id ? $ctx_id : null );
+			if ( $p_term ) {
+				$product_label = $p_term->name;
+			}
+		}
+		?>
+		<?php if ( $product_label ) : ?>
+			<p class="md-docs-sidebar__product" data-md-product-label><?php echo esc_html( $product_label ); ?></p>
+		<?php else : ?>
+			<p class="md-docs-sidebar__product" data-md-product-label hidden></p>
+		<?php endif; ?>
 		<div class="md-docs-sidebar__body">
 			<nav class="md-docs-sidebar__nav" data-md-doc-tree>
 				<?php manual_docs_render_doc_nav(); ?>
@@ -557,8 +572,23 @@ function manual_docs_get_version_scoped_tree( $post_id = null ) {
 	}
 
 	// Active version: show the root + its descendants (lazy below the open path).
+	// Product scope: root the tree at the product branch (e.g. Goat → AIOps only).
 	$expand_path[] = (int) $root->ID;
 	$expand_path   = array_values( array_unique( array_map( 'intval', $expand_path ) ) );
+
+	if ( function_exists( 'manual_docs_product_tree_enabled' ) && manual_docs_product_tree_enabled() && $post_id ) {
+		$product = function_exists( 'manual_docs_resolve_product_term' )
+			? manual_docs_resolve_product_term( $post_id )
+			: null;
+		$branch  = function_exists( 'manual_docs_get_product_branch_root' )
+			? manual_docs_get_product_branch_root( $post_id, $product )
+			: null;
+		if ( $branch ) {
+			$expand_path[] = (int) $branch->ID;
+			$expand_path   = array_values( array_unique( array_map( 'intval', $expand_path ) ) );
+			return array( manual_docs_build_nav_node( $branch, 0, $expand_path, $lazy_mode ) );
+		}
+	}
 
 	return array( manual_docs_build_nav_node( $root, 0, $expand_path, $lazy_mode ) );
 }
@@ -577,7 +607,7 @@ function manual_docs_render_doc_nav( $tree = null, $current = 0 ) {
 		$current = get_queried_object_id();
 	}
 	if ( empty( $tree ) ) {
-		echo '<p class="md-nav-empty">' . esc_html__( 'No documents in this version yet.', 'manual-docs' ) . '</p>';
+		echo '<p class="md-nav-empty">' . esc_html__( 'No documents in this product / version yet.', 'manual-docs' ) . '</p>';
 		return;
 	}
 
@@ -885,7 +915,16 @@ function manual_docs_adjacent_docs( $post_id = null ) {
 		? manual_docs_get_version_root_for_doc( $post_id )
 		: null;
 
-	if ( $root ) {
+	// Prefer product-branch reading order (much smaller than the full version tree).
+	$branch = function_exists( 'manual_docs_get_product_branch_root' )
+		? manual_docs_get_product_branch_root( $post_id )
+		: null;
+
+	if ( $branch ) {
+		$order = manual_docs_get_version_reading_order( (int) $branch->ID );
+		array_unshift( $order, (int) $branch->ID );
+		$order = array_values( array_unique( array_map( 'intval', $order ) ) );
+	} elseif ( $root ) {
 		$order = manual_docs_get_version_reading_order( (int) $root->ID );
 		// Include the version root at the start of the reading path.
 		array_unshift( $order, (int) $root->ID );

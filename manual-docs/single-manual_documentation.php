@@ -19,6 +19,7 @@ $compare_to   = function_exists( 'manual_docs_get_compare_request' ) ? manual_do
 $is_compare   = $compare_to && function_exists( 'manual_docs_version_diff_enabled' ) && manual_docs_version_diff_enabled();
 $doc_id       = (int) get_queried_object_id();
 $version_root = ( $doc_id && function_exists( 'manual_docs_get_version_root_for_doc' ) ) ? manual_docs_get_version_root_for_doc( $doc_id ) : null;
+$product      = ( $doc_id && function_exists( 'manual_docs_get_doc_product_payload' ) ) ? manual_docs_get_doc_product_payload( $doc_id ) : null;
 ?>
 
 <main id="main-content" class="md-main md-main--docs<?php echo $is_compare ? ' md-main--compare' : ''; ?>">
@@ -31,7 +32,16 @@ $version_root = ( $doc_id && function_exists( 'manual_docs_get_version_root_for_
 
 		<?php while ( have_posts() ) : ?>
 			<?php the_post(); ?>
-			<article <?php post_class( 'md-doc-article' ); ?> id="md-doc-article" data-md-doc-id="<?php the_ID(); ?>" data-md-version-root="<?php echo esc_attr( $version_root ? (string) (int) $version_root->ID : '0' ); ?>" aria-live="polite" tabindex="-1">
+			<article
+				<?php post_class( 'md-doc-article' ); ?>
+				id="md-doc-article"
+				data-md-doc-id="<?php the_ID(); ?>"
+				data-md-version-root="<?php echo esc_attr( $version_root ? (string) (int) $version_root->ID : '0' ); ?>"
+				data-md-product-id="<?php echo esc_attr( $product ? (string) (int) $product['id'] : '0' ); ?>"
+				data-md-product-slug="<?php echo esc_attr( $product ? $product['slug'] : '' ); ?>"
+				aria-live="polite"
+				tabindex="-1"
+			>
 				<div class="md-ajax-progress" data-md-ajax-progress hidden><span class="md-ajax-progress__bar"></span></div>
 
 				<header class="md-doc-header">

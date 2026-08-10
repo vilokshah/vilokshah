@@ -22,6 +22,7 @@
   var currentController = null;
   var navigating = false;
   var currentRootId = parseInt(article.getAttribute('data-md-version-root') || '0', 10) || 0;
+  var currentProductId = parseInt(article.getAttribute('data-md-product-id') || '0', 10) || 0;
 
   function qs(sel, ctx) {
     return (ctx || document).querySelector(sel);
@@ -179,6 +180,22 @@
     if (data.versionRootId) {
       currentRootId = parseInt(data.versionRootId, 10) || 0;
       article.setAttribute('data-md-version-root', String(currentRootId));
+    }
+
+    var nextProductId = parseInt(data.productTermId, 10) || 0;
+    currentProductId = nextProductId;
+    article.setAttribute('data-md-product-id', String(nextProductId));
+    article.setAttribute('data-md-product-slug', data.productSlug || '');
+
+    var productLabel = qs('[data-md-product-label]', shell);
+    if (productLabel) {
+      if (data.productName) {
+        productLabel.textContent = data.productName;
+        productLabel.hidden = false;
+      } else {
+        productLabel.textContent = '';
+        productLabel.hidden = true;
+      }
     }
 
     var titleEl = qs('[data-md-doc-title]', article);
@@ -384,21 +401,32 @@
     navigating = true;
     setLoading(true);
 
-    // Same-version clicks: skip tree rebuild. Version switches / missing nodes: include tree.
+    // Same-version + same-product clicks: skip tree rebuild.
     var includeTree = !!opts.includeTree;
     if (!includeTree && opts.forceTree) includeTree = true;
     if (!includeTree && !treeHasDoc(id) && !opts.allowMissingTree) {
-      // Target not visible in sidebar yet (collapsed lazy branch / other version) — need tree.
+      // Target not visible in sidebar yet (collapsed lazy branch / other version / other product).
       includeTree = true;
+    }
+    // Cached payload already knows the product — rebuild tree when product changes.
+    if (!includeTree && cache[id] && cache[id].productTermId) {
+      var cachedProduct = parseInt(cache[id].productTermId, 10) || 0;
+      if (cachedProduct !== currentProductId) includeTree = true;
     }
 
     return fetchDoc(id, { includeTree: includeTree, forceNetwork: !!opts.forceNetwork })
       .then(function (data) {
+        var prevProduct = currentProductId;
+        var prevRoot = currentRootId;
         var found = applyDoc(data, opts.pushState !== false);
         closeMobileSidebar();
 
-        // Recovery: doc still missing from tree after a no-tree fetch (other branch / version).
-        if (!found && !data.treeHtml) {
+        var dataProduct = parseInt(data.productTermId, 10) || 0;
+        var dataRoot = parseInt(data.versionRootId, 10) || 0;
+        var scopeChanged = dataProduct !== prevProduct || dataRoot !== prevRoot;
+
+        // Recovery: missing from tree, or product/version changed without a tree payload.
+        if ((!found || scopeChanged) && !data.treeHtml) {
           return fetchDoc(id, { includeTree: true, forceNetwork: true }).then(function (full) {
             applyDoc(full, false);
             prefetchNeighbors(full);

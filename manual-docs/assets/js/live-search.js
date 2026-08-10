@@ -103,7 +103,19 @@
   function versionQueryParam() {
     if (activeVersionId) return activeVersionId;
     if (activeVersion) return activeVersion;
+    // Default to current doc version when searching inside docs.
+    var article = document.getElementById('md-doc-article');
+    if (article) {
+      var root = article.getAttribute('data-md-version-root') || '';
+      if (root && root !== '0') return root;
+    }
     return '';
+  }
+
+  function productQueryParam() {
+    var article = document.getElementById('md-doc-article');
+    if (!article) return '';
+    return article.getAttribute('data-md-product-slug') || '';
   }
 
   function search(query, wrap) {
@@ -124,7 +136,9 @@
 
     var url = manualDocs.restUrl + 'search?q=' + encodeURIComponent(query);
     var version = versionQueryParam();
+    var product = productQueryParam();
     if (version) url += '&version=' + encodeURIComponent(version);
+    if (product) url += '&product=' + encodeURIComponent(product);
 
     fetch(url, {
       credentials: 'same-origin',
@@ -150,6 +164,7 @@
         var ajaxUrl = manualDocs.ajaxUrl + '?action=manual_docs_search&nonce=' + encodeURIComponent(manualDocs.nonce) +
           '&q=' + encodeURIComponent(query);
         if (version) ajaxUrl += '&version=' + encodeURIComponent(version);
+        if (product) ajaxUrl += '&product=' + encodeURIComponent(product);
         return fetch(ajaxUrl, { credentials: 'same-origin' })
           .then(function (r) { return r.json(); })
           .then(function (payload) {

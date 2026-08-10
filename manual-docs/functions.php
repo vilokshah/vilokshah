@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MANUAL_DOCS_VERSION', '2.9.26' );
+define( 'MANUAL_DOCS_VERSION', '2.9.27' );
 
 /**
  * Version roots for JS (search filters).
@@ -249,6 +249,7 @@ $manual_docs_includes = array(
 	'import-compat.php',
 	'access-control.php',
 	'versioning.php',
+	'product-scope.php',
 	'live-search.php',
 	'ajax-docs.php',
 	'pdf-download.php',

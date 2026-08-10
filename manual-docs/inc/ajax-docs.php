@@ -224,6 +224,10 @@ function manual_docs_get_doc_payload( WP_Post $post, $args = array() ) {
 		$children_html = (string) ob_get_clean();
 	}
 
+	$product = function_exists( 'manual_docs_get_doc_product_payload' )
+		? manual_docs_get_doc_product_payload( $post_id )
+		: null;
+
 	$payload = array(
 		'id'            => $post_id,
 		'title'         => get_the_title( $post ),
@@ -239,6 +243,9 @@ function manual_docs_get_doc_payload( WP_Post $post, $args = array() ) {
 		'version'       => $version,
 		'versionBadge'  => $version ? $version['name'] : '',
 		'versionRootId' => $root ? (int) $root->ID : 0,
+		'productTermId' => $product ? (int) $product['id'] : 0,
+		'productSlug'   => $product ? $product['slug'] : '',
+		'productName'   => $product ? $product['name'] : '',
 		'prevId'        => ! empty( $adjacent['prev'] ) ? (int) $adjacent['prev']->ID : 0,
 		'nextId'        => ! empty( $adjacent['next'] ) ? (int) $adjacent['next']->ID : 0,
 		'pdfUrl'        => manual_docs_get_pdf_url( $post_id, true ),

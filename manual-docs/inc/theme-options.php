@@ -62,6 +62,8 @@ function manual_docs_default_options() {
 		'tree_expand_active'   => 1,
 		'tree_scope'           => 'active_version',
 		'tree_lazy'            => 1,
+		'tree_product_scope'   => 1,
+		'product_exclude_slugs'=> 'releases',
 		'header_tagline'       => '',
 		'login_message'        => __( 'Please log in to view documentation.', 'manual-docs' ),
 		'login_page_path'      => '/login/',
@@ -233,8 +235,8 @@ function manual_docs_save_options() {
 		'light_active_bar_color',
 		'light_footer_cta_color',
 	);
-	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'login_page_path', 'pdf_watermark', 'footer_text', 'footer_copyright', 'font_display', 'font_body', 'tree_scope', 'academy_forum_slug' );
-	$bool_keys  = array( 'require_login', 'show_community_cta', 'show_toc', 'show_pdf', 'show_updated', 'show_edit_link', 'enable_version_diff', 'tree_expand_active', 'tree_lazy', 'hide_docs_archive' );
+	$text_keys  = array( 'brand_name', 'hero_title', 'hero_text', 'hero_eyebrow', 'version_label', 'version_root_slugs', 'version_root_ids', 'default_version_slug', 'cpt_rewrite_slug', 'permalink_mode', 'header_tagline', 'login_message', 'login_page_path', 'pdf_watermark', 'footer_text', 'footer_copyright', 'font_display', 'font_body', 'tree_scope', 'product_exclude_slugs', 'academy_forum_slug' );
+	$bool_keys  = array( 'require_login', 'show_community_cta', 'show_toc', 'show_pdf', 'show_updated', 'show_edit_link', 'enable_version_diff', 'tree_expand_active', 'tree_lazy', 'tree_product_scope', 'hide_docs_archive' );
 	$int_keys   = array( 'logo_dark_id', 'logo_light_id' );
 
 	foreach ( $color_keys as $key ) {
@@ -648,9 +650,18 @@ function manual_docs_render_options_page() {
 						<label><input type="checkbox" name="manual_docs_options[show_edit_link]" value="1" <?php checked( $o['show_edit_link'], 1 ); ?> /> <?php esc_html_e( 'Show edit link (for editors)', 'manual-docs' ); ?></label><br />
 						<label><input type="checkbox" name="manual_docs_options[tree_expand_active]" value="1" <?php checked( $o['tree_expand_active'], 1 ); ?> /> <?php esc_html_e( 'Auto-expand active tree branch', 'manual-docs' ); ?></label><br />
 						<label><input type="checkbox" name="manual_docs_options[tree_lazy]" value="1" <?php checked( ! empty( $o['tree_lazy'] ), 1 ); ?> /> <?php esc_html_e( 'Lazy-load tree children (recommended for large libraries)', 'manual-docs' ); ?></label><br />
+						<label><input type="checkbox" name="manual_docs_options[tree_product_scope]" value="1" <?php checked( ! empty( $o['tree_product_scope'] ), 1 ); ?> /> <?php esc_html_e( 'Scope sidebar to product category (AIOps, Platform, …) within the release', 'manual-docs' ); ?></label><br />
 						<label><input type="checkbox" name="manual_docs_options[enable_version_diff]" value="1" <?php checked( ! empty( $o['enable_version_diff'] ), 1 ); ?> /> <?php esc_html_e( 'Enable version diff (Compare across releases)', 'manual-docs' ); ?></label>
 						<p class="description" style="margin-top:6px;"><?php esc_html_e( 'When enabled, docs show a “Compare versions” control. Turn off to hide the feature completely with no other impact.', 'manual-docs' ); ?></p>
+						<p class="description" style="margin-top:6px;"><?php esc_html_e( 'Product scope uses documentation categories (same as the header product menu). Version roots stay Goat/Flamingo/Hummingbird; the tree shows only the active product branch.', 'manual-docs' ); ?></p>
 						<p class="description" style="margin-top:6px;"><?php esc_html_e( 'For libraries with thousands of docs, keep Lazy-load tree children enabled. Previous/Next uses a cached reading order (rebuilt after doc saves).', 'manual-docs' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th><label for="product_exclude_slugs"><?php esc_html_e( 'Non-product category slugs', 'manual-docs' ); ?></label></th>
+					<td>
+						<input class="regular-text" type="text" id="product_exclude_slugs" name="manual_docs_options[product_exclude_slugs]" value="<?php echo esc_attr( isset( $o['product_exclude_slugs'] ) ? $o['product_exclude_slugs'] : 'releases' ); ?>" />
+						<p class="description"><?php esc_html_e( 'Comma-separated category slugs that are not products (default: releases). Version root pages often use these.', 'manual-docs' ); ?></p>
 					</td>
 				</tr>
 				<tr>

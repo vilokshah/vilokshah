@@ -31,6 +31,11 @@ function manual_docs_register_search_routes() {
 					'type'              => 'string',
 					'sanitize_callback' => 'sanitize_text_field',
 				),
+				'product' => array(
+					'required'          => false,
+					'type'              => 'string',
+					'sanitize_callback' => 'sanitize_title',
+				),
 			),
 		)
 	);
@@ -104,6 +109,16 @@ function manual_docs_rest_search( WP_REST_Request $request ) {
 
 	$version_param = (string) $request->get_param( 'version' );
 	$version_root  = $version_param ? manual_docs_resolve_version_filter( $version_param ) : null;
+	$product_param = (string) $request->get_param( 'product' );
+	$product_term  = null;
+	$tax           = manual_docs_category_taxonomy();
+
+	if ( $product_param && taxonomy_exists( $tax ) ) {
+		$maybe = get_term_by( 'slug', sanitize_title( $product_param ), $tax );
+		if ( $maybe && ! is_wp_error( $maybe ) && function_exists( 'manual_docs_is_product_category' ) && manual_docs_is_product_category( $maybe ) ) {
+			$product_term = $maybe;
+		}
+	}
 
 	$args = array(
 		'post_type'              => 'manual_documentation',
@@ -119,7 +134,17 @@ function manual_docs_rest_search( WP_REST_Request $request ) {
 	// Scope to one release tree so goat isn't crowded out by other versions.
 	if ( $version_root ) {
 		$ids = array( (int) $version_root->ID );
-		if ( function_exists( 'manual_docs_get_descendant_ids' ) ) {
+		if ( $product_term && function_exists( 'manual_docs_find_product_child_under_version' ) ) {
+			$branch = manual_docs_find_product_child_under_version( (int) $version_root->ID, (int) $product_term->term_id );
+			if ( $branch ) {
+				$ids = array( (int) $branch->ID );
+				if ( function_exists( 'manual_docs_get_descendant_ids' ) ) {
+					$ids = array_merge( $ids, manual_docs_get_descendant_ids( (int) $branch->ID, 5000 ) );
+				}
+			} elseif ( function_exists( 'manual_docs_get_descendant_ids' ) ) {
+				$ids = array_merge( $ids, manual_docs_get_descendant_ids( (int) $version_root->ID, 5000 ) );
+			}
+		} elseif ( function_exists( 'manual_docs_get_descendant_ids' ) ) {
 			$ids = array_merge( $ids, manual_docs_get_descendant_ids( (int) $version_root->ID, 5000 ) );
 		}
 		$ids = array_values( array_unique( array_map( 'intval', $ids ) ) );
@@ -130,17 +155,26 @@ function manual_docs_rest_search( WP_REST_Request $request ) {
 		$args['orderby']  = 'relevance';
 	}
 
-	$tax        = manual_docs_category_taxonomy();
+	$tax_query = array();
 	$restricted = manual_docs_get_restricted_category_ids_for_user();
 	if ( ! empty( $restricted ) && taxonomy_exists( $tax ) ) {
-		$args['tax_query'] = array(
-			array(
-				'taxonomy' => $tax,
-				'field'    => 'term_id',
-				'terms'    => $restricted,
-				'operator' => 'NOT IN',
-			),
+		$tax_query[] = array(
+			'taxonomy' => $tax,
+			'field'    => 'term_id',
+			'terms'    => $restricted,
+			'operator' => 'NOT IN',
 		);
+	}
+	if ( $product_term && taxonomy_exists( $tax ) && empty( $args['post__in'] ) ) {
+		// No version scope: still limit to product category.
+		$tax_query[] = array(
+			'taxonomy' => $tax,
+			'field'    => 'term_id',
+			'terms'    => array( (int) $product_term->term_id ),
+		);
+	}
+	if ( $tax_query ) {
+		$args['tax_query'] = $tax_query;
 	}
 
 	$query   = new WP_Query( $args );
@@ -194,6 +228,9 @@ function manual_docs_ajax_search() {
 	$request->set_param( 'q', $q );
 	if ( ! empty( $_GET['version'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		$request->set_param( 'version', sanitize_text_field( wp_unslash( $_GET['version'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
+	}
+	if ( ! empty( $_GET['product'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		$request->set_param( 'product', sanitize_title( wp_unslash( $_GET['product'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 	}
 
 	$response = manual_docs_rest_search( $request );
