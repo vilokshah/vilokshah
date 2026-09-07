@@ -1,0 +1,689 @@
+//lytx 3aug 
+//@version=6
+indicator("LYNX MTF", shorttitle="LYNX MTF", overlay=true, max_boxes_count=5, max_lines_count=100, max_labels_count=50)
+
+// ═══════════════════════════════════════════════════════════════
+// INPUTS
+// ═══════════════════════════════════════════════════════════════
+i_bslLen      = input.int(20,    "BSL/SSL Lookback (Daily)",    minval=5,  maxval=100, group="BSL / SSL")
+i_showBSL     = input.bool(true, "Show BSL / SSL Lines",         group="BSL / SSL")
+i_showHammer  = input.bool(true, "Hammer / Shooting Star",       group="Patterns")
+i_showEngulf  = input.bool(true, "Bullish / Bearish Engulfing",  group="Patterns")
+i_showMornEve = input.bool(true, "Morning Star / Evening Star",  group="Patterns")
+i_showTweezer = input.bool(true, "Tweezer Top / Bottom",         group="Patterns")
+i_wickRatio   = input.float(1.5, "Min Wick : Body Ratio",        minval=1.0, step=0.1, group="Patterns")
+i_bodyFactor  = input.float(1.2, "Engulfing Body Factor",        minval=1.0, step=0.1, group="Patterns")
+i_swingLen    = input.int(5,     "Swing Lookback (bars)",         minval=2,  maxval=20,  group="Patterns")
+i_showEntry   = input.bool(true, "Show Entry Line",               group="Trade Levels")
+i_showSL      = input.bool(true, "Show Stop-Loss",                group="Trade Levels")
+i_colBull     = input.color(color.new(#00c853, 0), "Bullish",    group="Colors")
+i_colBear     = input.color(color.new(#f44336, 0), "Bearish",    group="Colors")
+i_colEntry    = input.color(color.new(#f5a623, 0), "Entry",      group="Colors")
+i_colSL       = input.color(color.new(#e53935, 0), "SL",         group="Colors")
+i_colTP       = input.color(color.new(#00e676, 0), "TP Lines",   group="Colors")
+i_colBSL      = input.color(color.new(#2196f3, 0), "BSL",        group="Colors")
+i_colSSL      = input.color(color.new(#ff9800, 0), "SSL",        group="Colors")
+
+LBL_OFF = 3
+
+// ═══════════════════════════════════════════════════════════════
+// TIMEFRAME GUARD
+// ═══════════════════════════════════════════════════════════════
+v_tf = timeframe.period
+if v_tf != "15" and v_tf != "60" and v_tf != "240"
+    runtime.error("Load on a 15m, 1H or 4H chart.")
+
+v_ctf = v_tf == "240" ? "60" : v_tf == "60" ? "15" : "5"
+
+// ═══════════════════════════════════════════════════════════════
+// ALL STATE VARIABLES — declared first before any use
+// ═══════════════════════════════════════════════════════════════
+var bool   s_waitBull  = false
+var bool   s_waitBear  = false
+var float  s_wpH       = na
+var float  s_wpL       = na
+var string s_wpName    = ""
+var bool   s_live      = false
+var bool   s_isBull    = false
+var float  s_entry     = na
+var float  s_sl        = na
+var float  s_range     = na
+var int    s_tpReached = 0
+
+// Session counters
+var int    s_sigToday  = 0
+var int    s_winsToday = 0
+var int    s_lossToday = 0
+var int    s_lastDay   = 0
+
+// ═══════════════════════════════════════════════════════════════
+// BSL / SSL
+// ═══════════════════════════════════════════════════════════════
+v_dHigh = request.security(syminfo.tickerid, "D", ta.highest(high, i_bslLen))
+v_dLow  = request.security(syminfo.tickerid, "D", ta.lowest(low,  i_bslLen))
+
+var line  v_lineBSL = na
+var line  v_lineSSL = na
+var label v_lblBSL  = na
+var label v_lblSSL  = na
+
+if i_showBSL and barstate.islast
+    if not na(v_lineBSL)
+        line.delete(v_lineBSL)
+    if not na(v_lineSSL)
+        line.delete(v_lineSSL)
+    if not na(v_lblBSL)
+        label.delete(v_lblBSL)
+    if not na(v_lblSSL)
+        label.delete(v_lblSSL)
+    v_lineBSL := line.new(bar_index - i_bslLen, v_dHigh, bar_index, v_dHigh, color=i_colBSL, width=1, style=line.style_dashed, extend=extend.right)
+    v_lineSSL := line.new(bar_index - i_bslLen, v_dLow,  bar_index, v_dLow,  color=i_colSSL, width=1, style=line.style_dashed, extend=extend.right)
+    v_lblBSL  := label.new(bar_index + LBL_OFF, v_dHigh, "BSL", color=color.new(i_colBSL, 20), textcolor=color.white, style=label.style_label_left, size=size.tiny)
+    v_lblSSL  := label.new(bar_index + LBL_OFF, v_dLow,  "SSL", color=color.new(i_colSSL, 20), textcolor=color.white, style=label.style_label_left, size=size.tiny)
+
+// ═══════════════════════════════════════════════════════════════
+// CANDLE HELPERS
+// ═══════════════════════════════════════════════════════════════
+f_body(i)    => math.abs(close[i] - open[i])
+f_upWick(i)  => high[i] - math.max(close[i], open[i])
+f_dnWick(i)  => math.min(close[i], open[i]) - low[i]
+f_isBull(i)  => close[i] > open[i]
+f_isBear(i)  => close[i] < open[i]
+f_midBody(i) => (open[i] + close[i]) / 2.0
+
+// ═══════════════════════════════════════════════════════════════
+// PATTERN DETECTION — all on closed bars [1],[2],[3]
+// ═══════════════════════════════════════════════════════════════
+f_hammer() =>
+    b = f_body(1)
+    b > 0 and f_dnWick(1) >= i_wickRatio * b and f_upWick(1) <= b * 0.6
+
+f_shootingStar() =>
+    b = f_body(1)
+    b > 0 and f_upWick(1) >= i_wickRatio * b and f_dnWick(1) <= b * 0.6
+
+f_bullEngulf() =>
+    f_isBear(2) and f_isBull(1) and f_body(1) >= i_bodyFactor * f_body(2) and open[1] <= close[2] and close[1] >= open[2]
+
+f_bearEngulf() =>
+    f_isBull(2) and f_isBear(1) and f_body(1) >= i_bodyFactor * f_body(2) and open[1] >= close[2] and close[1] <= open[2]
+
+f_morningStar() =>
+    c1 = f_isBear(3) and f_body(3) > f_body(2) * 2
+    c2 = f_body(2) < f_body(3) * 0.5
+    c3 = f_isBull(1) and f_body(1) > f_body(2) * 2
+    c1 and c2 and c3 and close[1] >= f_midBody(3)
+
+f_eveningStar() =>
+    c1 = f_isBull(3) and f_body(3) > f_body(2) * 2
+    c2 = f_body(2) < f_body(3) * 0.5
+    c3 = f_isBear(1) and f_body(1) > f_body(2) * 2
+    c1 and c2 and c3 and close[1] <= f_midBody(3)
+
+f_tweezerBottom() =>
+    avg = (f_body(1) + f_body(2)) / 2.0
+    f_isBear(2) and f_isBull(1) and math.abs(low[1] - low[2]) <= avg * 0.2
+
+f_tweezerTop() =>
+    avg = (f_body(1) + f_body(2)) / 2.0
+    f_isBull(2) and f_isBear(1) and math.abs(high[1] - high[2]) <= avg * 0.2
+
+// ═══════════════════════════════════════════════════════════════
+// SWING CONTEXT
+// ═══════════════════════════════════════════════════════════════
+v_atSwingLow  = low[1]  == ta.lowest(low,  i_swingLen + 1)
+v_atSwingHigh = high[1] == ta.highest(high, i_swingLen + 1)
+
+// ═══════════════════════════════════════════════════════════════
+// SIGNAL DETECTION
+// ═══════════════════════════════════════════════════════════════
+v_bullHammer = i_showHammer  and f_hammer()        and v_atSwingLow
+v_bullEngulf = i_showEngulf  and f_bullEngulf()    and v_atSwingLow
+v_bullMorn   = i_showMornEve and f_morningStar()   and v_atSwingLow
+v_bullTweez  = i_showTweezer and f_tweezerBottom() and v_atSwingLow
+v_bullSig    = v_bullHammer or v_bullEngulf or v_bullMorn or v_bullTweez
+
+v_bearStar   = i_showHammer  and f_shootingStar()  and v_atSwingHigh
+v_bearEngulf = i_showEngulf  and f_bearEngulf()    and v_atSwingHigh
+v_bearEve    = i_showMornEve and f_eveningStar()   and v_atSwingHigh
+v_bearTweez  = i_showTweezer and f_tweezerTop()    and v_atSwingHigh
+v_bearSig    = v_bearStar or v_bearEngulf or v_bearEve or v_bearTweez
+
+// ═══════════════════════════════════════════════════════════════
+// PATTERN BOUNDARIES
+// ═══════════════════════════════════════════════════════════════
+v_pH1 = high[1]
+v_pL1 = low[1]
+v_pH2 = math.max(high[1], high[2])
+v_pL2 = math.min(low[1],  low[2])
+v_pH3 = math.max(high[1], math.max(high[2], high[3]))
+v_pL3 = math.min(low[1],  math.min(low[2],  low[3]))
+
+// ═══════════════════════════════════════════════════════════════
+// WAIT STATE
+// ═══════════════════════════════════════════════════════════════
+if v_bullSig
+    s_waitBull := true
+    s_waitBear := false
+    s_wpH      := v_bullMorn ? v_pH3 : (v_bullEngulf or v_bullTweez) ? v_pH2 : v_pH1
+    s_wpL      := v_bullMorn ? v_pL3 : (v_bullEngulf or v_bullTweez) ? v_pL2 : v_pL1
+    s_wpName   := v_bullHammer ? "Hammer" : v_bullEngulf ? "Bull Engulf" : v_bullMorn ? "Morning Star" : "Tweezer Bot"
+
+if v_bearSig
+    s_waitBear := true
+    s_waitBull := false
+    s_wpH      := v_bearEve ? v_pH3 : (v_bearEngulf or v_bearTweez) ? v_pH2 : v_pH1
+    s_wpL      := v_bearEve ? v_pL3 : (v_bearEngulf or v_bearTweez) ? v_pL2 : v_pL1
+    s_wpName   := v_bearStar ? "Shoot Star" : v_bearEngulf ? "Bear Engulf" : v_bearEve ? "Evening Star" : "Tweezer Top"
+
+// ═══════════════════════════════════════════════════════════════
+// LOWER-TF CONFIRMATION
+// ═══════════════════════════════════════════════════════════════
+v_ltfC1 = request.security(syminfo.tickerid, v_ctf, close[1], lookahead=barmerge.lookahead_off)
+v_ltfO1 = request.security(syminfo.tickerid, v_ctf, open[1],  lookahead=barmerge.lookahead_off)
+v_ltfC2 = request.security(syminfo.tickerid, v_ctf, close[2], lookahead=barmerge.lookahead_off)
+v_ltfO2 = request.security(syminfo.tickerid, v_ctf, open[2],  lookahead=barmerge.lookahead_off)
+v_ltfC3 = request.security(syminfo.tickerid, v_ctf, close[3], lookahead=barmerge.lookahead_off)
+v_ltfO3 = request.security(syminfo.tickerid, v_ctf, open[3],  lookahead=barmerge.lookahead_off)
+
+v_ltfBullOk = (v_ltfC1 > v_ltfO1 and v_ltfC1 > s_wpH) or (v_ltfC2 > v_ltfO2 and v_ltfC2 > s_wpH) or (v_ltfC3 > v_ltfO3 and v_ltfC3 > s_wpH)
+v_ltfBearOk = (v_ltfC1 < v_ltfO1 and v_ltfC1 < s_wpL) or (v_ltfC2 < v_ltfO2 and v_ltfC2 < s_wpL) or (v_ltfC3 < v_ltfO3 and v_ltfC3 < s_wpL)
+
+v_bullConfirmed = s_waitBull and v_ltfBullOk and not s_live
+v_bearConfirmed = s_waitBear and v_ltfBearOk and not s_live
+
+if v_bullConfirmed
+    s_waitBull := false
+if v_bearConfirmed
+    s_waitBear := false
+
+// ═══════════════════════════════════════════════════════════════
+// SESSION STATS — only count bars from today using bar time
+// v_isToday compares the chart bar's date to the current date
+// This prevents historical bars from polluting the counter
+// ═══════════════════════════════════════════════════════════════
+v_barDay  = year * 10000 + month * 100 + dayofmonth
+v_isToday = year == year(timenow) and month == month(timenow) and dayofmonth == dayofmonth(timenow)
+
+if v_barDay != s_lastDay
+    s_sigToday  := 0
+    s_winsToday := 0
+    s_lossToday := 0
+    s_lastDay   := v_barDay
+
+if v_isToday
+    if v_bullConfirmed or v_bearConfirmed
+        s_sigToday := s_sigToday + 1
+
+// ═══════════════════════════════════════════════════════════════
+// DRAWING OBJECTSs
+// ═══════════════════════════════════════════════════════════════
+var box   d_pendBox = na
+var label d_pendLbl = na
+var line  d_entLn   = na
+var label d_entLb   = na
+var line  d_slLn    = na
+var label d_slLb    = na
+var label d_cfmLb   = na
+var line  d_t1Ln    = na
+var line  d_t2Ln    = na
+var line  d_t3Ln    = na
+var line  d_t4Ln    = na
+var line  d_t5Ln    = na
+var line  d_t6Ln    = na
+var line  d_t7Ln    = na
+var line  d_t8Ln    = na
+var label d_t1Lb    = na
+var label d_t2Lb    = na
+var label d_t3Lb    = na
+var label d_t4Lb    = na
+var label d_t5Lb    = na
+var label d_t6Lb    = na
+var label d_t7Lb    = na
+var label d_t8Lb    = na
+var line  d_m1Ln    = na
+var line  d_m2Ln    = na
+var line  d_m3Ln    = na
+var line  d_m4Ln    = na
+var line  d_m5Ln    = na
+var line  d_m6Ln    = na
+var line  d_m7Ln    = na
+
+// ═══════════════════════════════════════════════════════════════
+// PENDING BOX
+// ═══════════════════════════════════════════════════════════════
+if v_bullSig
+    if not na(d_pendBox)
+        box.delete(d_pendBox)
+    if not na(d_pendLbl)
+        label.delete(d_pendLbl)
+    v_sb = v_bullMorn ? 4 : (v_bullEngulf or v_bullTweez) ? 3 : 2
+    d_pendBox := box.new(bar_index - v_sb, s_wpH, bar_index, s_wpL, border_color=color.new(i_colBull, 40), bgcolor=color.new(i_colBull, 90), border_width=1, border_style=line.style_dashed)
+    d_pendLbl := label.new(bar_index, s_wpL - (s_wpH - s_wpL) * 0.4, "BUY " + s_wpName + " | Wait " + v_ctf + "m", color=i_colBull, textcolor=color.white, style=label.style_label_up, size=size.small)
+
+if v_bearSig
+    if not na(d_pendBox)
+        box.delete(d_pendBox)
+    if not na(d_pendLbl)
+        label.delete(d_pendLbl)
+    v_sb = v_bearEve ? 4 : (v_bearEngulf or v_bearTweez) ? 3 : 2
+    d_pendBox := box.new(bar_index - v_sb, s_wpH, bar_index, s_wpL, border_color=color.new(i_colBear, 40), bgcolor=color.new(i_colBear, 90), border_width=1, border_style=line.style_dashed)
+    d_pendLbl := label.new(bar_index, s_wpH + (s_wpH - s_wpL) * 0.4, "SELL " + s_wpName + " | Wait " + v_ctf + "m", color=i_colBear, textcolor=color.white, style=label.style_label_down, size=size.small)
+
+// ═══════════════════════════════════════════════════════════════
+// CLEAR ALL ON NEW CONFIRMED SIGNAL
+// ═══════════════════════════════════════════════════════════════
+v_doConfirm = v_bullConfirmed or v_bearConfirmed
+
+if v_doConfirm
+    if not na(d_pendBox)
+        box.delete(d_pendBox)
+    if not na(d_pendLbl)
+        label.delete(d_pendLbl)
+    if not na(d_entLn)
+        line.delete(d_entLn)
+    if not na(d_entLb)
+        label.delete(d_entLb)
+    if not na(d_slLn)
+        line.delete(d_slLn)
+    if not na(d_slLb)
+        label.delete(d_slLb)
+    if not na(d_cfmLb)
+        label.delete(d_cfmLb)
+    if not na(d_t1Ln)
+        line.delete(d_t1Ln)
+    if not na(d_t2Ln)
+        line.delete(d_t2Ln)
+    if not na(d_t3Ln)
+        line.delete(d_t3Ln)
+    if not na(d_t4Ln)
+        line.delete(d_t4Ln)
+    if not na(d_t5Ln)
+        line.delete(d_t5Ln)
+    if not na(d_t6Ln)
+        line.delete(d_t6Ln)
+    if not na(d_t7Ln)
+        line.delete(d_t7Ln)
+    if not na(d_t8Ln)
+        line.delete(d_t8Ln)
+    if not na(d_t1Lb)
+        label.delete(d_t1Lb)
+    if not na(d_t2Lb)
+        label.delete(d_t2Lb)
+    if not na(d_t3Lb)
+        label.delete(d_t3Lb)
+    if not na(d_t4Lb)
+        label.delete(d_t4Lb)
+    if not na(d_t5Lb)
+        label.delete(d_t5Lb)
+    if not na(d_t6Lb)
+        label.delete(d_t6Lb)
+    if not na(d_t7Lb)
+        label.delete(d_t7Lb)
+    if not na(d_t8Lb)
+        label.delete(d_t8Lb)
+    if not na(d_m1Ln)
+        line.delete(d_m1Ln)
+    if not na(d_m2Ln)
+        line.delete(d_m2Ln)
+    if not na(d_m3Ln)
+        line.delete(d_m3Ln)
+    if not na(d_m4Ln)
+        line.delete(d_m4Ln)
+    if not na(d_m5Ln)
+        line.delete(d_m5Ln)
+    if not na(d_m6Ln)
+        line.delete(d_m6Ln)
+    if not na(d_m7Ln)
+        line.delete(d_m7Ln)
+    s_live      := true
+    s_tpReached := 0
+
+// ═══════════════════════════════════════════════════════════════
+// BULL TRADE LEVELS
+// Entry = patHigh | SL = entry - range*0.5 | TP1-8 above
+// ═══════════════════════════════════════════════════════════════
+if v_bullConfirmed
+    v_rng    = s_wpH - s_wpL
+    v_ent    = s_wpH
+    v_sl     = s_wpH - v_rng * 0.5
+    s_isBull := true
+    s_entry  := v_ent
+    s_sl     := v_sl
+    s_range  := v_rng
+
+    if i_showEntry
+        d_entLn := line.new(bar_index - 1, v_ent, bar_index, v_ent, color=i_colEntry, width=2, style=line.style_solid, extend=extend.right)
+        d_entLb := label.new(bar_index + LBL_OFF, v_ent, "ENTRY  " + str.tostring(math.round(v_ent, 2)), color=i_colEntry, textcolor=color.black, style=label.style_label_left, size=size.small)
+
+    if i_showSL
+        d_slLn := line.new(bar_index - 1, v_sl, bar_index, v_sl, color=i_colSL, width=1, style=line.style_dashed, extend=extend.right)
+        d_slLb := label.new(bar_index + LBL_OFF, v_sl, "SL  " + str.tostring(math.round(v_sl, 2)), color=i_colSL, textcolor=color.white, style=label.style_label_left, size=size.small)
+
+    v_t1 = v_ent + v_rng * 1
+    v_t2 = v_ent + v_rng * 2
+    v_t3 = v_ent + v_rng * 3
+    v_t4 = v_ent + v_rng * 4
+    v_t5 = v_ent + v_rng * 5
+    v_t6 = v_ent + v_rng * 6
+    v_t7 = v_ent + v_rng * 7
+    v_t8 = v_ent + v_rng * 8
+
+    d_t1Ln := line.new(bar_index - 1, v_t1, bar_index, v_t1, color=color.new(i_colTP,  0), width=1, style=line.style_solid, extend=extend.right)
+    d_t2Ln := line.new(bar_index - 1, v_t2, bar_index, v_t2, color=color.new(i_colTP, 12), width=1, style=line.style_solid, extend=extend.right)
+    d_t3Ln := line.new(bar_index - 1, v_t3, bar_index, v_t3, color=color.new(i_colTP, 22), width=1, style=line.style_solid, extend=extend.right)
+    d_t4Ln := line.new(bar_index - 1, v_t4, bar_index, v_t4, color=color.new(i_colTP, 32), width=1, style=line.style_solid, extend=extend.right)
+    d_t5Ln := line.new(bar_index - 1, v_t5, bar_index, v_t5, color=color.new(i_colTP, 42), width=1, style=line.style_solid, extend=extend.right)
+    d_t6Ln := line.new(bar_index - 1, v_t6, bar_index, v_t6, color=color.new(i_colTP, 52), width=1, style=line.style_solid, extend=extend.right)
+    d_t7Ln := line.new(bar_index - 1, v_t7, bar_index, v_t7, color=color.new(i_colTP, 62), width=1, style=line.style_solid, extend=extend.right)
+    d_t8Ln := line.new(bar_index - 1, v_t8, bar_index, v_t8, color=color.new(i_colTP, 70), width=1, style=line.style_solid, extend=extend.right)
+
+    d_t1Lb := label.new(bar_index + LBL_OFF, v_t1, "TP1  " + str.tostring(math.round(v_t1, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+    d_t2Lb := label.new(bar_index + LBL_OFF, v_t2, "TP2  " + str.tostring(math.round(v_t2, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+    d_t3Lb := label.new(bar_index + LBL_OFF, v_t3, "TP3  " + str.tostring(math.round(v_t3, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+    d_t4Lb := label.new(bar_index + LBL_OFF, v_t4, "TP4  " + str.tostring(math.round(v_t4, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+    d_t5Lb := label.new(bar_index + LBL_OFF, v_t5, "TP5  " + str.tostring(math.round(v_t5, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+    d_t6Lb := label.new(bar_index + LBL_OFF, v_t6, "TP6  " + str.tostring(math.round(v_t6, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+    d_t7Lb := label.new(bar_index + LBL_OFF, v_t7, "TP7  " + str.tostring(math.round(v_t7, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+    d_t8Lb := label.new(bar_index + LBL_OFF, v_t8, "TP8  " + str.tostring(math.round(v_t8, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+
+    v_rr_bull = math.round(v_rng / (v_ent - v_sl), 1)
+    d_cfmLb := label.new(bar_index, v_ent - v_rng * 0.2, "BUY " + s_wpName + " | " + v_ctf + "m | R:R 1:" + str.tostring(v_rr_bull), color=i_colBull, textcolor=color.white, style=label.style_label_up, size=size.small)
+
+    v_bm0 = (v_ent + v_t1) / 2.0
+    v_bm1 = (v_t1 + v_t2) / 2.0
+    v_bm2 = (v_t2 + v_t3) / 2.0
+    v_bm3 = (v_t3 + v_t4) / 2.0
+    v_bm4 = (v_t4 + v_t5) / 2.0
+    v_bm5 = (v_t5 + v_t6) / 2.0
+    v_bm6 = (v_t6 + v_t7) / 2.0
+    d_m1Ln := line.new(bar_index - 1, v_bm0, bar_index, v_bm0, color=color.new(i_colTP, 55), width=1, style=line.style_dotted, extend=extend.right)
+    d_m2Ln := line.new(bar_index - 1, v_bm1, bar_index, v_bm1, color=color.new(i_colTP, 55), width=1, style=line.style_dotted, extend=extend.right)
+    d_m3Ln := line.new(bar_index - 1, v_bm2, bar_index, v_bm2, color=color.new(i_colTP, 55), width=1, style=line.style_dotted, extend=extend.right)
+    d_m4Ln := line.new(bar_index - 1, v_bm3, bar_index, v_bm3, color=color.new(i_colTP, 55), width=1, style=line.style_dotted, extend=extend.right)
+    d_m5Ln := line.new(bar_index - 1, v_bm4, bar_index, v_bm4, color=color.new(i_colTP, 55), width=1, style=line.style_dotted, extend=extend.right)
+    d_m6Ln := line.new(bar_index - 1, v_bm5, bar_index, v_bm5, color=color.new(i_colTP, 55), width=1, style=line.style_dotted, extend=extend.right)
+    d_m7Ln := line.new(bar_index - 1, v_bm6, bar_index, v_bm6, color=color.new(i_colTP, 55), width=1, style=line.style_dotted, extend=extend.right)
+
+// ═══════════════════════════════════════════════════════════════
+// BEAR TRADE LEVELS
+// Entry = patLow | SL = entry + range*0.5 | TP1-8 below
+// ═══════════════════════════════════════════════════════════════
+if v_bearConfirmed
+    v_rng    = s_wpH - s_wpL
+    v_ent    = s_wpL
+    v_sl     = s_wpL + v_rng * 0.5
+    s_isBull := false
+    s_entry  := v_ent
+    s_sl     := v_sl
+    s_range  := v_rng
+
+    if i_showEntry
+        d_entLn := line.new(bar_index - 1, v_ent, bar_index, v_ent, color=i_colEntry, width=2, style=line.style_solid, extend=extend.right)
+        d_entLb := label.new(bar_index + LBL_OFF, v_ent, "ENTRY  " + str.tostring(math.round(v_ent, 2)), color=i_colEntry, textcolor=color.black, style=label.style_label_left, size=size.small)
+
+    if i_showSL
+        d_slLn := line.new(bar_index - 1, v_sl, bar_index, v_sl, color=i_colSL, width=1, style=line.style_dashed, extend=extend.right)
+        d_slLb := label.new(bar_index + LBL_OFF, v_sl, "SL  " + str.tostring(math.round(v_sl, 2)), color=i_colSL, textcolor=color.white, style=label.style_label_left, size=size.small)
+
+    v_t1 = v_ent - v_rng * 1
+    v_t2 = v_ent - v_rng * 2
+    v_t3 = v_ent - v_rng * 3
+    v_t4 = v_ent - v_rng * 4
+    v_t5 = v_ent - v_rng * 5
+    v_t6 = v_ent - v_rng * 6
+    v_t7 = v_ent - v_rng * 7
+    v_t8 = v_ent - v_rng * 8
+
+    d_t1Ln := line.new(bar_index - 1, v_t1, bar_index, v_t1, color=color.new(i_colTP,  0), width=1, style=line.style_solid, extend=extend.right)
+    d_t2Ln := line.new(bar_index - 1, v_t2, bar_index, v_t2, color=color.new(i_colTP, 12), width=1, style=line.style_solid, extend=extend.right)
+    d_t3Ln := line.new(bar_index - 1, v_t3, bar_index, v_t3, color=color.new(i_colTP, 22), width=1, style=line.style_solid, extend=extend.right)
+    d_t4Ln := line.new(bar_index - 1, v_t4, bar_index, v_t4, color=color.new(i_colTP, 32), width=1, style=line.style_solid, extend=extend.right)
+    d_t5Ln := line.new(bar_index - 1, v_t5, bar_index, v_t5, color=color.new(i_colTP, 42), width=1, style=line.style_solid, extend=extend.right)
+    d_t6Ln := line.new(bar_index - 1, v_t6, bar_index, v_t6, color=color.new(i_colTP, 52), width=1, style=line.style_solid, extend=extend.right)
+    d_t7Ln := line.new(bar_index - 1, v_t7, bar_index, v_t7, color=color.new(i_colTP, 62), width=1, style=line.style_solid, extend=extend.right)
+    d_t8Ln := line.new(bar_index - 1, v_t8, bar_index, v_t8, color=color.new(i_colTP, 70), width=1, style=line.style_solid, extend=extend.right)
+
+    d_t1Lb := label.new(bar_index + LBL_OFF, v_t1, "TP1  " + str.tostring(math.round(v_t1, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+    d_t2Lb := label.new(bar_index + LBL_OFF, v_t2, "TP2  " + str.tostring(math.round(v_t2, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+    d_t3Lb := label.new(bar_index + LBL_OFF, v_t3, "TP3  " + str.tostring(math.round(v_t3, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+    d_t4Lb := label.new(bar_index + LBL_OFF, v_t4, "TP4  " + str.tostring(math.round(v_t4, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+    d_t5Lb := label.new(bar_index + LBL_OFF, v_t5, "TP5  " + str.tostring(math.round(v_t5, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+    d_t6Lb := label.new(bar_index + LBL_OFF, v_t6, "TP6  " + str.tostring(math.round(v_t6, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+    d_t7Lb := label.new(bar_index + LBL_OFF, v_t7, "TP7  " + str.tostring(math.round(v_t7, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+    d_t8Lb := label.new(bar_index + LBL_OFF, v_t8, "TP8  " + str.tostring(math.round(v_t8, 2)), color=color.new(#1b5e20, 0), textcolor=color.white, style=label.style_label_left, size=size.small)
+
+    v_rr_bear = math.round(v_rng / (v_sl - v_ent), 1)
+    d_cfmLb := label.new(bar_index, v_ent + v_rng * 0.2, "SELL " + s_wpName + " | " + v_ctf + "m | R:R 1:" + str.tostring(v_rr_bear), color=i_colBear, textcolor=color.white, style=label.style_label_down, size=size.small)
+
+    v_sm0 = (v_ent + v_t1) / 2.0
+    v_sm1 = (v_t1 + v_t2) / 2.0
+    v_sm2 = (v_t2 + v_t3) / 2.0
+    v_sm3 = (v_t3 + v_t4) / 2.0
+    v_sm4 = (v_t4 + v_t5) / 2.0
+    v_sm5 = (v_t5 + v_t6) / 2.0
+    v_sm6 = (v_t6 + v_t7) / 2.0
+    d_m1Ln := line.new(bar_index - 1, v_sm0, bar_index, v_sm0, color=color.new(i_colTP, 55), width=1, style=line.style_dotted, extend=extend.right)
+    d_m2Ln := line.new(bar_index - 1, v_sm1, bar_index, v_sm1, color=color.new(i_colTP, 55), width=1, style=line.style_dotted, extend=extend.right)
+    d_m3Ln := line.new(bar_index - 1, v_sm2, bar_index, v_sm2, color=color.new(i_colTP, 55), width=1, style=line.style_dotted, extend=extend.right)
+    d_m4Ln := line.new(bar_index - 1, v_sm3, bar_index, v_sm3, color=color.new(i_colTP, 55), width=1, style=line.style_dotted, extend=extend.right)
+    d_m5Ln := line.new(bar_index - 1, v_sm4, bar_index, v_sm4, color=color.new(i_colTP, 55), width=1, style=line.style_dotted, extend=extend.right)
+    d_m6Ln := line.new(bar_index - 1, v_sm5, bar_index, v_sm5, color=color.new(i_colTP, 55), width=1, style=line.style_dotted, extend=extend.right)
+    d_m7Ln := line.new(bar_index - 1, v_sm6, bar_index, v_sm6, color=color.new(i_colTP, 55), width=1, style=line.style_dotted, extend=extend.right)
+
+// ═══════════════════════════════════════════════════════════════
+// LIVE TP TRACKING — grey out hit TPs, track highest reached
+// Runs BEFORE SL check so tpReached is set before SL evaluation
+// ═══════════════════════════════════════════════════════════════
+if s_live
+    v_tp1p = s_isBull ? s_entry + s_range * 1 : s_entry - s_range * 1
+    v_tp2p = s_isBull ? s_entry + s_range * 2 : s_entry - s_range * 2
+    v_tp3p = s_isBull ? s_entry + s_range * 3 : s_entry - s_range * 3
+    v_tp4p = s_isBull ? s_entry + s_range * 4 : s_entry - s_range * 4
+    v_tp5p = s_isBull ? s_entry + s_range * 5 : s_entry - s_range * 5
+    v_tp6p = s_isBull ? s_entry + s_range * 6 : s_entry - s_range * 6
+    v_tp7p = s_isBull ? s_entry + s_range * 7 : s_entry - s_range * 7
+    v_tp8p = s_isBull ? s_entry + s_range * 8 : s_entry - s_range * 8
+
+    v_h1 = s_isBull ? high >= v_tp1p : low <= v_tp1p
+    v_h2 = s_isBull ? high >= v_tp2p : low <= v_tp2p
+    v_h3 = s_isBull ? high >= v_tp3p : low <= v_tp3p
+    v_h4 = s_isBull ? high >= v_tp4p : low <= v_tp4p
+    v_h5 = s_isBull ? high >= v_tp5p : low <= v_tp5p
+    v_h6 = s_isBull ? high >= v_tp6p : low <= v_tp6p
+    v_h7 = s_isBull ? high >= v_tp7p : low <= v_tp7p
+    v_h8 = s_isBull ? high >= v_tp8p : low <= v_tp8p
+
+    if v_h1 and not na(d_t1Ln)
+        line.set_color(d_t1Ln, color.new(color.gray, 30))
+        label.set_color(d_t1Lb, color.new(color.gray, 20))
+        label.set_textcolor(d_t1Lb, color.white)
+    if v_h2 and not na(d_t2Ln)
+        line.set_color(d_t2Ln, color.new(color.gray, 30))
+        label.set_color(d_t2Lb, color.new(color.gray, 20))
+        label.set_textcolor(d_t2Lb, color.white)
+    if v_h3 and not na(d_t3Ln)
+        line.set_color(d_t3Ln, color.new(color.gray, 30))
+        label.set_color(d_t3Lb, color.new(color.gray, 20))
+        label.set_textcolor(d_t3Lb, color.white)
+    if v_h4 and not na(d_t4Ln)
+        line.set_color(d_t4Ln, color.new(color.gray, 30))
+        label.set_color(d_t4Lb, color.new(color.gray, 20))
+        label.set_textcolor(d_t4Lb, color.white)
+    if v_h5 and not na(d_t5Ln)
+        line.set_color(d_t5Ln, color.new(color.gray, 30))
+        label.set_color(d_t5Lb, color.new(color.gray, 20))
+        label.set_textcolor(d_t5Lb, color.white)
+    if v_h6 and not na(d_t6Ln)
+        line.set_color(d_t6Ln, color.new(color.gray, 30))
+        label.set_color(d_t6Lb, color.new(color.gray, 20))
+        label.set_textcolor(d_t6Lb, color.white)
+    if v_h7 and not na(d_t7Ln)
+        line.set_color(d_t7Ln, color.new(color.gray, 30))
+        label.set_color(d_t7Lb, color.new(color.gray, 20))
+        label.set_textcolor(d_t7Lb, color.white)
+    if v_h8 and not na(d_t8Ln)
+        line.set_color(d_t8Ln, color.new(color.gray, 30))
+        label.set_color(d_t8Lb, color.new(color.gray, 20))
+        label.set_textcolor(d_t8Lb, color.white)
+
+    for n = 1 to 8
+        v_tp  = s_isBull ? s_entry + s_range * n : s_entry - s_range * n
+        v_hit = s_isBull ? high >= v_tp : low <= v_tp
+        if v_hit and n > s_tpReached
+            s_tpReached := n
+
+// ═══════════════════════════════════════════════════════════════
+// SL HIT DETECTION
+// KEY RULE: if price already reached TP1+, SL hit = WIN not loss
+// (price ran in our favour, moved SL to BE conceptually)
+// In that case treat as win and clear chart cleanly
+// If SL hit before any TP = actual loss
+// ═══════════════════════════════════════════════════════════════
+v_slHit = s_live and (s_isBull ? low <= s_sl : high >= s_sl)
+
+if v_slHit
+    // Determine outcome: if TP was reached before SL = win, else = loss
+    if v_isToday
+        if s_tpReached >= 1
+            s_winsToday := s_winsToday + 1
+        else
+            s_lossToday := s_lossToday + 1
+    // Clear ALL drawings cleanly — trade is fully closed
+    if not na(d_entLn)
+        line.delete(d_entLn)
+    if not na(d_entLb)
+        label.delete(d_entLb)
+    if not na(d_slLn)
+        line.delete(d_slLn)
+    if not na(d_slLb)
+        label.delete(d_slLb)
+    if not na(d_cfmLb)
+        label.delete(d_cfmLb)
+    if not na(d_t1Ln)
+        line.delete(d_t1Ln)
+    if not na(d_t2Ln)
+        line.delete(d_t2Ln)
+    if not na(d_t3Ln)
+        line.delete(d_t3Ln)
+    if not na(d_t4Ln)
+        line.delete(d_t4Ln)
+    if not na(d_t5Ln)
+        line.delete(d_t5Ln)
+    if not na(d_t6Ln)
+        line.delete(d_t6Ln)
+    if not na(d_t7Ln)
+        line.delete(d_t7Ln)
+    if not na(d_t8Ln)
+        line.delete(d_t8Ln)
+    if not na(d_t1Lb)
+        label.delete(d_t1Lb)
+    if not na(d_t2Lb)
+        label.delete(d_t2Lb)
+    if not na(d_t3Lb)
+        label.delete(d_t3Lb)
+    if not na(d_t4Lb)
+        label.delete(d_t4Lb)
+    if not na(d_t5Lb)
+        label.delete(d_t5Lb)
+    if not na(d_t6Lb)
+        label.delete(d_t6Lb)
+    if not na(d_t7Lb)
+        label.delete(d_t7Lb)
+    if not na(d_t8Lb)
+        label.delete(d_t8Lb)
+    if not na(d_m1Ln)
+        line.delete(d_m1Ln)
+    if not na(d_m2Ln)
+        line.delete(d_m2Ln)
+    if not na(d_m3Ln)
+        line.delete(d_m3Ln)
+    if not na(d_m4Ln)
+        line.delete(d_m4Ln)
+    if not na(d_m5Ln)
+        line.delete(d_m5Ln)
+    if not na(d_m6Ln)
+        line.delete(d_m6Ln)
+    if not na(d_m7Ln)
+        line.delete(d_m7Ln)
+    s_live      := false
+    s_tpReached := 0
+
+// ═══════════════════════════════════════════════════════════════
+// TP INVALIDATION — runs only if SL not hit
+// If price closes back through 50% of last hit TP zone
+// → count as win and close trade, keep TPs visible
+// ═══════════════════════════════════════════════════════════════
+if s_live and not v_slHit
+    if s_tpReached >= 1
+        v_tpTop  = s_isBull ? s_entry + s_range * s_tpReached : s_entry - s_range * s_tpReached
+        v_tpPrev = s_tpReached > 1 ? (s_isBull ? s_entry + s_range * (s_tpReached - 1) : s_entry - s_range * (s_tpReached - 1)) : s_entry
+        v_mid    = (v_tpTop + v_tpPrev) / 2.0
+        v_inv    = s_isBull ? close < v_mid : close > v_mid
+
+        if v_inv
+            if v_isToday
+                s_winsToday := s_winsToday + 1
+            // TPs stay visible until next signal — only close trade state
+            s_live := false
+
+// ═══════════════════════════════════════════════════════════════
+// BAR COLOR
+// ═══════════════════════════════════════════════════════════════
+barcolor(v_bullConfirmed ? color.new(i_colBull, 20) : v_bearConfirmed ? color.new(i_colBear, 20) : na)
+
+// ═══════════════════════════════════════════════════════════════
+// ALERTS
+// ═══════════════════════════════════════════════════════════════
+alertcondition(v_bullSig,       title="[LYNX] BUY Setup Forming",    message="BUY SETUP: {{ticker}} {{interval}} Bullish reversal spotted. Waiting lower TF confirm.")
+alertcondition(v_bearSig,       title="[LYNX] SELL Setup Forming",   message="SELL SETUP: {{ticker}} {{interval}} Bearish reversal spotted. Waiting lower TF confirm.")
+alertcondition(v_bullConfirmed, title="[LYNX] BUY ENTRY Confirmed",  message="BUY CONFIRMED: {{ticker}} {{interval}} Enter LONG. Check ENTRY SL and TPs on chart.")
+alertcondition(v_bearConfirmed, title="[LYNX] SELL ENTRY Confirmed", message="SELL CONFIRMED: {{ticker}} {{interval}} Enter SHORT. Check ENTRY SL and TPs on chart.")
+alertcondition(v_slHit,         title="[LYNX] Trade Closed",         message="TRADE CLOSED: {{ticker}} {{interval}} SL hit. Chart cleared. Scanning for next setup.")
+
+// ═══════════════════════════════════════════════════════════════
+// DASHBOARD TABLE
+// ═══════════════════════════════════════════════════════════════
+var table v_tbl = table.new(position.top_right, 2, 9, border_color=color.new(color.gray, 60), border_width=1, bgcolor=color.new(color.black, 65))
+
+if barstate.islast
+    v_hBg = color.new(#1a237e, 20)
+    v_dBg = color.new(color.black, 50)
+    v_grBg = color.new(#1b5e20, 40)
+    v_rdBg = color.new(#b71c1c, 40)
+    v_wt  = color.white
+    v_sm  = size.small
+    v_ti  = size.tiny
+
+    table.cell(v_tbl, 0, 0, "LYNX MTF",     bgcolor=v_hBg, text_color=color.yellow, text_size=v_sm)
+    table.cell(v_tbl, 1, 0, syminfo.ticker, bgcolor=v_hBg, text_color=v_wt,         text_size=v_sm)
+
+    table.cell(v_tbl, 0, 1, "Chart / Confirm",                bgcolor=v_dBg, text_color=color.yellow, text_size=v_ti)
+    table.cell(v_tbl, 1, 1, v_tf + "m / " + v_ctf + "m",     bgcolor=v_dBg, text_color=v_wt,         text_size=v_sm)
+
+    v_status = s_waitBull ? "Wait BULL" : s_waitBear ? "Wait BEAR" : s_live ? "TRADE ON" : "Scanning"
+    v_sBg    = s_waitBull ? color.new(#00c853, 45) : s_waitBear ? color.new(#f44336, 45) : s_live ? color.new(#f5a623, 35) : color.new(color.gray, 60)
+    table.cell(v_tbl, 0, 2, "Status",  bgcolor=v_sBg, text_color=v_wt, text_size=v_ti)
+    table.cell(v_tbl, 1, 2, v_status,  bgcolor=v_sBg, text_color=v_wt, text_size=v_sm)
+
+    v_slTxt = s_live ? str.tostring(math.round(s_sl, 2)) : "---"
+    v_slBg  = s_live ? color.new(i_colSL, 40) : color.new(color.gray, 60)
+    table.cell(v_tbl, 0, 3, "Active SL", bgcolor=v_slBg, text_color=v_wt, text_size=v_ti)
+    table.cell(v_tbl, 1, 3, v_slTxt,     bgcolor=v_slBg, text_color=v_wt, text_size=v_sm)
+
+    table.cell(v_tbl, 0, 4, "SESSION",                                                          bgcolor=v_dBg, text_color=color.gray, text_size=v_ti)
+    table.cell(v_tbl, 1, 4, str.tostring(dayofmonth(timenow)) + "/" + str.tostring(month(timenow)), bgcolor=v_dBg, text_color=color.gray, text_size=v_ti)
+
+    table.cell(v_tbl, 0, 5, "Signals Today", bgcolor=v_dBg, text_color=v_wt,          text_size=v_ti)
+    table.cell(v_tbl, 1, 5, str.tostring(s_sigToday), bgcolor=v_dBg, text_color=color.yellow, text_size=v_sm)
+
+    table.cell(v_tbl, 0, 6, "Wins",       bgcolor=v_grBg, text_color=v_wt, text_size=v_ti)
+    table.cell(v_tbl, 1, 6, str.tostring(s_winsToday), bgcolor=v_grBg, text_color=v_wt, text_size=v_sm)
+
+    table.cell(v_tbl, 0, 7, "Losses",     bgcolor=v_rdBg, text_color=v_wt, text_size=v_ti)
+    table.cell(v_tbl, 1, 7, str.tostring(s_lossToday), bgcolor=v_rdBg, text_color=v_wt, text_size=v_sm)
+
+    v_bslDist = math.round(math.abs(v_dHigh - close), 2)
+    v_sslDist = math.round(math.abs(close - v_dLow), 2)
+    table.cell(v_tbl, 0, 8, "BSL / SSL Dist", bgcolor=color.new(#0d47a1, 40), text_color=v_wt, text_size=v_ti)
+    table.cell(v_tbl, 1, 8, str.tostring(v_bslDist) + " / " + str.tostring(v_sslDist), bgcolor=color.new(#0d47a1, 40), text_color=v_wt, text_size=v_sm)
