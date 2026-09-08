@@ -1,6 +1,12 @@
 # LYNX MTF — how the working setup behaves
 
-The 3 Aug script is the strategy. Levels, patterns, BSL/SSL, and LTF confirm are **not** to be rewritten.
+The 3 Aug script is the strategy. Entry / SL (0.5× pattern **inside** the box) / TP multiples are unchanged.
+
+Runtime fixes in `LYNX_MTF.pine` (not rule changes):
+
+1. **SL wipe** — levels stayed on the chart after SL because (a) TP-run invalidation set `s_live=false` and then **stopped checking SL**, so a later SL tag did nothing, and (b) deleted line IDs were not reset to `na`. SL now always clears entry/SL/TP drawings and returns status to **Scanning**.
+2. **Missed reversals** — a new pattern could not confirm while a trade was live (`not s_live`). Same-bar tick re-arm could also skip or flash a trade. Confirms are once per bar; a new confirmed reversal **replaces** old levels. Swing high/low is judged on the **completed** pattern bar so the current wick cannot cancel it.
+3. **Dashboard** — trades/wins/losses incremented **on every tick** of the confirm/SL bar, and the calendar day mixed UTC `timenow` with exchange bar dates. Counts are once per event, using the chart timezone. Wins are not counted twice if SL is tagged after a TP-run close.
 
 ## Flow
 
