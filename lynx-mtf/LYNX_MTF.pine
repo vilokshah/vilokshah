@@ -264,16 +264,16 @@ var line  d_m5Ln    = na
 var line  d_m6Ln    = na
 var line  d_m7Ln    = na
 
-// Helpers only delete and return na — Pine CE10088 forbids `:=` on globals inside functions.
+// Delete then return typed na (CE10088: no `:=` on globals in functions; CE10096: typed na).
 f_killLn(line id) =>
     line.delete(id)
-    na
+    line(na)
 f_killLb(label id) =>
     label.delete(id)
-    na
+    label(na)
 f_killBx(box id) =>
     box.delete(id)
-    na
+    box(na)
 
 // ═══════════════════════════════════════════════════════════════
 // PENDING BOX
