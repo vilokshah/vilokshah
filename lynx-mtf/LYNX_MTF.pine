@@ -181,15 +181,16 @@ if v_bearSig
 // ═══════════════════════════════════════════════════════════════
 // LOWER-TF CONFIRMATION
 // ═══════════════════════════════════════════════════════════════
-v_ltfC1 = request.security(syminfo.tickerid, v_ctf, close[1], lookahead=barmerge.lookahead_off)
-v_ltfO1 = request.security(syminfo.tickerid, v_ctf, open[1],  lookahead=barmerge.lookahead_off)
-v_ltfC2 = request.security(syminfo.tickerid, v_ctf, close[2], lookahead=barmerge.lookahead_off)
-v_ltfO2 = request.security(syminfo.tickerid, v_ctf, open[2],  lookahead=barmerge.lookahead_off)
-v_ltfC3 = request.security(syminfo.tickerid, v_ctf, close[3], lookahead=barmerge.lookahead_off)
-v_ltfO3 = request.security(syminfo.tickerid, v_ctf, open[3],  lookahead=barmerge.lookahead_off)
+// Last COMPLETED lower-TF bar is close/open (lookahead_off), not close[1].
+// close[1] skipped the breakout candle, so 15m hammers stayed on "Wait 5m".
+[v_ltfO0, v_ltfC0, v_ltfO1, v_ltfC1, v_ltfO2, v_ltfC2, v_ltfO3, v_ltfC3] = request.security(syminfo.tickerid, v_ctf, [open, close, open[1], close[1], open[2], close[2], open[3], close[3]], lookahead=barmerge.lookahead_off)
 
-v_ltfBullOk = (v_ltfC1 > v_ltfO1 and v_ltfC1 > s_wpH) or (v_ltfC2 > v_ltfO2 and v_ltfC2 > s_wpH) or (v_ltfC3 > v_ltfO3 and v_ltfC3 > s_wpH)
-v_ltfBearOk = (v_ltfC1 < v_ltfO1 and v_ltfC1 < s_wpL) or (v_ltfC2 < v_ltfO2 and v_ltfC2 < s_wpL) or (v_ltfC3 < v_ltfO3 and v_ltfC3 < s_wpL)
+v_ltfBullOk = (v_ltfC0 > v_ltfO0 and v_ltfC0 > s_wpH) or (v_ltfC1 > v_ltfO1 and v_ltfC1 > s_wpH) or (v_ltfC2 > v_ltfO2 and v_ltfC2 > s_wpH) or (v_ltfC3 > v_ltfO3 and v_ltfC3 > s_wpH)
+v_ltfBearOk = (v_ltfC0 < v_ltfO0 and v_ltfC0 < s_wpL) or (v_ltfC1 < v_ltfO1 and v_ltfC1 < s_wpL) or (v_ltfC2 < v_ltfO2 and v_ltfC2 < s_wpL) or (v_ltfC3 < v_ltfO3 and v_ltfC3 < s_wpL)
+
+// 15m (chart) close through the pattern box also confirms — same as a 5m break.
+v_chartBullOk = close > s_wpH
+v_chartBearOk = close < s_wpL
 
 v_barDay  = year * 10000 + month * 100 + dayofmonth
 v_isToday = year == year(timenow) and month == month(timenow) and dayofmonth == dayofmonth(timenow)
@@ -207,8 +208,8 @@ if (v_bullSig or v_bearSig) and s_live and s_tpReached >= 1
     s_live        := false
     s_pendingWipe := true
 
-v_bullConfirmed = s_waitBull and v_ltfBullOk and not s_live
-v_bearConfirmed = s_waitBear and v_ltfBearOk and not s_live
+v_bullConfirmed = s_waitBull and (v_ltfBullOk or v_chartBullOk) and not s_live
+v_bearConfirmed = s_waitBear and (v_ltfBearOk or v_chartBearOk) and not s_live
 
 if v_bullConfirmed
     s_waitBull := false
