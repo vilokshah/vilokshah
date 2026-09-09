@@ -2,7 +2,7 @@
 
 Standalone TradingView indicator. The strategy is the **3 Aug working setup**, unchanged.
 
-Paste `LYNX_MTF.pine` into the Pine Editor (v6). Use only on **15m, 1H, or 4H**. Same trade math as 3 Aug, plus SL cleanup, missed-signal, and dashboard counting fixes.
+Paste `LYNX_MTF.pine` into the Pine Editor (v6). Use only on **15m, 1H, or 4H**. Same signals as the 3 Aug setup; SL hit still clears leftover levels.
 
 | File | What it is |
 |------|------------|

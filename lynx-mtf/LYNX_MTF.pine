@@ -50,16 +50,12 @@ var float  s_entry     = na
 var float  s_sl        = na
 var float  s_range     = na
 var int    s_tpReached = 0
-var int    s_entryBar  = na
-var int    s_procBar   = na
-var bool   s_didConfirm = false
-var bool   s_didPend    = false
 
 // Session counters
 var int    s_sigToday  = 0
 var int    s_winsToday = 0
 var int    s_lossToday = 0
-var int    s_statDay   = 0
+var int    s_lastDay   = 0
 
 // ═══════════════════════════════════════════════════════════════
 // BSL / SSL
@@ -136,10 +132,8 @@ f_tweezerTop() =>
 // ═══════════════════════════════════════════════════════════════
 // SWING CONTEXT
 // ═══════════════════════════════════════════════════════════════
-// Compare the pattern bar to prior bars only — do not let the in-progress
-// candle's wick cancel a completed reversal on bar [1].
-v_atSwingLow  = low[1]  == ta.lowest(low[1],  i_swingLen + 1)
-v_atSwingHigh = high[1] == ta.highest(high[1], i_swingLen + 1)
+v_atSwingLow  = low[1]  == ta.lowest(low,  i_swingLen + 1)
+v_atSwingHigh = high[1] == ta.highest(high, i_swingLen + 1)
 
 // ═══════════════════════════════════════════════════════════════
 // SIGNAL DETECTION
@@ -167,24 +161,16 @@ v_pH3 = math.max(high[1], math.max(high[2], high[3]))
 v_pL3 = math.min(low[1],  math.min(low[2],  low[3]))
 
 // ═══════════════════════════════════════════════════════════════
-// ONE EVALUATION PER BAR (avoids tick re-arm / double confirm)
-// ═══════════════════════════════════════════════════════════════
-if bar_index != s_procBar
-    s_procBar    := bar_index
-    s_didConfirm := false
-    s_didPend    := false
-
-// ═══════════════════════════════════════════════════════════════
 // WAIT STATE
 // ═══════════════════════════════════════════════════════════════
-if v_bullSig and not s_didConfirm
+if v_bullSig
     s_waitBull := true
     s_waitBear := false
     s_wpH      := v_bullMorn ? v_pH3 : (v_bullEngulf or v_bullTweez) ? v_pH2 : v_pH1
     s_wpL      := v_bullMorn ? v_pL3 : (v_bullEngulf or v_bullTweez) ? v_pL2 : v_pL1
     s_wpName   := v_bullHammer ? "Hammer" : v_bullEngulf ? "Bull Engulf" : v_bullMorn ? "Morning Star" : "Tweezer Bot"
 
-if v_bearSig and not s_didConfirm
+if v_bearSig
     s_waitBear := true
     s_waitBull := false
     s_wpH      := v_bearEve ? v_pH3 : (v_bearEngulf or v_bearTweez) ? v_pH2 : v_pH1
@@ -204,31 +190,31 @@ v_ltfO3 = request.security(syminfo.tickerid, v_ctf, open[3],  lookahead=barmerge
 v_ltfBullOk = (v_ltfC1 > v_ltfO1 and v_ltfC1 > s_wpH) or (v_ltfC2 > v_ltfO2 and v_ltfC2 > s_wpH) or (v_ltfC3 > v_ltfO3 and v_ltfC3 > s_wpH)
 v_ltfBearOk = (v_ltfC1 < v_ltfO1 and v_ltfC1 < s_wpL) or (v_ltfC2 < v_ltfO2 and v_ltfC2 < s_wpL) or (v_ltfC3 < v_ltfO3 and v_ltfC3 < s_wpL)
 
-// A live trade no longer blocks a new confirmed reversal (old levels are replaced).
-// s_didConfirm stops the same bar from firing on every tick.
-v_bullConfirmed = s_waitBull and v_ltfBullOk and not s_didConfirm
-v_bearConfirmed = s_waitBear and v_ltfBearOk and not s_didConfirm
+v_bullConfirmed = s_waitBull and v_ltfBullOk and not s_live
+v_bearConfirmed = s_waitBear and v_ltfBearOk and not s_live
 
 if v_bullConfirmed
-    s_waitBull    := false
-    s_didConfirm  := true
+    s_waitBull := false
 if v_bearConfirmed
-    s_waitBear    := false
-    s_didConfirm  := true
+    s_waitBear := false
 
-// Session date in the chart timezone (not UTC from timenow).
-v_nowDay = year(timenow, syminfo.timezone) * 10000 + month(timenow, syminfo.timezone) * 100 + dayofmonth(timenow, syminfo.timezone)
-v_barDay = year(time,    syminfo.timezone) * 10000 + month(time,    syminfo.timezone) * 100 + dayofmonth(time,    syminfo.timezone)
-v_isToday = v_barDay == v_nowDay
+// ═══════════════════════════════════════════════════════════════
+// SESSION STATS — only count bars from today using bar time
+// v_isToday compares the chart bar's date to the current date
+// This prevents historical bars from polluting the counter
+// ═══════════════════════════════════════════════════════════════
+v_barDay  = year * 10000 + month * 100 + dayofmonth
+v_isToday = year == year(timenow) and month == month(timenow) and dayofmonth == dayofmonth(timenow)
 
-if s_statDay != v_nowDay
+if v_barDay != s_lastDay
     s_sigToday  := 0
     s_winsToday := 0
     s_lossToday := 0
-    s_statDay   := v_nowDay
+    s_lastDay   := v_barDay
 
-if v_isToday and (v_bullConfirmed or v_bearConfirmed)
-    s_sigToday := s_sigToday + 1
+if v_isToday and barstate.isconfirmed
+    if v_bullConfirmed or v_bearConfirmed
+        s_sigToday := s_sigToday + 1
 
 // ═══════════════════════════════════════════════════════════════
 // DRAWING OBJECTSs
@@ -264,35 +250,26 @@ var line  d_m5Ln    = na
 var line  d_m6Ln    = na
 var line  d_m7Ln    = na
 
-// Delete then return typed na (CE10088: no `:=` on globals in functions; CE10096: typed na).
-f_killLn(line id) =>
-    line.delete(id)
-    line(na)
-f_killLb(label id) =>
-    label.delete(id)
-    label(na)
-f_killBx(box id) =>
-    box.delete(id)
-    box(na)
-
 // ═══════════════════════════════════════════════════════════════
 // PENDING BOX
 // ═══════════════════════════════════════════════════════════════
-if v_bullSig and not s_didConfirm and not s_didPend
-    d_pendBox := f_killBx(d_pendBox)
-    d_pendLbl := f_killLb(d_pendLbl)
+if v_bullSig
+    if not na(d_pendBox)
+        box.delete(d_pendBox)
+    if not na(d_pendLbl)
+        label.delete(d_pendLbl)
     v_sb = v_bullMorn ? 4 : (v_bullEngulf or v_bullTweez) ? 3 : 2
     d_pendBox := box.new(bar_index - v_sb, s_wpH, bar_index, s_wpL, border_color=color.new(i_colBull, 40), bgcolor=color.new(i_colBull, 90), border_width=1, border_style=line.style_dashed)
     d_pendLbl := label.new(bar_index, s_wpL - (s_wpH - s_wpL) * 0.4, "BUY " + s_wpName + " | Wait " + v_ctf + "m", color=i_colBull, textcolor=color.white, style=label.style_label_up, size=size.small)
-    s_didPend := true
 
-if v_bearSig and not s_didConfirm and not s_didPend
-    d_pendBox := f_killBx(d_pendBox)
-    d_pendLbl := f_killLb(d_pendLbl)
+if v_bearSig
+    if not na(d_pendBox)
+        box.delete(d_pendBox)
+    if not na(d_pendLbl)
+        label.delete(d_pendLbl)
     v_sb = v_bearEve ? 4 : (v_bearEngulf or v_bearTweez) ? 3 : 2
     d_pendBox := box.new(bar_index - v_sb, s_wpH, bar_index, s_wpL, border_color=color.new(i_colBear, 40), bgcolor=color.new(i_colBear, 90), border_width=1, border_style=line.style_dashed)
     d_pendLbl := label.new(bar_index, s_wpH + (s_wpH - s_wpL) * 0.4, "SELL " + s_wpName + " | Wait " + v_ctf + "m", color=i_colBear, textcolor=color.white, style=label.style_label_down, size=size.small)
-    s_didPend := true
 
 // ═══════════════════════════════════════════════════════════════
 // CLEAR ALL ON NEW CONFIRMED SIGNAL
@@ -300,40 +277,69 @@ if v_bearSig and not s_didConfirm and not s_didPend
 v_doConfirm = v_bullConfirmed or v_bearConfirmed
 
 if v_doConfirm
-    d_pendBox := f_killBx(d_pendBox)
-    d_pendLbl := f_killLb(d_pendLbl)
-    d_entLn := f_killLn(d_entLn)
-    d_entLb := f_killLb(d_entLb)
-    d_slLn  := f_killLn(d_slLn)
-    d_slLb  := f_killLb(d_slLb)
-    d_cfmLb := f_killLb(d_cfmLb)
-    d_t1Ln := f_killLn(d_t1Ln)
-    d_t2Ln := f_killLn(d_t2Ln)
-    d_t3Ln := f_killLn(d_t3Ln)
-    d_t4Ln := f_killLn(d_t4Ln)
-    d_t5Ln := f_killLn(d_t5Ln)
-    d_t6Ln := f_killLn(d_t6Ln)
-    d_t7Ln := f_killLn(d_t7Ln)
-    d_t8Ln := f_killLn(d_t8Ln)
-    d_t1Lb := f_killLb(d_t1Lb)
-    d_t2Lb := f_killLb(d_t2Lb)
-    d_t3Lb := f_killLb(d_t3Lb)
-    d_t4Lb := f_killLb(d_t4Lb)
-    d_t5Lb := f_killLb(d_t5Lb)
-    d_t6Lb := f_killLb(d_t6Lb)
-    d_t7Lb := f_killLb(d_t7Lb)
-    d_t8Lb := f_killLb(d_t8Lb)
-    d_m1Ln := f_killLn(d_m1Ln)
-    d_m2Ln := f_killLn(d_m2Ln)
-    d_m3Ln := f_killLn(d_m3Ln)
-    d_m4Ln := f_killLn(d_m4Ln)
-    d_m5Ln := f_killLn(d_m5Ln)
-    d_m6Ln := f_killLn(d_m6Ln)
-    d_m7Ln := f_killLn(d_m7Ln)
+    if not na(d_pendBox)
+        box.delete(d_pendBox)
+    if not na(d_pendLbl)
+        label.delete(d_pendLbl)
+    if not na(d_entLn)
+        line.delete(d_entLn)
+    if not na(d_entLb)
+        label.delete(d_entLb)
+    if not na(d_slLn)
+        line.delete(d_slLn)
+    if not na(d_slLb)
+        label.delete(d_slLb)
+    if not na(d_cfmLb)
+        label.delete(d_cfmLb)
+    if not na(d_t1Ln)
+        line.delete(d_t1Ln)
+    if not na(d_t2Ln)
+        line.delete(d_t2Ln)
+    if not na(d_t3Ln)
+        line.delete(d_t3Ln)
+    if not na(d_t4Ln)
+        line.delete(d_t4Ln)
+    if not na(d_t5Ln)
+        line.delete(d_t5Ln)
+    if not na(d_t6Ln)
+        line.delete(d_t6Ln)
+    if not na(d_t7Ln)
+        line.delete(d_t7Ln)
+    if not na(d_t8Ln)
+        line.delete(d_t8Ln)
+    if not na(d_t1Lb)
+        label.delete(d_t1Lb)
+    if not na(d_t2Lb)
+        label.delete(d_t2Lb)
+    if not na(d_t3Lb)
+        label.delete(d_t3Lb)
+    if not na(d_t4Lb)
+        label.delete(d_t4Lb)
+    if not na(d_t5Lb)
+        label.delete(d_t5Lb)
+    if not na(d_t6Lb)
+        label.delete(d_t6Lb)
+    if not na(d_t7Lb)
+        label.delete(d_t7Lb)
+    if not na(d_t8Lb)
+        label.delete(d_t8Lb)
+    if not na(d_m1Ln)
+        line.delete(d_m1Ln)
+    if not na(d_m2Ln)
+        line.delete(d_m2Ln)
+    if not na(d_m3Ln)
+        line.delete(d_m3Ln)
+    if not na(d_m4Ln)
+        line.delete(d_m4Ln)
+    if not na(d_m5Ln)
+        line.delete(d_m5Ln)
+    if not na(d_m6Ln)
+        line.delete(d_m6Ln)
+    if not na(d_m7Ln)
+        line.delete(d_m7Ln)
     s_live      := true
     s_markup    := true
     s_tpReached := 0
-    s_entryBar  := bar_index
 
 // ═══════════════════════════════════════════════════════════════
 // BULL TRADE LEVELS
@@ -471,7 +477,7 @@ if v_bearConfirmed
 // LIVE TP TRACKING — grey out hit TPs, track highest reached
 // Runs BEFORE SL check so tpReached is set before SL evaluation
 // ═══════════════════════════════════════════════════════════════
-if s_markup
+if s_live
     v_tp1p = s_isBull ? s_entry + s_range * 1 : s_entry - s_range * 1
     v_tp2p = s_isBull ? s_entry + s_range * 2 : s_entry - s_range * 2
     v_tp3p = s_isBull ? s_entry + s_range * 3 : s_entry - s_range * 3
@@ -536,50 +542,103 @@ if s_markup
 // In that case treat as win and clear chart cleanly
 // If SL hit before any TP = actual loss
 // ═══════════════════════════════════════════════════════════════
-// Wipe levels whenever price tags SL, even after a TP run already
-// set s_live=false but left the lines on the chart.
-v_slHit = s_markup and not v_doConfirm and not na(s_sl) and not na(s_entryBar) and bar_index > s_entryBar and (s_isBull ? low <= s_sl : high >= s_sl)
+v_slHit = (s_live or s_markup) and not na(s_sl) and (s_isBull ? low <= s_sl : high >= s_sl)
 
 if v_slHit
-    if v_isToday and s_live
+    // Determine outcome: if TP was reached before SL = win, else = loss
+    if v_isToday and barstate.isconfirmed and s_live
         if s_tpReached >= 1
             s_winsToday := s_winsToday + 1
         else
             s_lossToday := s_lossToday + 1
-    d_pendBox := f_killBx(d_pendBox)
-    d_pendLbl := f_killLb(d_pendLbl)
-    d_entLn := f_killLn(d_entLn)
-    d_entLb := f_killLb(d_entLb)
-    d_slLn  := f_killLn(d_slLn)
-    d_slLb  := f_killLb(d_slLb)
-    d_cfmLb := f_killLb(d_cfmLb)
-    d_t1Ln := f_killLn(d_t1Ln)
-    d_t2Ln := f_killLn(d_t2Ln)
-    d_t3Ln := f_killLn(d_t3Ln)
-    d_t4Ln := f_killLn(d_t4Ln)
-    d_t5Ln := f_killLn(d_t5Ln)
-    d_t6Ln := f_killLn(d_t6Ln)
-    d_t7Ln := f_killLn(d_t7Ln)
-    d_t8Ln := f_killLn(d_t8Ln)
-    d_t1Lb := f_killLb(d_t1Lb)
-    d_t2Lb := f_killLb(d_t2Lb)
-    d_t3Lb := f_killLb(d_t3Lb)
-    d_t4Lb := f_killLb(d_t4Lb)
-    d_t5Lb := f_killLb(d_t5Lb)
-    d_t6Lb := f_killLb(d_t6Lb)
-    d_t7Lb := f_killLb(d_t7Lb)
-    d_t8Lb := f_killLb(d_t8Lb)
-    d_m1Ln := f_killLn(d_m1Ln)
-    d_m2Ln := f_killLn(d_m2Ln)
-    d_m3Ln := f_killLn(d_m3Ln)
-    d_m4Ln := f_killLn(d_m4Ln)
-    d_m5Ln := f_killLn(d_m5Ln)
-    d_m6Ln := f_killLn(d_m6Ln)
-    d_m7Ln := f_killLn(d_m7Ln)
+    // Clear ALL drawings cleanly — trade is fully closed
+    if not na(d_entLn)
+        line.delete(d_entLn)
+    if not na(d_entLb)
+        label.delete(d_entLb)
+    if not na(d_slLn)
+        line.delete(d_slLn)
+    if not na(d_slLb)
+        label.delete(d_slLb)
+    if not na(d_cfmLb)
+        label.delete(d_cfmLb)
+    if not na(d_t1Ln)
+        line.delete(d_t1Ln)
+    if not na(d_t2Ln)
+        line.delete(d_t2Ln)
+    if not na(d_t3Ln)
+        line.delete(d_t3Ln)
+    if not na(d_t4Ln)
+        line.delete(d_t4Ln)
+    if not na(d_t5Ln)
+        line.delete(d_t5Ln)
+    if not na(d_t6Ln)
+        line.delete(d_t6Ln)
+    if not na(d_t7Ln)
+        line.delete(d_t7Ln)
+    if not na(d_t8Ln)
+        line.delete(d_t8Ln)
+    if not na(d_t1Lb)
+        label.delete(d_t1Lb)
+    if not na(d_t2Lb)
+        label.delete(d_t2Lb)
+    if not na(d_t3Lb)
+        label.delete(d_t3Lb)
+    if not na(d_t4Lb)
+        label.delete(d_t4Lb)
+    if not na(d_t5Lb)
+        label.delete(d_t5Lb)
+    if not na(d_t6Lb)
+        label.delete(d_t6Lb)
+    if not na(d_t7Lb)
+        label.delete(d_t7Lb)
+    if not na(d_t8Lb)
+        label.delete(d_t8Lb)
+    if not na(d_m1Ln)
+        line.delete(d_m1Ln)
+    if not na(d_m2Ln)
+        line.delete(d_m2Ln)
+    if not na(d_m3Ln)
+        line.delete(d_m3Ln)
+    if not na(d_m4Ln)
+        line.delete(d_m4Ln)
+    if not na(d_m5Ln)
+        line.delete(d_m5Ln)
+    if not na(d_m6Ln)
+        line.delete(d_m6Ln)
+    if not na(d_m7Ln)
+        line.delete(d_m7Ln)
+    d_entLn := na
+    d_entLb := na
+    d_slLn := na
+    d_slLb := na
+    d_cfmLb := na
+    d_t1Ln := na
+    d_t2Ln := na
+    d_t3Ln := na
+    d_t4Ln := na
+    d_t5Ln := na
+    d_t6Ln := na
+    d_t7Ln := na
+    d_t8Ln := na
+    d_t1Lb := na
+    d_t2Lb := na
+    d_t3Lb := na
+    d_t4Lb := na
+    d_t5Lb := na
+    d_t6Lb := na
+    d_t7Lb := na
+    d_t8Lb := na
+    d_m1Ln := na
+    d_m2Ln := na
+    d_m3Ln := na
+    d_m4Ln := na
+    d_m5Ln := na
+    d_m6Ln := na
+    d_m7Ln := na
     s_live      := false
     s_markup    := false
     s_tpReached := 0
-    s_entryBar  := na
     s_sl        := na
 
 // ═══════════════════════════════════════════════════════════════
@@ -595,8 +654,9 @@ if s_live and not v_slHit
         v_inv    = s_isBull ? close < v_mid : close > v_mid
 
         if v_inv
-            if v_isToday
+            if v_isToday and barstate.isconfirmed
                 s_winsToday := s_winsToday + 1
+            // TPs stay visible until SL or next signal — only close trade state
             s_live := false
 
 // ═══════════════════════════════════════════════════════════════
@@ -633,20 +693,20 @@ if barstate.islast
     table.cell(v_tbl, 0, 1, "Chart / Confirm",                bgcolor=v_dBg, text_color=color.yellow, text_size=v_ti)
     table.cell(v_tbl, 1, 1, v_tf + "m / " + v_ctf + "m",     bgcolor=v_dBg, text_color=v_wt,         text_size=v_sm)
 
-    v_status = s_waitBull ? "Wait BULL" : s_waitBear ? "Wait BEAR" : s_live ? "TRADE ON" : s_markup ? "Levels on" : "Scanning"
-    v_sBg    = s_waitBull ? color.new(#00c853, 45) : s_waitBear ? color.new(#f44336, 45) : s_live ? color.new(#f5a623, 35) : s_markup ? color.new(#f5a623, 55) : color.new(color.gray, 60)
+    v_status = s_waitBull ? "Wait BULL" : s_waitBear ? "Wait BEAR" : s_live ? "TRADE ON" : "Scanning"
+    v_sBg    = s_waitBull ? color.new(#00c853, 45) : s_waitBear ? color.new(#f44336, 45) : s_live ? color.new(#f5a623, 35) : color.new(color.gray, 60)
     table.cell(v_tbl, 0, 2, "Status",  bgcolor=v_sBg, text_color=v_wt, text_size=v_ti)
     table.cell(v_tbl, 1, 2, v_status,  bgcolor=v_sBg, text_color=v_wt, text_size=v_sm)
 
-    v_slTxt = s_markup and not na(s_sl) ? str.tostring(math.round(s_sl, 2)) : "---"
-    v_slBg  = s_markup ? color.new(i_colSL, 40) : color.new(color.gray, 60)
+    v_slTxt = s_live ? str.tostring(math.round(s_sl, 2)) : "---"
+    v_slBg  = s_live ? color.new(i_colSL, 40) : color.new(color.gray, 60)
     table.cell(v_tbl, 0, 3, "Active SL", bgcolor=v_slBg, text_color=v_wt, text_size=v_ti)
     table.cell(v_tbl, 1, 3, v_slTxt,     bgcolor=v_slBg, text_color=v_wt, text_size=v_sm)
 
     table.cell(v_tbl, 0, 4, "SESSION",                                                          bgcolor=v_dBg, text_color=color.gray, text_size=v_ti)
-    table.cell(v_tbl, 1, 4, str.tostring(dayofmonth(timenow, syminfo.timezone)) + "/" + str.tostring(month(timenow, syminfo.timezone)), bgcolor=v_dBg, text_color=color.gray, text_size=v_ti)
+    table.cell(v_tbl, 1, 4, str.tostring(dayofmonth(timenow)) + "/" + str.tostring(month(timenow)), bgcolor=v_dBg, text_color=color.gray, text_size=v_ti)
 
-    table.cell(v_tbl, 0, 5, "Trades Today", bgcolor=v_dBg, text_color=v_wt,          text_size=v_ti)
+    table.cell(v_tbl, 0, 5, "Signals Today", bgcolor=v_dBg, text_color=v_wt,          text_size=v_ti)
     table.cell(v_tbl, 1, 5, str.tostring(s_sigToday), bgcolor=v_dBg, text_color=color.yellow, text_size=v_sm)
 
     table.cell(v_tbl, 0, 6, "Wins",       bgcolor=v_grBg, text_color=v_wt, text_size=v_ti)
