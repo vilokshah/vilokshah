@@ -45,6 +45,7 @@ var float  s_wpL       = na
 var string s_wpName    = ""
 var bool   s_live      = false
 var bool   s_markup    = false
+var bool   s_pendingWipe = false
 var bool   s_isBull    = false
 var float  s_entry     = na
 var float  s_sl        = na
@@ -190,19 +191,6 @@ v_ltfO3 = request.security(syminfo.tickerid, v_ctf, open[3],  lookahead=barmerge
 v_ltfBullOk = (v_ltfC1 > v_ltfO1 and v_ltfC1 > s_wpH) or (v_ltfC2 > v_ltfO2 and v_ltfC2 > s_wpH) or (v_ltfC3 > v_ltfO3 and v_ltfC3 > s_wpH)
 v_ltfBearOk = (v_ltfC1 < v_ltfO1 and v_ltfC1 < s_wpL) or (v_ltfC2 < v_ltfO2 and v_ltfC2 < s_wpL) or (v_ltfC3 < v_ltfO3 and v_ltfC3 < s_wpL)
 
-v_bullConfirmed = s_waitBull and v_ltfBullOk and not s_live
-v_bearConfirmed = s_waitBear and v_ltfBearOk and not s_live
-
-if v_bullConfirmed
-    s_waitBull := false
-if v_bearConfirmed
-    s_waitBear := false
-
-// ═══════════════════════════════════════════════════════════════
-// SESSION STATS — only count bars from today using bar time
-// v_isToday compares the chart bar's date to the current date
-// This prevents historical bars from polluting the counter
-// ═══════════════════════════════════════════════════════════════
 v_barDay  = year * 10000 + month * 100 + dayofmonth
 v_isToday = year == year(timenow) and month == month(timenow) and dayofmonth == dayofmonth(timenow)
 
@@ -211,6 +199,21 @@ if v_barDay != s_lastDay
     s_winsToday := 0
     s_lossToday := 0
     s_lastDay   := v_barDay
+
+// A runner that already tagged TP1+ must not block the next reversal.
+if (v_bullSig or v_bearSig) and s_live and s_tpReached >= 1
+    if v_isToday
+        s_winsToday := s_winsToday + 1
+    s_live        := false
+    s_pendingWipe := true
+
+v_bullConfirmed = s_waitBull and v_ltfBullOk and not s_live
+v_bearConfirmed = s_waitBear and v_ltfBearOk and not s_live
+
+if v_bullConfirmed
+    s_waitBull := false
+if v_bearConfirmed
+    s_waitBear := false
 
 if v_isToday and barstate.isconfirmed
     if v_bullConfirmed or v_bearConfirmed
@@ -277,6 +280,7 @@ if v_bearSig
 v_doConfirm = v_bullConfirmed or v_bearConfirmed
 
 if v_doConfirm
+    s_pendingWipe := false
     if not na(d_pendBox)
         box.delete(d_pendBox)
     if not na(d_pendLbl)
@@ -340,6 +344,96 @@ if v_doConfirm
     s_live      := true
     s_markup    := true
     s_tpReached := 0
+
+if s_pendingWipe and not v_doConfirm
+    if not na(d_entLn)
+        line.delete(d_entLn)
+    if not na(d_entLb)
+        label.delete(d_entLb)
+    if not na(d_slLn)
+        line.delete(d_slLn)
+    if not na(d_slLb)
+        label.delete(d_slLb)
+    if not na(d_cfmLb)
+        label.delete(d_cfmLb)
+    if not na(d_t1Ln)
+        line.delete(d_t1Ln)
+    if not na(d_t2Ln)
+        line.delete(d_t2Ln)
+    if not na(d_t3Ln)
+        line.delete(d_t3Ln)
+    if not na(d_t4Ln)
+        line.delete(d_t4Ln)
+    if not na(d_t5Ln)
+        line.delete(d_t5Ln)
+    if not na(d_t6Ln)
+        line.delete(d_t6Ln)
+    if not na(d_t7Ln)
+        line.delete(d_t7Ln)
+    if not na(d_t8Ln)
+        line.delete(d_t8Ln)
+    if not na(d_t1Lb)
+        label.delete(d_t1Lb)
+    if not na(d_t2Lb)
+        label.delete(d_t2Lb)
+    if not na(d_t3Lb)
+        label.delete(d_t3Lb)
+    if not na(d_t4Lb)
+        label.delete(d_t4Lb)
+    if not na(d_t5Lb)
+        label.delete(d_t5Lb)
+    if not na(d_t6Lb)
+        label.delete(d_t6Lb)
+    if not na(d_t7Lb)
+        label.delete(d_t7Lb)
+    if not na(d_t8Lb)
+        label.delete(d_t8Lb)
+    if not na(d_m1Ln)
+        line.delete(d_m1Ln)
+    if not na(d_m2Ln)
+        line.delete(d_m2Ln)
+    if not na(d_m3Ln)
+        line.delete(d_m3Ln)
+    if not na(d_m4Ln)
+        line.delete(d_m4Ln)
+    if not na(d_m5Ln)
+        line.delete(d_m5Ln)
+    if not na(d_m6Ln)
+        line.delete(d_m6Ln)
+    if not na(d_m7Ln)
+        line.delete(d_m7Ln)
+    d_entLn := na
+    d_entLb := na
+    d_slLn := na
+    d_slLb := na
+    d_cfmLb := na
+    d_t1Ln := na
+    d_t2Ln := na
+    d_t3Ln := na
+    d_t4Ln := na
+    d_t5Ln := na
+    d_t6Ln := na
+    d_t7Ln := na
+    d_t8Ln := na
+    d_t1Lb := na
+    d_t2Lb := na
+    d_t3Lb := na
+    d_t4Lb := na
+    d_t5Lb := na
+    d_t6Lb := na
+    d_t7Lb := na
+    d_t8Lb := na
+    d_m1Ln := na
+    d_m2Ln := na
+    d_m3Ln := na
+    d_m4Ln := na
+    d_m5Ln := na
+    d_m6Ln := na
+    d_m7Ln := na
+    s_pendingWipe := false
+    s_markup      := false
+    s_tpReached   := 0
+    s_sl          := na
 
 // ═══════════════════════════════════════════════════════════════
 // BULL TRADE LEVELS
@@ -535,22 +629,16 @@ if s_live
         if v_hit and n > s_tpReached
             s_tpReached := n
 
-// ═══════════════════════════════════════════════════════════════
-// SL HIT DETECTION
-// KEY RULE: if price already reached TP1+, SL hit = WIN not loss
-// (price ran in our favour, moved SL to BE conceptually)
-// In that case treat as win and clear chart cleanly
-// If SL hit before any TP = actual loss
-// ═══════════════════════════════════════════════════════════════
+v_tp8Hit = (s_live or s_markup) and s_tpReached >= 8
 v_slHit = (s_live or s_markup) and not na(s_sl) and (s_isBull ? low <= s_sl : high >= s_sl)
+v_wipeTrade = v_slHit or v_tp8Hit
 
-if v_slHit
-    // Determine outcome: if TP was reached before SL = win, else = loss
-    if v_isToday and barstate.isconfirmed and s_live
-        if s_tpReached >= 1
-            s_winsToday := s_winsToday + 1
-        else
+if v_wipeTrade
+    if v_isToday and s_live
+        if v_slHit and s_tpReached < 1
             s_lossToday := s_lossToday + 1
+        else
+            s_winsToday := s_winsToday + 1
     // Clear ALL drawings cleanly — trade is fully closed
     if not na(d_entLn)
         line.delete(d_entLn)
@@ -646,7 +734,7 @@ if v_slHit
 // If price closes back through 50% of last hit TP zone
 // → count as win and close trade, keep TPs visible
 // ═══════════════════════════════════════════════════════════════
-if s_live and not v_slHit
+if s_live and not v_wipeTrade
     if s_tpReached >= 1
         v_tpTop  = s_isBull ? s_entry + s_range * s_tpReached : s_entry - s_range * s_tpReached
         v_tpPrev = s_tpReached > 1 ? (s_isBull ? s_entry + s_range * (s_tpReached - 1) : s_entry - s_range * (s_tpReached - 1)) : s_entry
@@ -671,7 +759,7 @@ alertcondition(v_bullSig,       title="[LYNX] BUY Setup Forming",    message="BU
 alertcondition(v_bearSig,       title="[LYNX] SELL Setup Forming",   message="SELL SETUP: {{ticker}} {{interval}} Bearish reversal spotted. Waiting lower TF confirm.")
 alertcondition(v_bullConfirmed, title="[LYNX] BUY ENTRY Confirmed",  message="BUY CONFIRMED: {{ticker}} {{interval}} Enter LONG. Check ENTRY SL and TPs on chart.")
 alertcondition(v_bearConfirmed, title="[LYNX] SELL ENTRY Confirmed", message="SELL CONFIRMED: {{ticker}} {{interval}} Enter SHORT. Check ENTRY SL and TPs on chart.")
-alertcondition(v_slHit,         title="[LYNX] Trade Closed",         message="TRADE CLOSED: {{ticker}} {{interval}} SL hit. Chart cleared. Scanning for next setup.")
+alertcondition(v_slHit or v_tp8Hit, title="[LYNX] Trade Closed", message="TRADE CLOSED: {{ticker}} {{interval}} SL or final TP hit. Chart cleared. Scanning for next setup.")
 
 // ═══════════════════════════════════════════════════════════════
 // DASHBOARD TABLE
