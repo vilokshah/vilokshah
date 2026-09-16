@@ -50,6 +50,7 @@ function goldMat(metalness = 0.85) {
 export function createMakhar(textures) {
   const root = new THREE.Group();
   root.name = "makhar";
+  const lampLights = [];
 
   const wall = new THREE.Group();
   wall.position.y = 4.5;
@@ -118,13 +119,14 @@ export function createMakhar(textures) {
   niches.forEach((n) => wall.add(n.group));
 
   // Hanging lamps
-  [-3.4, -1.15, 1.15, 3.4].forEach((x, i) => {
+  [-3.4, -1.15, 1.15, 3.4].forEach((x) => {
     const lamp = createDiyas();
-    lamp.position.set(x, 3.85, 0.55);
+    lamp.position.set(x, 4.15, 0.55);
     wall.add(lamp);
-    const light = new THREE.PointLight(0xffc978, 4.5, 6, 1.6);
-    light.position.set(x, 3.55, 0.7);
+    const light = new THREE.PointLight(0xffc978, 5.5, 7, 1.6);
+    light.position.set(x, 3.85, 0.75);
     wall.add(light);
+    lampLights.push(light);
   });
 
   addMarigoldSwags(wall);
@@ -151,63 +153,68 @@ export function createMakhar(textures) {
     root.add(step);
   }
 
-  return { root, niches };
+  return { root, niches, lampLights };
 }
 
 function createSanctum(textures) {
   const g = new THREE.Group();
 
   const recess = new THREE.Mesh(
-    new THREE.BoxGeometry(4.2, 4.2, 1.1),
-    mat(0x2a120c)
+    new THREE.BoxGeometry(4.05, 4.05, 1.35),
+    mat(0x1a0c0a, { roughness: 0.9 })
   );
-  recess.position.z = -0.15;
+  recess.position.z = -0.2;
   g.add(recess);
 
   const goldFrame = new THREE.Mesh(
-    new THREE.BoxGeometry(4.55, 4.55, 0.16),
+    new THREE.BoxGeometry(4.55, 4.55, 0.18),
     goldMat()
   );
-  goldFrame.position.z = 0.42;
+  goldFrame.position.z = 0.48;
   g.add(goldFrame);
 
   const inner = new THREE.Mesh(
-    new THREE.BoxGeometry(4.05, 4.05, 0.08),
-    mat(0x7a1f24)
+    new THREE.BoxGeometry(4.12, 4.12, 0.08),
+    mat(0x6b1a16)
   );
-  inner.position.z = 0.5;
+  inner.position.z = 0.56;
   g.add(inner);
 
-  // Cut a visual opening with a dark plane and a placeholder temple
   const opening = new THREE.Mesh(
-    new THREE.PlaneGeometry(3.7, 3.7),
-    mat(0x1a0b08, { roughness: 0.9 })
+    new THREE.PlaneGeometry(3.72, 3.72),
+    mat(0x140806, { roughness: 0.95 })
   );
-  opening.position.z = 0.56;
+  opening.position.z = 0.61;
   g.add(opening);
 
-  const cabinet = new THREE.Mesh(
-    new THREE.BoxGeometry(2.2, 2.6, 0.7),
-    goldMat(0.55)
-  );
-  cabinet.position.set(0, -0.35, 0.85);
-  g.add(cabinet);
+  [-1.7, 1.7].forEach((x) => {
+    const pillar = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.13, 0.16, 3.5, 12),
+      goldMat(0.7)
+    );
+    pillar.position.set(x, -0.15, 0.95);
+    g.add(pillar);
+    const cap = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.12, 0.38), goldMat());
+    cap.position.set(x, 1.62, 0.95);
+    g.add(cap);
+  });
 
-  const door = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.7, 2.1),
-    new THREE.MeshStandardMaterial({
-      color: 0x8b1e2d,
-      roughness: 0.4,
-      metalness: 0.2,
-      emissive: 0x4a140c,
-      emissiveIntensity: 0.35,
-    })
+  const platform = new THREE.Mesh(
+    new THREE.BoxGeometry(2.6, 0.22, 1.1),
+    goldMat(0.45)
   );
-  door.position.set(0, -0.25, 1.21);
-  g.add(door);
+  platform.position.set(0, -1.55, 0.95);
+  g.add(platform);
 
-  const label = makeLabel("YOUR 4 × 4 FT TEMPLE", 2.4, 0.28);
-  label.position.set(0, 1.55, 1.22);
+  const murtiBase = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.42, 0.5, 0.18, 16),
+    goldMat()
+  );
+  murtiBase.position.set(0, -1.35, 1.05);
+  g.add(murtiBase);
+
+  const label = makeLabel("YOUR 4 × 4 FT TEMPLE", 2.6, 0.26);
+  label.position.set(0, 1.72, 1.05);
   g.add(label);
 
   const kalash = createKalash();
@@ -215,13 +222,12 @@ function createSanctum(textures) {
   kalash.scale.setScalar(1.15);
   g.add(kalash);
 
-  // Torana arch
   const arch = new THREE.Mesh(
-    new THREE.TorusGeometry(2.15, 0.09, 10, 48, Math.PI),
+    new THREE.TorusGeometry(1.95, 0.07, 10, 48, Math.PI),
     goldMat()
   );
   arch.rotation.z = Math.PI;
-  arch.position.set(0, 0.15, 0.62);
+  arch.position.set(0, 0.05, 0.92);
   g.add(arch);
 
   return g;
@@ -275,17 +281,18 @@ function createGopuram(textures, height, baseW, depth) {
   }
 
   const roof = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.18, 0.18, baseW * 0.42, 16, 1, false, 0, Math.PI),
+    new THREE.CylinderGeometry(depth * 0.28, depth * 0.28, baseW * 0.55, 20, 1, false, 0, Math.PI),
     goldMat()
   );
   roof.rotation.z = Math.PI / 2;
-  roof.position.y = height + 0.15;
+  roof.rotation.y = Math.PI / 2;
+  roof.position.y = height + 0.28;
   g.add(roof);
 
   for (let k = -2; k <= 2; k += 1) {
     const finial = createKalash();
-    finial.scale.setScalar(0.38);
-    finial.position.set(k * 0.18, height + 0.42, 0);
+    finial.scale.setScalar(0.42);
+    finial.position.set(k * 0.22, height + 0.58, 0);
     g.add(finial);
   }
 
@@ -338,7 +345,7 @@ function createNiche(goddess, texture, x, y, z, crown = false) {
   portrait.position.y = 0.06;
   group.add(portrait);
 
-  const caption = makeLabel(`DAY ${goddess.day}  ·  ${goddess.name.toUpperCase()}`, w + 0.05, 0.18);
+  const caption = makeLabel(`DAY ${goddess.day}  ·  ${goddess.name.toUpperCase()}`, w + 0.12, 0.2);
   caption.position.set(0, -h * 0.42, 0.14);
   group.add(caption);
 
@@ -405,8 +412,8 @@ function addMarigoldSwags(wall) {
       const bead = new THREE.Mesh(geo, mats[i % 3]);
       bead.position.set(
         start + t * 2.4,
-        2.55 - Math.sin(t * Math.PI) * 0.55,
-        0.55
+        3.35 - Math.sin(t * Math.PI) * 0.42,
+        0.62
       );
       wall.add(bead);
     }
@@ -473,7 +480,7 @@ function makeLabel(text, width, height) {
   ctx.lineWidth = 8;
   ctx.strokeRect(6, 6, canvas.width - 12, canvas.height - 12);
   ctx.fillStyle = "#fff4d4";
-  ctx.font = "600 48px Cinzel, serif";
+  ctx.font = "600 42px Cinzel, serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText(text, canvas.width / 2, canvas.height / 2);

@@ -29,10 +29,10 @@ await Promise.all(
 const app = document.querySelector("#app");
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x100a07);
-scene.fog = new THREE.Fog(0x100a07, 16, 34);
+scene.fog = new THREE.Fog(0x100a07, 22, 42);
 
 const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.1, 80);
-camera.position.set(0, 4.6, 13.5);
+camera.position.set(0, 4.8, 15.2);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -50,7 +50,7 @@ controls.minDistance = 6;
 controls.maxDistance = 22;
 
 scene.add(createRoom());
-const { root, niches } = createMakhar(textures);
+const { root, niches, lampLights } = createMakhar(textures);
 scene.add(root);
 
 const hemi = new THREE.HemisphereLight(0xffe6b8, 0x3a1c10, 0.85);
@@ -61,7 +61,7 @@ scene.add(key);
 const fill = new THREE.DirectionalLight(0x88c0c8, 0.35);
 fill.position.set(-6, 6, 4);
 scene.add(fill);
-const shrineLight = new THREE.PointLight(0xffb367, 18, 8, 1.4);
+const shrineLight = new THREE.PointLight(0xffb367, 14, 8, 1.4);
 shrineLight.position.set(0, 4.2, 1.4);
 scene.add(shrineLight);
 
@@ -105,6 +105,11 @@ legend.addEventListener("click", (e) => {
 renderPanel(selected);
 
 function onPointer(event) {
+  const onCanvas = event.target === renderer.domElement;
+  if (!onCanvas) {
+    if (event.type === "pointermove") document.body.style.cursor = "default";
+    return;
+  }
   pointer.x = (event.clientX / innerWidth) * 2 - 1;
   pointer.y = -(event.clientY / innerHeight) * 2 + 1;
   raycaster.setFromCamera(pointer, camera);
@@ -124,24 +129,28 @@ window.addEventListener("pointermove", onPointer);
 window.addEventListener("click", onPointer);
 
 document.querySelector("#btn-front").addEventListener("click", () => {
-  camera.position.set(0, 4.6, 13.5);
+  camera.position.set(0, 4.8, 15.2);
   controls.target.set(0, 4.2, 0);
 });
 document.querySelector("#btn-three").addEventListener("click", () => {
-  camera.position.set(7.5, 5.8, 10);
+  camera.position.set(8.2, 6.0, 11.5);
   controls.target.set(0, 4.2, 0);
 });
 document.querySelector("#btn-close").addEventListener("click", () => {
-  camera.position.set(0, 4.1, 7.2);
-  controls.target.set(0, 4.0, 0);
+  camera.position.set(0, 4.0, 8.4);
+  controls.target.set(0, 4.0, 0.4);
 });
 
 let lampsOn = true;
 document.querySelector("#btn-lamps").addEventListener("click", (e) => {
   lampsOn = !lampsOn;
   e.currentTarget.classList.toggle("active", lampsOn);
-  shrineLight.intensity = lampsOn ? 18 : 4;
-  hemi.intensity = lampsOn ? 0.85 : 0.35;
+  shrineLight.intensity = lampsOn ? 14 : 2.5;
+  hemi.intensity = lampsOn ? 0.85 : 0.22;
+  key.intensity = lampsOn ? 1.35 : 0.25;
+  lampLights.forEach((l) => {
+    l.intensity = lampsOn ? 5.5 : 0;
+  });
 });
 document.querySelector("#btn-lamps").classList.add("active");
 
@@ -153,7 +162,7 @@ window.addEventListener("resize", () => {
 
 renderer.setAnimationLoop(() => {
   const t = performance.now() * 0.001;
-  shrineLight.intensity = lampsOn ? 16 + Math.sin(t * 2.2) * 2.2 : 4;
+  shrineLight.intensity = lampsOn ? 12 + Math.sin(t * 2.2) * 2 : 2.5;
   controls.update();
   renderer.render(scene, camera);
 });

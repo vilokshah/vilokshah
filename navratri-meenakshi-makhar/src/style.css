@@ -117,8 +117,8 @@ button.active {
   position: absolute;
   top: 108px;
   right: 18px;
-  width: min(340px, calc(100% - 36px));
-  padding: 18px;
+  width: min(280px, calc(100% - 36px));
+  padding: 14px;
   border-radius: 16px;
   max-height: calc(100% - 140px);
   overflow: auto;
@@ -156,8 +156,9 @@ button.active {
   aspect-ratio: 3 / 4;
   object-fit: cover;
   border-radius: 12px;
-  margin: 12px 0;
+  margin: 10px 0;
   border: 1px solid var(--line);
+  max-height: 280px;
 }
 
 .legend {
@@ -171,14 +172,18 @@ button.active {
 
 .legend ol {
   margin: 8px 0 0;
-  padding-left: 18px;
-  columns: 2;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 16px;
   font-size: 13px;
 }
 
 .legend li {
-  margin: 0 0 4px;
+  margin: 0;
   cursor: pointer;
+  padding: 2px 0;
 }
 
 .legend li:hover,
