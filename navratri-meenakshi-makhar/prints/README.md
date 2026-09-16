@@ -1,13 +1,13 @@
 # Print files (12 × 11 ft flex)
 
-These are the backdrop artworks to send to a flex printer. The centre gold arch is left empty so the **4 × 4 ft white marble temple** can sit on the floor in front.
+Main artwork: every Navadurga sits in her own gold **jharokha**, evenly spaced, with an empty floor arch for the 4 × 4 ft marble temple.
+
+The background is a mural of **famous Devi temples** (Vaishno Devi hills, Ambaji, Kamakhya-like shrine, river ghats, Chamundi-style tower, Jwala flames) — not a repeating Meenakshi gopuram.
 
 | File | Use |
 | --- | --- |
-| `navratri-backdrop-print.png` | Main print — nine Navadurga, Hindi names, no day numbers |
-| `navratri-backdrop-print.jpg` | Smaller copy of the same |
-| `navratri-backdrop-alt.png` | Alternate (slightly simpler centre cloth) |
+| `navratri-backdrop-print.png` | Main print |
+| `navratri-backdrop-print.jpg` | Smaller copy |
+| `navratri-backdrop-alt.png` | Alternate with temple miniatures around the arch |
 
-Names on the art: शैलपुत्री, ब्रह्मचारिणी, चंद्रघंटा, कूष्मांडा, स्कंदमाता, कात्यायनी, कालरात्रि, महागौरी, सिद्धिदात्री.
-
-Ask the shop for **12 ft wide × 11 ft high**, matte star-flex, with the empty arch aligned to the floor.
+Hindi names only, no day numbers.
