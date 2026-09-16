@@ -26,3 +26,7 @@ npm run dev
 ```
 
 Printer notes: [BUILD_GUIDE.md](./BUILD_GUIDE.md).
+
+## Final print image
+
+Open `print.html` (same dev server: http://localhost:5173/print.html) or use `public/assets/final-flex-banner-12x11.jpg` — 12×11 ft layout, nine goddesses, empty 4×4 floor panel.

@@ -33,9 +33,7 @@ function marbleMat() {
   });
 }
 
-export function composeBannerTexture(images) {
-  const W = 2400;
-  const H = 2200;
+export function drawBannerCanvas(images, W = 2400, H = 2200) {
   const canvas = document.createElement("canvas");
   canvas.width = W;
   canvas.height = H;
@@ -108,6 +106,11 @@ export function composeBannerTexture(images) {
   ctx.textAlign = "center";
   ctx.fillText("MEENAKSHI  ·  NAVARĀTRI  FLEX  12 × 11 FT", W / 2, 82);
 
+  return canvas;
+}
+
+export function composeBannerTexture(images) {
+  const canvas = drawBannerCanvas(images);
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = 8;
