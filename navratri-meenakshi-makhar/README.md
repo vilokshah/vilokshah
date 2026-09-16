@@ -1,34 +1,23 @@
-# Navratri Meenakshi Makhar — 3D idea
+# Navratri Meenakshi flex banner — 12 × 11 ft
 
-Interactive 3D design for a **full-wall Navratri makhar** in the colour language of **Madurai Meenakshi Amman Temple**, built around an existing home temple that is **4 ft high × 4 ft wide**.
+A **printed flex-banner backdrop** for a **4 ft × 4 ft white marble temple that sits on the floor**.
 
-## The idea
+The shrine is not drawn on the vinyl. The bottom-centre **4 × 4 ft** of the banner is only a faint lotus mandala so the marble mandir can stand in front of it.
 
-The 4×4 ft shrine stays as the sanctum. Everything else is a theatrical Dravidian *screen* — the same idea as a Meenakshi gopuram: a densely painted surface of gods, gold, and gateways facing the room.
+## Print size
 
-| Piece | Size | Role |
-| --- | --- | --- |
-| Backdrop wall | **12 ft wide × 9 ft tall × ~1.2 ft deep** | Full wall makhar |
-| Central opening | **4 ft × 4 ft** | Your existing temple sits here |
-| Twin gopurams | ~2.4 ft wide × 7.4 ft tall | Left / right towers |
-| Nine niches | ~13×15 in (crown slightly larger) | Navadurga, horseshoe |
-| Plinth + lotus tank | 12.6 ft × 2.2 ft | Golden Lotus Tank hint |
+| | |
+| --- | --- |
+| Wall / flex | **12 ft wide × 11 ft high** |
+| Temple (existing) | **4 ft × 4 ft**, white marble, **from the floor** |
+| Clear panel behind temple | 4 × 4 ft, starting at the floor, no deity |
+| Goddesses | **Nine frames only** — 4 left, 1 above the temple on the banner, 4 right |
 
-## Navadurga layout
+## Navadurga (unique portraits)
 
-Horseshoe around the shrine, reading like the nine nights:
-
-1. **Śhailaputrī** — lowest left  
-2. **Brahmachāriṇī** — left  
-3. **Chandraghanta** — left  
-4. **Kūṣmāṇḍā** — upper left  
-5. **Skandamātā** — **crown**, directly above the 4×4 temple  
-6. **Kātyāyanī** — upper right  
-7. **Kālarātri** — right (darkest panel)  
-8. **Mahāgaurī** — right  
-9. **Siddhidātrī** — lowest right, opposite day 1  
-
-## How to view the 3D model
+1–4 left column, bottom to top: Śhailaputrī, Brahmachāriṇī, Chandraghaṇṭā, Kūṣmāṇḍā  
+5 above the 4×4 opening (still on the flex, not inside the shrine): Skandamātā  
+6–9 right column, top to bottom: Kātyāyanī, Kālarātri, Mahāgaurī, Siddhidātrī  
 
 ```bash
 cd navratri-meenakshi-makhar
@@ -36,13 +25,4 @@ npm install
 npm run dev
 ```
 
-Open the local URL, then:
-
-- **Front** — elevation, as if standing in the puja room  
-- **3/4 view** — depth of the gopurams  
-- **Shrine close-up** — 4×4 opening  
-- Click any goddess niche or the list  
-
-Concept stills live in `public/assets/`.
-
-Physical cutting list, paints, and LED plan: [BUILD_GUIDE.md](./BUILD_GUIDE.md).
+Printer notes: [BUILD_GUIDE.md](./BUILD_GUIDE.md).

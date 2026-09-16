@@ -1,36 +1,22 @@
-# Physical build guide — Meenakshi Navratri Makhar
+# Flex banner print — 12 × 11 ft
 
-Designed for a **4 ft × 4 ft** home temple. The makhar is a **12 ft × 9 ft** wall backdrop that leaves the shrine untouched in a recessed gold frame.
+Hang the vinyl on the 12 × 11 ft wall. Stand the **white marble 4 × 4 ft temple on the floor** in front of the empty centre panel. Do not print an idol or a fake shrine in that square.
 
-## Structure
+## File
 
-1. **Wall frame** — 12 × 9 ft rectangle of 18 mm plywood / MDF on a 2×2 timber grid, lagged into wall studs or a free-standing A-frame if the wall cannot take load.
-2. **Central cut-out** — 4 ft 2 in × 4 ft 2 in opening, lined with 4 in gold-leafed MDF so the existing temple sits 8–10 in proud of the painted plane.
-3. **Twin gopurams** — stacked thermocol or carved XPS foam storeys on a plywood spine. Each storey steps in ~8%. Paint with Meenakshi palette, then glue tiny clay / 3D-printed “stucco” figures.
-4. **Nine niches** — arched boxes, 13 × 15 in inside (crown 16 × 18 in). Print the nine portraits on satin canvas, mount on foamcore, edge in gold washi / metallic acrylic.
-5. **Plinth** — 12 ft 6 in × 2 ft 2 in × 3 in painted sandstone. Three gold steps, 4 ft 4 in wide, up to the shrine.
-6. **Lotus tank** — shallow tray, 30 in diameter, with pink foam lotus and a sheet of teal acrylic “water”. Optional tea-light in a glass bowl.
+Use the on-screen banner as the layout. For the shop, export a still of the **Front** camera or print from a screenshot of the 12×11 plane.
 
-## Colour (Madurai)
+Recommended print: 12 ft × 11 ft, 150–300 dpi flex / star flex, matte lamination, eyelets every 2 ft along the top rail.
 
-- Base red-oxide / temple maroon on the back plane  
-- Turquoise, coral, magenta, emerald, saffron on gopuram storeys  
-- Antique gold on all cornices, kalashams, and the 4×4 frame  
-- White lotus-petal moulding along the top and bottom friezes  
+## Layout (feet from left, from floor)
 
-Acrylics: crimson, viridian, turquoise, cadmium yellow, magenta, gold metallic, burnt sienna. Seal with matte varnish except gold (leave satin).
+- Empty / mandala panel: x = 4–8 ft, y = 0–4 ft  
+- Left frames (days 1–4): centre-line x ≈ 1.85 ft  
+- Right frames (days 6–9): centre-line x ≈ 10.15 ft  
+- Day 5 Skandamātā: centre of the banner, y ≈ 8.9 ft (above the marble temple)
 
-## Light
+## Keep off the vinyl
 
-- Warm 2700 K LED strip hidden in the 4×4 gold frame, facing inward  
-- Four hanging brass diyas (or LED candles) on the upper beam  
-- Tiny fairy lights in the gopuram “sculpture” bands  
-- Dim Kālarātri’s niche slightly so the dark panel reads as night  
-
-## Flowers and finish
-
-Marigold swags in three festoons across the mid-band. Fresh malas on the 4×4 temple only — the printed Navadurga panels stay dry.
-
-## Safety
-
-Keep foam and fabric 12 in from any real flame. Prefer LED diyas. Confirm wall fixings for ~40–60 kg of plywood + foam.
+- No extra repeating gopuram figurines that read as more goddesses  
+- Nothing in the 4×4 floor square except a light gold lotus mandala  
+- The real marble temple is physical, not printed

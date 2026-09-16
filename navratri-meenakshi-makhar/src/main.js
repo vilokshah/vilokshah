@@ -2,7 +2,7 @@ import "./style.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GODDESSES } from "./goddesses.js";
-import { createMakhar, createRoom } from "./makhar.js";
+import { composeBannerTexture, createMakhar, createRoom } from "./makhar.js";
 
 const loader = new THREE.TextureLoader();
 const loadTex = (url) =>
@@ -14,55 +14,65 @@ const loadTex = (url) =>
     });
   });
 
-const textures = {
-  gopuram: await loadTex("/assets/gopuram-sculpture-texture.png"),
+const loadImg = (url) =>
+  new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.src = url;
+  });
+
+const textures = {};
+const images = {
+  bannerBg: await loadImg("/assets/flex-banner-background.png"),
 };
-textures.gopuram.wrapS = textures.gopuram.wrapT = THREE.RepeatWrapping;
-textures.gopuram.repeat.set(2.4, 1);
 
 await Promise.all(
   GODDESSES.map(async (g) => {
     textures[g.id] = await loadTex(g.image);
+    images[g.id] = await loadImg(g.image);
   })
 );
+textures.marbleFront = await loadTex("/assets/white-marble-temple.png");
+
+const bannerMap = composeBannerTexture(images);
 
 const app = document.querySelector("#app");
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x100a07);
-scene.fog = new THREE.Fog(0x100a07, 22, 42);
+scene.fog = new THREE.Fog(0x100a07, 24, 48);
 
-const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.1, 80);
-camera.position.set(0, 4.8, 15.2);
+const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.1, 80);
+camera.position.set(0, 5.6, 16.5);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.12;
-renderer.shadowMap.enabled = false;
+renderer.toneMappingExposure = 1.08;
 app.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
-controls.target.set(0, 4.2, 0);
+controls.target.set(0, 5.2, 0);
 controls.maxPolarAngle = Math.PI * 0.49;
 controls.minDistance = 6;
-controls.maxDistance = 22;
+controls.maxDistance = 26;
 
 scene.add(createRoom());
-const { root, niches, lampLights } = createMakhar(textures);
+const { root, niches, lampLights } = createMakhar(textures, bannerMap);
 scene.add(root);
 
-const hemi = new THREE.HemisphereLight(0xffe6b8, 0x3a1c10, 0.85);
+const hemi = new THREE.HemisphereLight(0xffe6b8, 0x3a1c10, 0.9);
 scene.add(hemi);
-const key = new THREE.DirectionalLight(0xfff1d0, 1.35);
-key.position.set(4, 10, 8);
+const key = new THREE.DirectionalLight(0xfff1d0, 1.25);
+key.position.set(5, 11, 9);
 scene.add(key);
-const fill = new THREE.DirectionalLight(0x88c0c8, 0.35);
-fill.position.set(-6, 6, 4);
+const fill = new THREE.DirectionalLight(0x88c0c8, 0.32);
+fill.position.set(-6, 7, 4);
 scene.add(fill);
-const shrineLight = new THREE.PointLight(0xffb367, 14, 8, 1.4);
-shrineLight.position.set(0, 4.2, 1.4);
+const shrineLight = new THREE.PointLight(0xffe6c4, 10, 9, 1.4);
+shrineLight.position.set(0, 3.2, 2.4);
 scene.add(shrineLight);
 
 const raycaster = new THREE.Raycaster();
@@ -88,7 +98,7 @@ function renderPanel(g) {
     li.classList.toggle("active", li.dataset.id === g.id);
   });
   niches.forEach((n) => {
-    n.highlight.material.opacity = n.id === g.id ? 0.55 : 0;
+    n.highlight.material.opacity = n.id === g.id ? 0.35 : 0;
   });
 }
 
@@ -98,15 +108,13 @@ legend.innerHTML = GODDESSES.map(
 legend.addEventListener("click", (e) => {
   const li = e.target.closest("li");
   if (!li) return;
-  const g = GODDESSES.find((x) => x.id === li.dataset.id);
-  renderPanel(g);
+  renderPanel(GODDESSES.find((x) => x.id === li.dataset.id));
 });
 
 renderPanel(selected);
 
 function onPointer(event) {
-  const onCanvas = event.target === renderer.domElement;
-  if (!onCanvas) {
+  if (event.target !== renderer.domElement) {
     if (event.type === "pointermove") document.body.style.cursor = "default";
     return;
   }
@@ -129,27 +137,27 @@ window.addEventListener("pointermove", onPointer);
 window.addEventListener("click", onPointer);
 
 document.querySelector("#btn-front").addEventListener("click", () => {
-  camera.position.set(0, 4.8, 15.2);
-  controls.target.set(0, 4.2, 0);
+  camera.position.set(0, 5.6, 16.5);
+  controls.target.set(0, 5.2, 0);
 });
 document.querySelector("#btn-three").addEventListener("click", () => {
-  camera.position.set(8.2, 6.0, 11.5);
-  controls.target.set(0, 4.2, 0);
+  camera.position.set(9, 6.4, 13);
+  controls.target.set(0, 5.2, 0);
 });
 document.querySelector("#btn-close").addEventListener("click", () => {
-  camera.position.set(0, 4.0, 8.4);
-  controls.target.set(0, 4.0, 0.4);
+  camera.position.set(0, 2.2, 8.5);
+  controls.target.set(0, 2.0, 0.8);
 });
 
 let lampsOn = true;
 document.querySelector("#btn-lamps").addEventListener("click", (e) => {
   lampsOn = !lampsOn;
   e.currentTarget.classList.toggle("active", lampsOn);
-  shrineLight.intensity = lampsOn ? 14 : 2.5;
-  hemi.intensity = lampsOn ? 0.85 : 0.22;
-  key.intensity = lampsOn ? 1.35 : 0.25;
+  shrineLight.intensity = lampsOn ? 10 : 2;
+  hemi.intensity = lampsOn ? 0.9 : 0.22;
+  key.intensity = lampsOn ? 1.25 : 0.28;
   lampLights.forEach((l) => {
-    l.intensity = lampsOn ? 5.5 : 0;
+    l.intensity = lampsOn ? 4.2 : 0;
   });
 });
 document.querySelector("#btn-lamps").classList.add("active");
@@ -161,8 +169,6 @@ window.addEventListener("resize", () => {
 });
 
 renderer.setAnimationLoop(() => {
-  const t = performance.now() * 0.001;
-  shrineLight.intensity = lampsOn ? 12 + Math.sin(t * 2.2) * 2 : 2.5;
   controls.update();
   renderer.render(scene, camera);
 });
