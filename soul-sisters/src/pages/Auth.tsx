@@ -24,11 +24,11 @@ export function Login() {
         >
           <div className="field">
             <label>Email</label>
-            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
+            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" autoComplete="username" required />
           </div>
           <div className="field">
             <label>Password</label>
-            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
+            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" autoComplete="current-password" required />
           </div>
           {err && <p className="err">{err}</p>}
           <button className="btn primary full" type="submit">Continue</button>
@@ -80,7 +80,7 @@ export function Signup() {
           </div>
           <div className="field">
             <label>Password</label>
-            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" minLength={6} required />
+            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" autoComplete="new-password" minLength={6} required />
           </div>
           {err && <p className="err">{err}</p>}
           <button className="btn primary full" type="submit">Join Soul Sisters</button>

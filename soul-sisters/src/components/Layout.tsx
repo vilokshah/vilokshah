@@ -7,7 +7,8 @@ export function Layout() {
   const location = useLocation()
   const cart = useStore((s) => s.cart)
   const user = useSession()
-  const notes = useStore((s) => visibleNotes(user, s.notifications))
+  const notifications = useStore((s) => s.notifications)
+  const notes = visibleNotes(user, notifications)
   const unread = notes.filter((n) => user && !n.readBy.includes(user.id)).length
   const qty = cart.reduce((a, c) => a + c.qty, 0)
   const hideTabs = location.pathname.startsWith('/checkout') || location.pathname.startsWith('/admin')

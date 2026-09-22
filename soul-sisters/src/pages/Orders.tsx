@@ -4,7 +4,8 @@ import { inr, useSession, useStore } from '../store'
 
 export function Orders() {
   const user = useSession()
-  const orders = useStore((s) => s.orders.filter((o) => (user?.role === 'admin' ? true : o.userId === user?.id)))
+  const allOrders = useStore((s) => s.orders)
+  const orders = allOrders.filter((o) => (user?.role === 'admin' ? true : o.userId === user?.id))
   return (
     <>
       <Top title="Orders" back />
