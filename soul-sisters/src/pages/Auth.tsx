@@ -18,8 +18,19 @@ export function Login() {
           <BrandLogo />
           <ThemeToggle />
         </div>
-        <div className="tiny" style={{ marginTop: 22 }}>Welcome back</div>
-        <h1 className="serif" style={{ fontSize: 40, margin: '6px 0 18px' }}>Sign in</h1>
+        <div className="auth-hero">
+          <img
+            src={`${import.meta.env.BASE_URL}banner.jpg`}
+            alt="soulsisters collection"
+          />
+          <div className="auth-hero-copy">
+            <p className="lead">Designing &amp; Creating Trends</p>
+            <p className="sub">Specializing in Digital &amp; Hand Printing</p>
+            <p className="cats">Western · Ethnic · Indo Western</p>
+          </div>
+        </div>
+        <div className="tiny" style={{ marginTop: 18 }}>Welcome back</div>
+        <h1 className="serif" style={{ fontSize: 36, margin: '6px 0 18px' }}>Sign in</h1>
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -62,8 +73,19 @@ export function Signup() {
           <BrandLogo />
           <ThemeToggle />
         </div>
-        <div className="tiny" style={{ marginTop: 22 }}>soulsisters</div>
-        <h1 className="serif" style={{ fontSize: 40, margin: '6px 0 18px' }}>Create profile</h1>
+        <div className="auth-hero">
+          <img
+            src={`${import.meta.env.BASE_URL}banner.jpg`}
+            alt="soulsisters collection"
+          />
+          <div className="auth-hero-copy">
+            <p className="lead">Designing &amp; Creating Trends</p>
+            <p className="sub">Specializing in Digital &amp; Hand Printing</p>
+            <p className="cats">Western · Ethnic · Indo Western</p>
+          </div>
+        </div>
+        <div className="tiny" style={{ marginTop: 18 }}>soulsisters</div>
+        <h1 className="serif" style={{ fontSize: 36, margin: '6px 0 18px' }}>Create profile</h1>
         <form
           onSubmit={(e) => {
             e.preventDefault()

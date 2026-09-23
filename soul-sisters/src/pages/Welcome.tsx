@@ -10,12 +10,11 @@ export function Welcome() {
         </div>
         <div style={{ flex: 1 }} />
         <img className="welcome-logo" src={`${import.meta.env.BASE_URL}logo.png`} alt="SS" />
-        <div className="tiny" style={{ color: 'var(--gold)' }}>soulsisters</div>
-        <h1>soul<br />sisters</h1>
-        <p className="muted" style={{ color: 'rgba(255,255,255,.82)', maxWidth: 340 }}>
-          Silk, festive sets, and everyday pieces from the soulsisters house.
-        </p>
-        <Link className="btn gold full" to="/login" style={{ marginTop: 8 }}>
+        <h1>soulsisters</h1>
+        <p className="welcome-tag">Designing &amp; Creating Trends</p>
+        <p className="welcome-sub">Specializing in Digital &amp; Hand Printing</p>
+        <p className="welcome-cats">Western · Ethnic · Indo Western</p>
+        <Link className="btn gold full" to="/login" style={{ marginTop: 14 }}>
           Shop now
         </Link>
         <Link className="btn ghost full" to="/signup" style={{ marginTop: 10, color: 'white', borderColor: 'rgba(255,255,255,.35)' }}>

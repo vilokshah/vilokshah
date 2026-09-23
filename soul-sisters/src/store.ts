@@ -69,9 +69,9 @@ export function inr(n: number) {
 
 export const DEFAULT_STORE: StoreInfo = {
   brand: 'soulsisters',
-  phone: '+91 98765 43210',
+  phone: '8446706456',
   email: 'hello@soulsisters.in',
-  address: '12 Hughes Road, Mumbai 400007',
+  address: 'Vision Flora Mall, front shop no.35, Pimple Saudagar, Pune',
   instagram: 'soulsisters__17',
   hours: '11:00 am – 8:00 pm · Tue–Sun',
 }
@@ -300,7 +300,7 @@ export const useStore = create<State>()(
         }))
       },
     }),
-    { name: 'soul-sisters-store-v3' },
+    { name: 'soul-sisters-store-v5' },
   ),
 )
 

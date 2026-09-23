@@ -50,11 +50,11 @@ export function Home() {
             </p>
           </div>
           <div className="hero">
-            <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1400&q=80" alt="Campaign" />
+            <img src={`${import.meta.env.BASE_URL}banner.jpg`} alt="soulsisters collection" />
             <div className="copy">
-              <div className="tiny" style={{ color: '#f3e6d8' }}>New season</div>
-              <h1>Sisters in silk</h1>
-              <p>New slips, festive velvets, and linen that lives with you.</p>
+              <div className="tiny" style={{ color: '#f3e6d8' }}>soulsisters</div>
+              <h1>Designing &amp; Creating Trends</h1>
+              <p>Specializing in Digital &amp; Hand Printing · Western · Ethnic · Indo Western</p>
               <Link className="btn gold sm" to="/shop">Shop the edit</Link>
             </div>
           </div>

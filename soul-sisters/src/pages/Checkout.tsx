@@ -103,7 +103,7 @@ export function Checkout() {
                   email: user?.email,
                   contact: user?.phone,
                 },
-                theme: { color: '#1F4D3A' },
+                theme: { color: '#8B2E4A' },
                 handler: (response) => {
                   const order = checkout('razorpay', address, response.razorpay_payment_id)
                   setPaying(false)
