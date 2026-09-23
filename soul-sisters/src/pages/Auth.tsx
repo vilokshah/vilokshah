@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { BrandLogo } from '../components/BrandLogo'
 import { useStore } from '../store'
 
 export function Login() {
@@ -11,8 +12,9 @@ export function Login() {
 
   return (
     <div className="app-scroll">
-      <div className="pad" style={{ paddingTop: 48 }}>
-        <div className="tiny">Welcome back</div>
+      <div className="pad" style={{ paddingTop: 28 }}>
+        <BrandLogo />
+        <div className="tiny" style={{ marginTop: 18 }}>Welcome back</div>
         <h1 className="serif" style={{ fontSize: 40, margin: '6px 0 18px' }}>Sign in</h1>
         <form
           onSubmit={(e) => {
@@ -59,8 +61,9 @@ export function Signup() {
 
   return (
     <div className="app-scroll">
-      <div className="pad" style={{ paddingTop: 48 }}>
-        <div className="tiny">Women’s atelier</div>
+      <div className="pad" style={{ paddingTop: 28 }}>
+        <BrandLogo />
+        <div className="tiny" style={{ marginTop: 18 }}>Women’s house</div>
         <h1 className="serif" style={{ fontSize: 40, margin: '6px 0 18px' }}>Create profile</h1>
         <form
           onSubmit={(e) => {

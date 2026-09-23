@@ -13,6 +13,7 @@ import { Alerts, Profile } from './pages/Account'
 import { AdminHome, RequireAdmin } from './pages/admin/AdminHome'
 import { AdminBarcodes, AdminInventory, AdminProductForm, AdminProducts } from './pages/admin/CatalogAdmin'
 import { AdminAlerts, AdminAnalytics, AdminOrders } from './pages/admin/Insights'
+import { AdminPayments } from './pages/admin/AdminPayments'
 
 function Gate() {
   const user = useSession()
@@ -61,6 +62,7 @@ export default function App() {
                 <Route path="/admin/analytics" element={<AdminAnalytics />} />
                 <Route path="/admin/orders" element={<AdminOrders />} />
                 <Route path="/admin/alerts" element={<AdminAlerts />} />
+                <Route path="/admin/payments" element={<AdminPayments />} />
               </Route>
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />

@@ -21,6 +21,7 @@ interface State {
   wishlist: string[]
   orders: Order[]
   notifications: AppNotification[]
+  razorpayKeyId: string
   login: (email: string, password: string) => string | null
   signup: (name: string, email: string, password: string) => string | null
   logout: () => void
@@ -30,7 +31,9 @@ interface State {
   removeFromCart: (sku: string) => void
   clearCart: () => void
   toggleWish: (id: string) => void
-  checkout: (payMethod: PayMethod, address: string) => Order | null
+  checkout: (payMethod: PayMethod, address: string, paymentId: string) => Order | null
+  importProducts: (items: Product[]) => void
+  setRazorpayKey: (key: string) => void
   upsertProduct: (p: Product) => void
   deleteProduct: (id: string) => void
   setStock: (sku: string, stock: number) => void
@@ -74,6 +77,7 @@ export const useStore = create<State>()(
       wishlist: ['p1', 'p10'],
       orders: SAMPLE_ORDERS,
       notifications: SAMPLE_NOTES,
+      razorpayKeyId: '',
 
       login: (email, password) => {
         const u = get().users.find(
@@ -141,9 +145,9 @@ export const useStore = create<State>()(
           wishlist: s.wishlist.includes(id) ? s.wishlist.filter((x) => x !== id) : [...s.wishlist, id],
         })),
 
-      checkout: (payMethod, address) => {
+      checkout: (payMethod, address, paymentId) => {
         const { cart, products, sessionId, orders } = get()
-        if (!sessionId || cart.length === 0) return null
+        if (!sessionId || cart.length === 0 || !paymentId) return null
         const lines = cart.map((c) => {
           const p = products.find((x) => x.id === c.productId)!
           return {
@@ -168,9 +172,10 @@ export const useStore = create<State>()(
           shipping,
           discount,
           total: subtotal + shipping - discount,
-          status: payMethod === 'cod' ? 'placed' : 'paid',
+          status: 'paid',
           payMethod,
-          paid: payMethod !== 'cod',
+          paid: true,
+          paymentId,
           createdAt: new Date().toISOString(),
           address,
         }
@@ -196,7 +201,7 @@ export const useStore = create<State>()(
             {
               id: `n-${Date.now()}-u`,
               title: `We’ve got your order ${order.id}`,
-              body: 'The atelier is packing your pieces with tissue and a handwritten note.',
+              body: 'Your Soul Sisters order is confirmed. We’re packing your pieces with tissue and a handwritten note.',
               audience: sessionId,
               createdAt: new Date().toISOString(),
               readBy: [],
@@ -215,6 +220,11 @@ export const useStore = create<State>()(
           next[i] = p
           return { products: next }
         }),
+
+      importProducts: (items) =>
+        set((s) => ({ products: [...items, ...s.products] })),
+
+      setRazorpayKey: (key) => set({ razorpayKeyId: key.trim() }),
 
       deleteProduct: (id) => set((s) => ({ products: s.products.filter((p) => p.id !== id) })),
 

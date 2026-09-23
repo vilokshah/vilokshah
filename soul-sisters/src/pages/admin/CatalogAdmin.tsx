@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Top } from '../../components/Layout'
 import { BarcodeMark } from '../../components/BarcodeMark'
+import { downloadProductTemplate, parseProductWorkbook } from '../../lib/excel'
 import { buildVariants, categoryLabel, inr, useStore } from '../../store'
 import type { CategoryId, Product } from '../../types'
 import { CATEGORIES } from '../../data/catalog'
@@ -11,11 +12,46 @@ const cats = CATEGORIES.map((c) => c.id)
 export function AdminProducts() {
   const products = useStore((s) => s.products)
   const del = useStore((s) => s.deleteProduct)
+  const importProducts = useStore((s) => s.importProducts)
+  const [msg, setMsg] = useState('')
   return (
     <div className="app-scroll">
       <Top title="Catalog" back />
       <div className="pad">
         <Link className="btn primary full" to="/admin/products/new">Add a new piece</Link>
+        <div className="card" style={{ padding: 14, margin: '12px 0' }}>
+          <b>Upload many products from Excel</b>
+          <p className="muted">Use .xlsx or .csv. Download the template, fill rows, then upload.</p>
+          <button className="btn ghost sm" type="button" onClick={() => void downloadProductTemplate()}>
+            Download Excel template
+          </button>
+          <label className="btn gold sm" style={{ marginLeft: 8, display: 'inline-block' }}>
+            Upload Excel
+            <input
+              type="file"
+              accept=".xlsx,.xls,.csv"
+              hidden
+              onChange={async (e) => {
+                const file = e.target.files?.[0]
+                e.target.value = ''
+                if (!file) return
+                try {
+                  const buf = await file.arrayBuffer()
+                  const { products: rows, errors } = parseProductWorkbook(buf)
+                  if (rows.length) importProducts(rows)
+                  setMsg(
+                    rows.length
+                      ? `Added ${rows.length} product${rows.length === 1 ? '' : 's'}.${errors.length ? ` ${errors.length} row warning(s).` : ''}`
+                      : errors[0] || 'No products found in the file.',
+                  )
+                } catch {
+                  setMsg('Could not read that file. Save as .xlsx and try again.')
+                }
+              }}
+            />
+          </label>
+          {msg && <p className="muted" style={{ marginBottom: 0 }}>{msg}</p>}
+        </div>
         {products.map((p) => (
           <div className="list-item" key={p.id}>
             <img className="thumb-sm" src={p.images[0]} alt="" />
@@ -118,7 +154,7 @@ export function AdminProductForm() {
             nav('/admin/products')
           }}
         >
-          Save to atelier
+          Save piece
         </button>
       </div>
     </div>

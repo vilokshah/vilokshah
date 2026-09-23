@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Bell, Home, Search, ShoppingBag, UserRound, Sparkles } from 'lucide-react'
 import { useSession, useStore, visibleNotes } from '../store'
+import { BrandLogo } from './BrandLogo'
 
 export function Layout() {
   const location = useLocation()
@@ -64,17 +65,13 @@ export function Top({
   return (
     <header className="topbar">
       {back ? (
-        <button className="icon-btn" type="button" onClick={() => nav(-1)}>
+        <button className="icon-btn" type="button" aria-label="Back" onClick={() => nav(-1)}>
           ←
         </button>
-      ) : (
-        <div className="brand-mark">
-          <strong>Soul Sisters</strong>
-          <span>Atelier</span>
-        </div>
-      )}
-      {title && back && <b style={{ flex: 1, textAlign: 'center' }}>{title}</b>}
-      <div>{right}</div>
+      ) : null}
+      <BrandLogo compact={false} />
+      {title && back ? <b className="top-title">{title}</b> : null}
+      <div className="top-right">{right}</div>
     </header>
   )
 }

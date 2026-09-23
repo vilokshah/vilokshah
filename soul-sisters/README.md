@@ -1,8 +1,6 @@
-# Soul Sisters — women’s atelier app
+# Soul Sisters — womenswear shop
 
-A Myntra-style mobile boutique for the **Soul Sisters** womenswear brand. Shoppers browse categories, wishlists, and checkout; founders run catalog, inventory, barcodes, orders, notifications, and sales analysis from a brand studio.
-
-This is a mobile-first Progressive Web App (installable on a phone). Data lives in the browser so you can demo the full loop without a backend.
+A boutique site for the **Soul Sisters** brand: shop, inventory, barcodes, Razorpay checkout, Excel catalog upload, and founder analytics.
 
 ## Run locally
 
@@ -12,7 +10,7 @@ npm install
 npm run dev
 ```
 
-Open the printed URL (default `http://localhost:5173`). On a laptop it appears inside a phone frame; on a real phone it goes edge-to-edge.
+Open `http://localhost:5173`.
 
 ## Demo accounts
 
@@ -21,25 +19,23 @@ Open the printed URL (default `http://localhost:5173`). On a laptop it appears i
 | Shopper | `ananya@soulsisters.com` | `sisters123` |
 | Founder / admin | `admin@soulsisters.com` | `sisters123` |
 
-## What is included
+## Razorpay (real payments)
 
-**Customer**
-- Welcome, login, signup, logout, profile
-- Home campaign, category rooms, search, product detail (size/colour, low-stock)
-- Bag, wishlist, orders
-- Checkout with UPI, card, wallet, and COD (demo gateway — no real charges)
-- In-app notifications
+Checkout **does not place an order until Razorpay confirms payment**. Cash on delivery is disabled.
 
-**Brand studio (admin)**
-- Add / edit / delete pieces by category
-- Inventory by SKU, size, and colour
-- CODE128 barcode view + generate hang-tags
-- Order desk with status that notifies the customer
-- Sales analysis (revenue, AOV, daily take, category mix, bestsellers)
-- Broadcast notifications to all sisters or studio-only
+1. Create an account at [dashboard.razorpay.com](https://dashboard.razorpay.com/signup).
+2. Copy **Key ID** (`rzp_test_…` for testing, `rzp_live_…` after KYC).
+3. Sign in as admin → Brand studio → **Payments** → paste Key ID → Save.
+4. On checkout, Razorpay opens UPI / cards / net banking / wallets.
 
-Payments are a realistic checkout UI meant to sit in front of Razorpay or Stripe later. Inventory decrements on purchase.
+Optional (recommended for live): in Netlify add env vars `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`, and `VITE_RAZORPAY_KEY_ID`, then connect this repo so the `create-razorpay-order` function can run. Never put the secret in the website.
 
-## Stack
+Test cards/UPI are listed in the Razorpay test-mode docs.
 
-Vite, React, TypeScript, React Router, Zustand (persisted), Recharts, JsBarcode.
+## Excel catalog
+
+Admin → Catalog → download the template → fill rows → Upload Excel (`.xlsx` or `.csv`).
+
+## Hosting
+
+Build with `npm run build` and publish `dist`, or connect Git to Netlify using `netlify.toml`.

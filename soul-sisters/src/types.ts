@@ -68,7 +68,7 @@ export interface CartItem {
 }
 
 export type OrderStatus = 'placed' | 'paid' | 'packed' | 'shipped' | 'delivered' | 'cancelled'
-export type PayMethod = 'upi' | 'card' | 'wallet' | 'cod'
+export type PayMethod = 'razorpay'
 
 export interface OrderLine {
   productId: string
@@ -92,6 +92,7 @@ export interface Order {
   status: OrderStatus
   payMethod: PayMethod
   paid: boolean
+  paymentId?: string
   createdAt: string
   address: string
 }

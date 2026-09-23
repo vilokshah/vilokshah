@@ -107,7 +107,7 @@ export function ProductPage() {
           ))}
         </div>
         <p className="muted" style={{ marginTop: 10 }}>
-          SKU {variant?.sku} · {variant && variant.stock > 0 ? `${variant.stock} in atelier` : 'Waitlist'}
+          SKU {variant?.sku} · {variant && variant.stock > 0 ? `${variant.stock} in stock` : 'Waitlist'}
           {variant && variant.stock < 4 && variant.stock > 0 && <span className="low"> · low stock</span>}
         </p>
         <button className="btn ghost full" type="button" onClick={() => setShowCode(true)} style={{ marginBottom: 10 }}>

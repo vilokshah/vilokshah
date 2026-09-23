@@ -55,8 +55,9 @@ export function OrderDetail() {
           </div>
         ))}
         <div className="card" style={{ padding: 14 }}>
-          <div className="row"><span>Paid</span><b>{order.paid ? 'Yes' : 'COD pending'}</b></div>
+          <div className="row"><span>Paid</span><b>{order.paid ? 'Yes' : 'Pending'}</b></div>
           <div className="row"><span>Method</span><b>{order.payMethod.toUpperCase()}</b></div>
+          {order.paymentId && <div className="row"><span>Payment ID</span><span>{order.paymentId}</span></div>}
           <div className="row"><span>Ship to</span><span style={{ textAlign: 'right', maxWidth: 220 }}>{order.address}</span></div>
           <div className="row"><span>Total</span><b>{inr(order.total)}</b></div>
         </div>
