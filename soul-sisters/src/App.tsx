@@ -1,6 +1,7 @@
+import { useEffect } from 'react'
 import { HashRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { Layout } from './components/Layout'
-import { useSession } from './store'
+import { useSession, useStore } from './store'
 import { Welcome } from './pages/Welcome'
 import { Login, Signup } from './pages/Auth'
 import { Home } from './pages/Home'
@@ -14,6 +15,15 @@ import { AdminHome, RequireAdmin } from './pages/admin/AdminHome'
 import { AdminBarcodes, AdminInventory, AdminProductForm, AdminProducts } from './pages/admin/CatalogAdmin'
 import { AdminAlerts, AdminAnalytics, AdminOrders } from './pages/admin/Insights'
 import { AdminPayments } from './pages/admin/AdminPayments'
+import { AdminStore } from './pages/admin/AdminStore'
+
+function ThemeSync() {
+  const theme = useStore((s) => s.theme)
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+  }, [theme])
+  return null
+}
 
 function Gate() {
   const user = useSession()
@@ -32,6 +42,7 @@ export default function App() {
     <div className="stage">
       <div className="phone">
         <HashRouter>
+          <ThemeSync />
           <Routes>
             <Route element={<GuestOnly />}>
               <Route path="/" element={<Welcome />} />
@@ -63,6 +74,7 @@ export default function App() {
                 <Route path="/admin/orders" element={<AdminOrders />} />
                 <Route path="/admin/alerts" element={<AdminAlerts />} />
                 <Route path="/admin/payments" element={<AdminPayments />} />
+                <Route path="/admin/store" element={<AdminStore />} />
               </Route>
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />

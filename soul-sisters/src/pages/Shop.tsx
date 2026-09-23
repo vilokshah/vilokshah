@@ -73,7 +73,7 @@ export function Shop() {
         ))}
       </div>
       <div className="pad">
-        <p className="muted">{list.length} pieces for women</p>
+        <p className="muted">{list.length} pieces</p>
         <div className="grid2">
           {list.map((p) => (
             <ProductCard key={p.id} p={p} />

@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Bell, Home, Search, ShoppingBag, UserRound, Sparkles } from 'lucide-react'
+import { Bell, Home, Moon, Search, ShoppingBag, Sparkles, Sun, UserRound } from 'lucide-react'
 import { useSession, useStore, visibleNotes } from '../store'
 import { BrandLogo } from './BrandLogo'
+import { StoreFooter } from './StoreFooter'
 
 export function Layout() {
   const location = useLocation()
@@ -17,6 +18,7 @@ export function Layout() {
     <>
       <div className="app-scroll">
         <Outlet />
+        <StoreFooter />
       </div>
       {!hideTabs && (
         <nav className="tabbar">
@@ -52,6 +54,21 @@ export function Layout() {
   )
 }
 
+export function ThemeToggle() {
+  const theme = useStore((s) => s.theme)
+  const setTheme = useStore((s) => s.setTheme)
+  return (
+    <button
+      className="icon-btn"
+      type="button"
+      aria-label="Switch theme"
+      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+    >
+      {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+    </button>
+  )
+}
+
 export function Top({
   title,
   back,
@@ -71,7 +88,10 @@ export function Top({
       ) : null}
       <BrandLogo compact={false} />
       {title && back ? <b className="top-title">{title}</b> : null}
-      <div className="top-right">{right}</div>
+      <div className="top-right">
+        <ThemeToggle />
+        {right}
+      </div>
     </header>
   )
 }

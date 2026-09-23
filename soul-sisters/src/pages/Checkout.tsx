@@ -63,7 +63,8 @@ export function Checkout() {
           <div className="row"><span>To pay</span><b>{inr(total)}</b></div>
         </div>
         <p className="muted">
-          Pay securely with Razorpay — UPI, cards, net banking, and wallets. Cash on delivery is not available.
+          Pay with Razorpay. In the payment window you can choose <b>UPI</b> and complete with <b>Google Pay</b>,{' '}
+          <b>PhonePe</b>, Paytm, or any UPI app, plus cards, net banking, and wallets. Cash on delivery is not available.
         </p>
         {!key && (
           <p className="err">
@@ -102,7 +103,7 @@ export function Checkout() {
                   email: user?.email,
                   contact: user?.phone,
                 },
-                theme: { color: '#6B1D33' },
+                theme: { color: '#1F4D3A' },
                 handler: (response) => {
                   const order = checkout('razorpay', address, response.razorpay_payment_id)
                   setPaying(false)
@@ -125,7 +126,7 @@ export function Checkout() {
           {paying ? 'Opening Razorpay…' : `Pay ${inr(total)} with Razorpay`}
         </button>
         <p className="muted" style={{ marginTop: 10, textAlign: 'center' }}>
-          You will complete UPI / card payment in the Razorpay window. The order is created only after payment succeeds.
+          You will finish GPay / PhonePe / card in the Razorpay window. The order is created only after payment succeeds.
         </p>
       </div>
     </>

@@ -8,7 +8,7 @@ export function ProductCard({ p }: { p: Product }) {
   const toggle = useStore((s) => s.toggleWish)
   const on = wishlist.includes(p.id)
   return (
-    <article className="card">
+    <article className="card rise">
       <Link to={`/product/${p.id}`} className="thumb">
         <img src={p.images[0]} alt={p.name} />
         <button
@@ -20,12 +20,13 @@ export function ProductCard({ p }: { p: Product }) {
             toggle(p.id)
           }}
         >
-          <Heart size={16} fill={on ? '#8b2e4a' : 'none'} color="#8b2e4a" />
+          <Heart size={16} fill={on ? 'currentColor' : 'none'} />
         </button>
+        <span className="thumb-name">{p.name}</span>
       </Link>
       <div className="meta">
-        <div className="tiny">{p.category}</div>
         <h3>{p.name}</h3>
+        <p className="muted" style={{ margin: '4px 0 8px' }}>{p.subtitle}</p>
         <div className="price">
           {inr(p.price)}
           <span className="mrp">{inr(p.mrp)}</span>

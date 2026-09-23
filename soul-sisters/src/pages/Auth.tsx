@@ -1,20 +1,24 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { BrandLogo } from '../components/BrandLogo'
+import { ThemeToggle } from '../components/Layout'
 import { useStore } from '../store'
 
 export function Login() {
   const login = useStore((s) => s.login)
   const nav = useNavigate()
-  const [email, setEmail] = useState('ananya@soulsisters.com')
-  const [password, setPassword] = useState('sisters123')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [err, setErr] = useState<string | null>(null)
 
   return (
     <div className="app-scroll">
       <div className="pad" style={{ paddingTop: 28 }}>
-        <BrandLogo />
-        <div className="tiny" style={{ marginTop: 18 }}>Welcome back</div>
+        <div className="row">
+          <BrandLogo />
+          <ThemeToggle />
+        </div>
+        <div className="tiny" style={{ marginTop: 22 }}>Welcome back</div>
         <h1 className="serif" style={{ fontSize: 40, margin: '6px 0 18px' }}>Sign in</h1>
         <form
           onSubmit={(e) => {
@@ -36,16 +40,8 @@ export function Login() {
           <button className="btn primary full" type="submit">Continue</button>
         </form>
         <p className="muted" style={{ marginTop: 18 }}>
-          New to Soul Sisters? <Link to="/signup"><b>Join the sisterhood</b></Link>
+          New here? <Link to="/signup"><b>Create an account</b></Link>
         </p>
-        <div className="card" style={{ padding: 14, marginTop: 24 }}>
-          <div className="tiny">Demo access</div>
-          <p className="muted" style={{ margin: '6px 0 0' }}>
-            Shopper · ananya@soulsisters.com<br />
-            Admin · admin@soulsisters.com<br />
-            Password · sisters123
-          </p>
-        </div>
       </div>
     </div>
   )
@@ -62,8 +58,11 @@ export function Signup() {
   return (
     <div className="app-scroll">
       <div className="pad" style={{ paddingTop: 28 }}>
-        <BrandLogo />
-        <div className="tiny" style={{ marginTop: 18 }}>Women’s house</div>
+        <div className="row">
+          <BrandLogo />
+          <ThemeToggle />
+        </div>
+        <div className="tiny" style={{ marginTop: 22 }}>soulsisters</div>
         <h1 className="serif" style={{ fontSize: 40, margin: '6px 0 18px' }}>Create profile</h1>
         <form
           onSubmit={(e) => {
@@ -86,10 +85,10 @@ export function Signup() {
             <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" autoComplete="new-password" minLength={6} required />
           </div>
           {err && <p className="err">{err}</p>}
-          <button className="btn primary full" type="submit">Join Soul Sisters</button>
+          <button className="btn primary full" type="submit">Join soulsisters</button>
         </form>
         <p className="muted" style={{ marginTop: 18 }}>
-          Already a sister? <Link to="/login"><b>Sign in</b></Link>
+          Already have an account? <Link to="/login"><b>Sign in</b></Link>
         </p>
       </div>
     </div>

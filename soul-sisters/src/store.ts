@@ -10,6 +10,8 @@ import type {
   OrderStatus,
   Variant,
   CategoryId,
+  StoreInfo,
+  ThemeMode,
 } from './types'
 import { PRODUCTS, USERS, SAMPLE_ORDERS, SAMPLE_NOTES } from './data/catalog'
 
@@ -22,6 +24,8 @@ interface State {
   orders: Order[]
   notifications: AppNotification[]
   razorpayKeyId: string
+  theme: ThemeMode
+  storeInfo: StoreInfo
   login: (email: string, password: string) => string | null
   signup: (name: string, email: string, password: string) => string | null
   logout: () => void
@@ -34,6 +38,8 @@ interface State {
   checkout: (payMethod: PayMethod, address: string, paymentId: string) => Order | null
   importProducts: (items: Product[]) => void
   setRazorpayKey: (key: string) => void
+  setTheme: (theme: ThemeMode) => void
+  updateStoreInfo: (patch: Partial<StoreInfo>) => void
   upsertProduct: (p: Product) => void
   deleteProduct: (id: string) => void
   setStock: (sku: string, stock: number) => void
@@ -61,6 +67,15 @@ export function inr(n: number) {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n)
 }
 
+export const DEFAULT_STORE: StoreInfo = {
+  brand: 'soulsisters',
+  phone: '+91 98765 43210',
+  email: 'hello@soulsisters.in',
+  address: '12 Hughes Road, Mumbai 400007',
+  instagram: 'soulsisters__17',
+  hours: '11:00 am – 8:00 pm · Tue–Sun',
+}
+
 export function nextOrderId(orders: Order[]) {
   const nums = orders.map((o) => Number(o.id.replace(/\D/g, ''))).filter(Boolean)
   const max = nums.length ? Math.max(...nums) : 10520
@@ -78,6 +93,8 @@ export const useStore = create<State>()(
       orders: SAMPLE_ORDERS,
       notifications: SAMPLE_NOTES,
       razorpayKeyId: '',
+      theme: 'light',
+      storeInfo: DEFAULT_STORE,
 
       login: (email, password) => {
         const u = get().users.find(
@@ -225,6 +242,8 @@ export const useStore = create<State>()(
         set((s) => ({ products: [...items, ...s.products] })),
 
       setRazorpayKey: (key) => set({ razorpayKeyId: key.trim() }),
+      setTheme: (theme) => set({ theme }),
+      updateStoreInfo: (patch) => set((s) => ({ storeInfo: { ...s.storeInfo, ...patch } })),
 
       deleteProduct: (id) => set((s) => ({ products: s.products.filter((p) => p.id !== id) })),
 
@@ -281,7 +300,7 @@ export const useStore = create<State>()(
         }))
       },
     }),
-    { name: 'soul-sisters-store' },
+    { name: 'soul-sisters-store-v3' },
   ),
 )
 

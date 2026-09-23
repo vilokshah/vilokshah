@@ -8,6 +8,7 @@ import {
   BellRing,
   ArrowLeft,
 } from 'lucide-react'
+import { MapPin } from 'lucide-react'
 import { CreditCard } from 'lucide-react'
 import { useSession, useStore, inr } from '../../store'
 
@@ -34,6 +35,7 @@ export function AdminHome() {
     { to: '/admin/analytics', icon: BarChart3, title: 'Sales analysis', sub: inr(revenue) },
     { to: '/admin/alerts', icon: BellRing, title: 'Notify sisters', sub: 'Push to the app' },
     { to: '/admin/payments', icon: CreditCard, title: 'Payments', sub: 'Razorpay keys' },
+    { to: '/admin/store', icon: MapPin, title: 'Store details', sub: 'Footer name, phone, address' },
   ]
 
   return (
@@ -47,7 +49,7 @@ export function AdminHome() {
         <span className="tiny">Admin</span>
       </header>
       <div className="pad">
-        <h1 className="serif" style={{ fontSize: 34, margin: '4px 0 8px' }}>Soul Sisters HQ</h1>
+        <h1 className="serif" style={{ fontSize: 34, margin: '4px 0 8px' }}>soulsisters HQ</h1>
         <p className="muted">Manage stock, stories, and sales.</p>
         <div className="grid2" style={{ marginTop: 8 }}>
           <div className="kpi"><span className="tiny">Revenue</span><b>{inr(revenue)}</b></div>
@@ -57,7 +59,7 @@ export function AdminHome() {
       <div className="admin-nav">
         {tiles.map((t) => (
           <Link key={t.to} to={t.to} className="admin-tile">
-            <t.icon size={18} color="#8b2e4a" />
+            <t.icon size={18} />
             <h3>{t.title}</h3>
             <div className="muted">{t.sub}</div>
           </Link>

@@ -20,7 +20,7 @@ export function Cart() {
         {lines.length === 0 ? (
           <div className="empty">
             <h2 className="serif">Your bag is empty</h2>
-            <p>The sisterhood is waiting in the shop.</p>
+            <p>Your bag is empty — start with the shop.</p>
             <Link className="btn primary" to="/shop">Start dressing</Link>
           </div>
         ) : (

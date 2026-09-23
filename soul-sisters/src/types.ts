@@ -106,8 +106,13 @@ export interface AppNotification {
   readBy: string[]
 }
 
-export interface PaymentDraft {
-  method: PayMethod
-  upiId?: string
-  cardLast4?: string
+export interface StoreInfo {
+  brand: string
+  phone: string
+  email: string
+  address: string
+  instagram: string
+  hours: string
 }
+
+export type ThemeMode = 'light' | 'dark'

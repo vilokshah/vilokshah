@@ -46,11 +46,11 @@ export function Home() {
         <>
           <div className="pad" style={{ paddingTop: 0 }}>
             <p className="muted" style={{ margin: '0 0 8px' }}>
-              Hello{user ? `, ${user.name.split(' ')[0]}` : ''} — dressing women, only.
+              Hello{user ? `, ${user.name.split(' ')[0]}` : ''}
             </p>
           </div>
           <div className="hero">
-            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1400&q=80" alt="Campaign" />
+            <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1400&q=80" alt="Campaign" />
             <div className="copy">
               <div className="tiny" style={{ color: '#f3e6d8' }}>New season</div>
               <h1>Sisters in silk</h1>
