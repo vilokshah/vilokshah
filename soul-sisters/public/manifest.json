@@ -1,0 +1,10 @@
+{
+  "name": "Soul Sisters",
+  "short_name": "Soul Sisters",
+  "description": "Womenswear boutique — shop, manage inventory, and track sales.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FBF7F4",
+  "theme_color": "#8B2E4A",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
